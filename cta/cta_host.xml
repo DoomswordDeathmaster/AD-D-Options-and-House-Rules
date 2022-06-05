@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root>
+  <windowclass name="combatants_entry_host" merge="join">
+    <script file="cta/scripts/cta_entry.lua" />
+    <sheetdata>
+      <button_ctaentry_initresult name="initresult" />
+      <button_ctaentry_initresult_d6 name="initresult_d6" />
+    </sheetdata>
+  </windowclass>
+</root>

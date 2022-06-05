@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root>
+	<windowclass name="combat_mini_section" merge="join" insertbefore="combat_thaco_matrix">
+		<sheetdata>
+			<button_charinitdelay name="initiativedelay" merge="replace">
+			<script>
+				function onInit()
+					Debug.console(OptionsManager.getOption("initiativeDelayAllow"));
+					if OptionsManager.getOption("initiativeDelayAllow") == "off" then
+						setVisible(false);
+						window.label_initdelaytop.setVisible(false);
+					end
+				end
+			</script>
+			<anchored height="25" width="20" >
+			   <top offset="15" />
+			  <left parent="surprise_total_roll" anchor="right" relation="relative" offset="15" />
+			</anchored>
+		  </button_charinitdelay>
+		</sheetdata>
+	</windowclass>
+</root>
+    

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root>
+    <template name="button_ctaentry_initresult">
+        <number_ct_crosslink name="initresult">
+        <script>
+            function onInit()
+                super.onInit();
+                setVisible(true);
+                if OptionsManager.getOption("initiativeDie") == "d6" then
+                    setVisible(false);
+                end
+            end
+            function action(draginfo)
+                local node = window.getDatabaseNode();
+                draginfo.setDescription(DB.getValue(node,"name",""));
+                draginfo.setShortcutData("reorder_cta_initiative",node.getPath());
+                draginfo.setIcon("reorder_arrow");
+                draginfo.setType("reorder");
+                return true;
+            end
+            function onDragStart(button, x, y, draginfo)
+                return action(draginfo);
+            end
+        </script>
+        <readonly />
+        <color>FFFFFF</color>
+        <frame name="d10red" offset="-1,3,0,0" />
+        <anchored to="token" height="20" width="25">
+            <top anchor="top" offset="5" />
+            <left anchor="right" relation="relative" offset="0" />
+        </anchored>
+        <tooltip textres="cta_initiative_tooltip" />
+        </number_ct_crosslink>
+	</template>
+
+    <template name="button_ctaentry_initresult_d6">
+        <number_ct_crosslink name="initresult_d6">
+        <script>
+            function onInit()
+                super.onInit();
+                setVisible(false);
+                if OptionsManager.getOption("initiativeDie") == "d6" then
+                    setVisible(true);
+                end
+            end
+            function action(draginfo)
+                local node = window.getDatabaseNode();
+                draginfo.setDescription(DB.getValue(node,"name",""));
+                draginfo.setShortcutData("reorder_cta_initiative",node.getPath());
+                draginfo.setIcon("reorder_arrow");
+                draginfo.setType("reorder");
+                return true;
+            end
+            function onDragStart(button, x, y, draginfo)
+                return action(draginfo);
+            end
+        </script>
+        <readonly />
+        <color>FFFFFF</color>
+        <frame name="d6red" offset="-1,3,0,0" />
+        <anchored to="token" height="20" width="25">
+            <top anchor="top" offset="5" />
+            <left anchor="right" relation="relative" offset="0" />
+        </anchored>
+        <tooltip textres="cta_initiative_tooltip" />
+        </number_ct_crosslink>
+	</template>
+</root>

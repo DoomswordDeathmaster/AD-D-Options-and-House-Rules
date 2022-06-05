@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root>
+  <windowclass name="charsheet_main" merge="join">
+    <script file="campaign/scripts/char_main.lua" />
+    <sheetdata>
+      <stringu name="background" merge="replace">
+        <script>
+          function onInit()
+            setVisible(true);
+            window.backgroundlink.setVisible(true);
+            if OptionsManager.getOption("use2eKits") == "off" then
+              setVisible(false);
+              window.backgroundlink.setVisible(false);
+            end
+          end
+        </script>
+        <anchored to="race" position="right" relation="relative" offset="30,0" width="80" />
+      </stringu>
+
+      <chooser_label name="background_choose" merge="replace">
+        <script>
+          function onInit()
+            super.onInit();
+            setVisible(true);
+            if OptionsManager.getOption("use2eKits") == "off" then
+              setVisible(false);
+            end
+          end
+        </script>
+        <record>background</record>
+        <class>background</class>
+        <path>masterindex</path>
+        <anchored to="background" position="insidetopleft" />
+      </chooser_label>
+      
+      <label_titlechar_visible name="title_class_level" merge="add">
+        <anchored to="classlevel">
+          <top parent="classracekittitle" />
+          <left anchor="center" parent="classlevel" offset="-80" />
+          <right parent="classlevel" />
+        </anchored>
+        <static textres="char_label_classlevel" />
+      </label_titlechar_visible>
+
+      <label_titlechar_visible name="title_race" merge="add">
+        <anchored to="race">
+          <top parent="classracekittitle" />
+          <left anchor="center" parent="race" offset="-80" />
+          <right parent="race" />
+        </anchored>
+        <static textres="char_label_race" />
+      </label_titlechar_visible>
+    </sheetdata>
+  </windowclass>
+</root>      
+    

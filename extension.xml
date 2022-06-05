@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="3.0">
+  <properties>
+    <name>AD&amp;D Options and House Rules</name>
+    <version>1</version>
+    <author>Doomsword</author>
+    <description>AD&amp;D Options and House Rules</description>
+    <loadorder>999</loadorder>
+    <ruleset>
+      <name>2E</name>
+    </ruleset>
+  </properties>
+  <base>
+    <includefile source="campaign/record_char_combat.xml" />
+    <includefile source="campaign/record_char_main.xml" />
+    <includefile source="campaign/template_char.xml" />
+    <includefile source="campaign/template_char_adnd.xml" />
+    <includefile source="campaign/template_ct.xml" />
+    <includefile source="campaign/template_cta.xml" />
+    <includefile source="cta/cta_host.xml" />
+    <includefile source="graphics/graphics_frames_adnd.xml" />
+
+    <script name="ActionInitAdndOpHr" file="scripts/manager_action_init_adnd_op_hr.lua" />
+    <script name="AdndOpHrManager" file="scripts/manager_adnd_op_hr.lua" />
+    <script name="ActionCheckManagerAdndOpHr" file="scripts/manager_action_check_adnd_op_hr.lua" />
+    <script name="CombatManagerAdndOpHr" file="scripts/manager_combat_adnd_op_hr.lua" />
+    <script name="CombatManager2AdndOpHr" file="scripts/manager_combat2_5E_adnd_op_hr.lua" />
+
+    <includefile source="strings/strings_adnd_op_hr.xml" />
+  </base>
+</root>

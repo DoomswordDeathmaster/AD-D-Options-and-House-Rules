@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root>
+  <framedef name="d6red">
+    <bitmap file="graphics/icons/d6_ricon.png" />
+    <topleft rect="0,0,35,30" />
+  </framedef>
+  <framedef name="d12red">
+    <bitmap file="graphics/icons/d12_ricon.png" />
+    <topleft rect="0,0,35,30" />
+  </framedef>
+</root>
