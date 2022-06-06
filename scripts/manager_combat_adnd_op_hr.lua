@@ -13,8 +13,6 @@ OOB_MSGTYPE_CHANGEINIT = "changeinitiative";
 function onInit()
     local initiativeDie = OptionsManager.getOption("initiativeDie");
     local initiativeDieNumber = initiativeDie:gsub("d", "");
-    --Debug.console("initDie: " .. initiativeDie);
-    --Debug.console(initiativeDieNumber);
 
     DataCommonADND.nDefaultInitiativeDice = initiativeDieNumber;
 
@@ -103,28 +101,15 @@ function rollEntryInitNew(nodeEntry)
             nInitPC = DB.getValue(nodeChar,"initiative.total",0);
         end
         
+        Debug.console(sOptInitGrouping) ;
+
         -- if grouping involving pcs is on
         if bOptPCVNPCINIT or (sOptInitGrouping == "pc" or sOptInitGrouping == "both") then
-            Debug.console("pc_lastinit");
-            Debug.console(PC_LASTINIT);
-            Debug.console("npc_lastinit");
-            Debug.console(NPC_LASTINIT);
-
             -- roll without mods
             nInitResult = rollRandomInitOrig(0, bADV);
 
             -- group init - apply init result to remaining PCs
             applyInitResultToAllPCs(nInitResult);
-            -- for _,v in pairs(CombatManager.getCombatantNodes()) do
-            --     Debug.console(DB.getValue(v, "friendfoe"));
-            --     if DB.getValue(v, "friendfoe") == "friend" then
-            --         Debug.console("friend");
-            --         Debug.console(initresult);
-            --         -- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
-            --         DB.setValue(v, "initresult", "number", nInitResult);
-            --         DB.setValue(v, "initresult_d6", "number", nInitResult);
-            --     end
-            -- end
 
             -- set last init for comparison for ties and swapping
             PC_LASTINIT = nInitResult;
@@ -143,10 +128,6 @@ function rollEntryInitNew(nodeEntry)
         -- it's an npc
         -- if grouping involving npcs is on
         if bOptPCVNPCINIT or (sOptInitGrouping == "npc" or sOptInitGrouping == "both") then
-            Debug.console("npc_lastinit");
-            Debug.console(NPC_LASTINIT);
-            Debug.console("pc_lastinit");
-            Debug.console(PC_LASTINIT);
 
             -- roll without mods
             nInitResult = rollRandomInitOrig(0, bADV);
@@ -156,16 +137,6 @@ function rollEntryInitNew(nodeEntry)
 
             -- set last init for comparison for ties and swapping
             NPC_LASTINIT = nInitResult;
-            -- for _,v in pairs(CombatManager.getCombatantNodes()) do
-            --     Debug.console(DB.getValue(v, "friendfoe"));
-            --     if DB.getValue(v, "friendfoe") ~= "friend" then
-            --         Debug.console("not friend");
-            --         Debug.console(initresult);
-            --         -- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
-            --         DB.setValue(v, "initresult", "number", nInitResult);
-            --         DB.setValue(v, "initresult_d6", "number", nInitResult);
-            --     end
-            -- end
         else
             -- set nInit to 0 for disallowing mods
             local nInit = 0;
@@ -291,7 +262,9 @@ function applyInitResultToAllPCs(nInitResult)
     Debug.console("applyInitResultToAllPCs");
     -- group init - apply init result to all PCs
     for _,v in pairs(CombatManager.getCombatantNodes()) do
+        Debug.console(DB.getValue(v, "name"));
         Debug.console(DB.getValue(v, "friendfoe"));
+        Debug.console(nInitResult);
         if DB.getValue(v, "friendfoe") == "friend" then
             Debug.console("friend");
             Debug.console(initresult);
@@ -306,7 +279,9 @@ function applyInitResultToAllNPCs(nInitResult)
     Debug.console("applyInitResultToAllNPCs");
     -- group init - apply init result to remaining NPCs
     for _,v in pairs(CombatManager.getCombatantNodes()) do
+        Debug.console(DB.getValue(v, "name"));
         Debug.console(DB.getValue(v, "friendfoe"));
+        Debug.console(nInitResult);
         if DB.getValue(v, "friendfoe") ~= "friend" then
             Debug.console("not friend");
             Debug.console(initresult);
