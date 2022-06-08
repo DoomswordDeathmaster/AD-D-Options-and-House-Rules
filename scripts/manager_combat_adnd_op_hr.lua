@@ -101,7 +101,7 @@ function rollEntryInitNew(nodeEntry)
             nInitPC = DB.getValue(nodeChar,"initiative.total",0);
         end
         
-        Debug.console(sOptInitGrouping) ;
+        Debug.console(sOptInitGrouping);
 
         -- if grouping involving pcs is on
         if bOptPCVNPCINIT or (sOptInitGrouping == "pc" or sOptInitGrouping == "both") then
@@ -225,7 +225,8 @@ function rollEntryInitNew(nodeEntry)
         end
     end
 
-    if bOptPCVNPCINIT or (sOptInitGrouping ~= "neither") then
+    -- deal with ties when all initiative is grouped and ties are turned off
+    if bOptPCVNPCINIT or (sOptInitGrouping == "both") then
         Debug.console(bOptInitTies);
         -- init ties off
         if not bOptInitTies then
