@@ -14,6 +14,7 @@
   <string name="option_label_adnd_op_hr_initiative_ties_allow">Initiative Grouping: Allow Ties</string>
   <string name="option_label_adnd_op_hr_surprise_die">Surprise Die</string>
   <string name="option_label_adnd_op_hr_use_2e_kits">Use 2e Kits</string>
+  <string name="option_label_adnd_op_hr_round_start_reset_init">Initiative Reset on Round Start</string>
   
   <!-- Option value strings -->
   <string name="option_val_d6">d6</string>

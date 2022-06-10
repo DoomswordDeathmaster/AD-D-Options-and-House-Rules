@@ -33,4 +33,7 @@ function registerOptions()
 	-- Use 2e Kits
 	OptionsManager.registerOption2("use2eKits", false, "option_header_adnd_op_hr", "option_label_adnd_op_hr_use_2e_kits", "option_entry_cycler", 
 		{ labels = "option_val_off", values = "off", baselabel = "option_val_on", baseval = "on", default = "on" });
+	-- Round Start Reset Init
+	OptionsManager.registerOption2("roundStartResetInit", false, "option_header_adnd_op_hr", "option_label_adnd_op_hr_round_start_reset_init", "option_entry_cycler", 
+		{ labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off" });
 end

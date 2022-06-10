@@ -28,8 +28,8 @@ function onInit()
     OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_CHANGEINIT, handleInitiativeChange);
 
     CombatManager.setCustomCombatReset(resetInitNew);
-    
-    CombatManager.setCustomSort(sortfuncADnD);
+    CombatManager.setCustomRoundStart(onRoundStartNew);
+    CombatManager.setCustomSort(sortfuncADnDNew);
 end
 
 function rollRandomInitNew(nMod, bADV)
@@ -50,13 +50,13 @@ function rollEntryInitNew(nodeEntry)
     local bOptInitTies = (OptionsManager.getOption("initiativeTiesAllow") == 'on');
     local sOptInitGrouping = OptionsManager.getOption("initiativeGrouping");
     local bOptInitGroupingSwap = (OptionsManager.getOption("initiativeGroupingSwap") == 'on');
-    local sOptInitOrdering = OptionsManager.getOption("initiativeOrdering");
+    --local sOptInitOrdering = OptionsManager.getOption("initiativeOrdering");
     
     Debug.console(bOptInitMods);
     Debug.console(bOptInitTies);
     Debug.console("init grouping: " .. sOptInitGrouping);
     Debug.console(bOptInitGroupingSwap);
-    Debug.console("init ordering: " .. sOptInitOrdering);
+    --Debug.console("init ordering: " .. sOptInitOrdering);
 
 	if not nodeEntry then
 		return;
@@ -252,9 +252,13 @@ function rollEntryInitNew(nodeEntry)
         Debug.console(bOptInitGroupingSwap);
         -- init grouping swap
         if bOptInitGroupingSwap then
-            Debug.console("swapping init");
-            applyInitResultToAllPCs(NPC_LASTINIT);
-            applyInitResultToAllNPCs(PC_LASTINIT);
+            if bOptPCVNPCINIT or (sOptInitGrouping ~= "neither") then
+                Debug.console("swapping init");
+                Debug.console(PC_LASTINIT);
+                Debug.console(NPC_LASTINIT);
+                applyInitResultToAllPCs(NPC_LASTINIT);
+                applyInitResultToAllNPCs(PC_LASTINIT);
+            end
         end
     end
 end
@@ -263,15 +267,18 @@ function applyInitResultToAllPCs(nInitResult)
     Debug.console("applyInitResultToAllPCs");
     -- group init - apply init result to all PCs
     for _,v in pairs(CombatManager.getCombatantNodes()) do
-        Debug.console(DB.getValue(v, "name"));
-        Debug.console(DB.getValue(v, "friendfoe"));
-        Debug.console(nInitResult);
+        --Debug.console(DB.getValue(v, "name"));
+        --Debug.console(DB.getValue(v, "friendfoe"));
+        --Debug.console(nInitResult);
         if DB.getValue(v, "friendfoe") == "friend" then
-            Debug.console("friend");
-            Debug.console(initresult);
+            --Debug.console("friend");
+            --Debug.console(initresult);
             -- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
             DB.setValue(v, "initresult", "number", nInitResult);
             DB.setValue(v, "initresult_d6", "number", nInitResult);
+            -- set init rolled
+            --Debug.console("set pc init rolled");
+            DB.setValue(v, "initrolled", "number", 1);
         end
     end
 end
@@ -280,24 +287,42 @@ function applyInitResultToAllNPCs(nInitResult)
     Debug.console("applyInitResultToAllNPCs");
     -- group init - apply init result to remaining NPCs
     for _,v in pairs(CombatManager.getCombatantNodes()) do
-        Debug.console(DB.getValue(v, "name"));
-        Debug.console(DB.getValue(v, "friendfoe"));
-        Debug.console(nInitResult);
+        --Debug.console(DB.getValue(v, "name"));
+        --Debug.console(DB.getValue(v, "friendfoe"));
+        --Debug.console(nInitResult);
         if DB.getValue(v, "friendfoe") ~= "friend" then
             Debug.console("not friend");
-            Debug.console(initresult);
+            Debug.console(nInitResult);
             -- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
             DB.setValue(v, "initresult", "number", nInitResult);
             DB.setValue(v, "initresult_d6", "number", nInitResult);
+            -- set init rolled
+            --Debug.console("set npc init rolled");
+            DB.setValue(v, "initrolled", "number", 1);
         end
     end
 end
 
--- TODO: sorting options
+function applyIndividualInit(nTotal, rSource)
+    local nodeEntry = ActorManager.getCTNode(rSource);
+    --local node = ActorManager.getCreatureNode(rSource);
+    Debug.console("applyIndividualInit");
+    Debug.console(nodeEntry);
+    Debug.console(nTotal);
+    -- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
+    DB.setValue(nodeEntry, "initresult", "number", nTotal);
+    DB.setValue(nodeEntry, "initresult_d6", "number", nTotal);
+    -- set init rolled
+    Debug.console("set init rolled");
+    DB.setValue(nodeEntry, "initrolled", "number", 1);
+end
+
 --
 -- AD&D Style ordering (low to high initiative)
 --
-function sortfuncADnD(node2, node1)
+function sortfuncADnDNew(node2, node1)
+    local sOptInitOrdering = OptionsManager.getOption("initiativeOrdering");
+    Debug.console("sortFuncADnDNew");
     local bHost = Session.IsHost;
     local sOptCTSI = OptionsManager.getOption("CTSI");
     
@@ -318,13 +343,25 @@ function sortfuncADnD(node2, node1)
         local nValue1 = DB.getValue(node1, "initresult", 0);
         local nValue2 = DB.getValue(node2, "initresult", 0);
         if nValue1 ~= nValue2 then
-          return nValue1 > nValue2;
+            if sOptInitOrdering == "ascending" then
+                Debug.console(sOptInitOrdering);
+                return nValue1 > nValue2;
+            else
+                Debug.console(sOptInitOrdering);
+                return nValue1 < nValue2;
+            end
         end
         
         nValue1 = DB.getValue(node1, "init", 0);
         nValue2 = DB.getValue(node2, "init", 0);
         if nValue1 ~= nValue2 then
-          return nValue1 > nValue2;
+            if sOptInitOrdering == "ascending" then
+                Debug.console(sOptInitOrdering);
+                return nValue1 > nValue2;
+            else
+                Debug.console(sOptInitOrdering);
+                return nValue1 < nValue2;
+            end
         end
       else
         if sFaction1 ~= sFaction2 then
@@ -339,11 +376,22 @@ function sortfuncADnD(node2, node1)
     
     local sValue1 = DB.getValue(node1, "name", "");
     local sValue2 = DB.getValue(node2, "name", "");
-    if sValue1 ~= sValue2 then
-      return sValue1 < sValue2;
+
+    if sOptInitOrdering == "ascending" then
+        Debug.console(sOptInitOrdering);
+        if sValue1 ~= sValue2 then
+            return sValue1 < sValue2;
+        end
+    
+        return node1.getNodeName() < node2.getNodeName();
+    else
+        Debug.console(sOptInitOrdering);
+        if sValue1 ~= sValue2 then
+            return sValue2 < sValue1;
+        end
+    
+        return node2.getNodeName() < node1.getNodeName();
     end
-  
-    return node1.getNodeName() < node2.getNodeName();
 end
 
 function handleInitiativeChange(msgOOB)
@@ -356,19 +404,42 @@ function handleInitiativeChange(msgOOB)
 end
 
 function resetInitNew()
-    function resetCombatantInit(nodeCT)
-        Debug.console("reset init new");
+    -- set last init results to 0
+    Debug.console("setting last inits to 0");
+    PC_LASTINIT = 0;
+    NPC_LASTINIT = 0;
 
-        PC_LASTINIT = 0;
-        NPC_LASTINIT = 0;
-
-        DB.setValue(nodeCT, "initresult", "number", 0);
-        DB.setValue(nodeCT, "initresult_d6", "number", 0);
-        DB.setValue(nodeCT, "reaction", "number", 0);
-        
-        --set not rolled initiative portrait icon to active on new round
-        CharlistManagerADND.turnOffInitRolled(nodeCT);
+    for _,nodeCT in pairs(CombatManager.getCombatantNodes()) do
+        resetCombatantInit(nodeCT);
     end
+
+    Debug.console(NPC_LASTINIT);
+    Debug.console(PC_LASTINIT);
+end
+
+function onRoundStartNew(nCurrent)
+    local bOptRoundStartResetInit = (OptionsManager.getOption("roundStartResetInit") == 'on');
+    Debug.console(bOptRoundStartResetInit);
+
+    PC_LASTINIT = 0;
+    NPC_LASTINIT = 0;
     
-    CombatManager.callForEachCombatant(resetCombatantInit);
+    if bOptRoundStartResetInit then
+        for _,nodeCT in pairs(CombatManager.getCombatantNodes()) do
+            resetCombatantInit(nodeCT);
+        end
+    end
+end
+
+function resetCombatantInit(nodeCT)
+    Debug.console("reset init new");
+    
+    DB.setValue(nodeCT, "initresult", "number", 0);
+    DB.setValue(nodeCT, "initresult_d6", "number", 0);
+    DB.setValue(nodeCT, "reaction", "number", 0);
+    
+    -- toggle portrait initiative icon
+    CharlistManagerADND.turnOffAllInitRolled();
+    -- toggle all "initrun" values to not run
+    CharlistManagerADND.turnOffAllInitRun();
 end
