@@ -2,14 +2,20 @@
 <root version="3.0">
   <properties>
     <name>AD&amp;D Options and House Rules</name>
-    <version>1.0</version>
+    <version>1.1</version>
     <author>Doomsword</author>
-    <description>AD&amp;D Options and House Rules</description>
+    <description>
+      <text>AD&amp;D Options and House Rules</text>
+      <author>Doomsword</author>
+    </description>
     <loadorder>99</loadorder>
     <ruleset>
       <name>2E</name>
     </ruleset>
   </properties>
+
+  <announcement text="AD&amp;D Options and House Rules\r -- by Doomsword and includes Celestian's 1E properties" font="emotefont" icon="doomsword_icon" />
+
   <base>
     <includefile source="campaign/record_char_combat.xml" />
     <includefile source="campaign/record_char_main.xml" />
@@ -17,11 +23,13 @@
     <includefile source="campaign/template_cta.xml" />
     <includefile source="cta/cta_host.xml" />
     <includefile source="graphics/graphics_frames_adnd.xml" />
+		<includefile source="graphics/graphics_icons.xml" />
 
     <script name="ActionInitAdndOpHr" file="scripts/manager_action_init_adnd_op_hr.lua" />
     <script name="ActionSurpriseAdndOpHr" file="scripts/manager_action_surprise_adnd_op_hr.lua" />
     <script name="AdndOpHrManager" file="scripts/manager_adnd_op_hr.lua" />
     <script name="CombatManagerAdndOpHr" file="scripts/manager_combat_adnd_op_hr.lua" />
+    <script name="DataCommonADND1e" file="scripts/data_common_adnd1e.lua" />
 
     <includefile source="strings/strings_adnd_op_hr.xml" />
   </base>
