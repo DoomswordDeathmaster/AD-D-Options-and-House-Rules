@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+  <windowclass name="npc_combat" merge="join">
+    <script file="campaign/scripts/npc.lua" />
+    <script>
+      function update()   
+        super.update();
+        local nodeRecord = getDatabaseNode();
+        local bReadOnly = WindowManager.getReadOnlyState(nodeRecord);
+
+        updateControl("fights_as", bReadOnly);
+        fights_as.setReadOnly(bReadOnly);
+        updateControl("saves_as", bReadOnly);
+        saves_as.setReadOnly(bReadOnly);
+      end
+
+      function onInit()
+        super.onInit();
+        local nodeRecord = getDatabaseNode();
+        local bReadOnly = WindowManager.getReadOnlyState(nodeRecord);
+
+        updateControl("fights_as", bReadOnly);
+        fights_as.setReadOnly(bReadOnly);
+        updateControl("saves_as", bReadOnly);
+        saves_as.setReadOnly(bReadOnly);
+      end
+    </script>
+    <sheetdata>
+      <label_column name="fights_as_label" insertbefore="thaco_label">
+          <static textres="npc_label_fights_as" />
+      </label_column>
+
+      <string_columnh name="fights_as" insertbefore="thaco_label">
+        <script>
+          function onValueChanged()
+            window.onSummaryChanged();
+          end
+        </script>
+      </string_columnh>
+      <label_column name="saves_as_label" insertbefore="specialAttacks_label">
+        <static textres="npc_label_saves_as" />
+      </label_column>
+      <string_columnh name="saves_as" insertbefore="specialAttacks_label">
+        <script>
+          function onValueChanged()
+            window.onSummaryChanged();
+          end
+        </script>
+      </string_columnh>
+    </sheetdata>
+  </windowclass>
+</root>

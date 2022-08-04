@@ -2,7 +2,7 @@
 <root version="3.0">
   <properties>
     <name>AD&amp;D Options and House Rules</name>
-    <version>1.1</version>
+    <version>1.2</version>
     <author>Doomsword</author>
     <description>
       <text>AD&amp;D Options and House Rules</text>
@@ -19,8 +19,10 @@
   <base>
     <includefile source="campaign/record_char_combat.xml" />
     <includefile source="campaign/record_char_main.xml" />
+    <includefile source="campaign/record_npc.xml" />
     <includefile source="campaign/template_char_adnd.xml" />
     <includefile source="campaign/template_cta.xml" />
+    <includefile source="campaign/template_npc.xml" />
     <includefile source="cta/cta_host.xml" />
     <includefile source="graphics/graphics_frames_adnd.xml" />
 		<includefile source="graphics/graphics_icons.xml" />
@@ -30,6 +32,8 @@
     <script name="AdndOpHrManager" file="scripts/manager_adnd_op_hr.lua" />
     <script name="CombatManagerAdndOpHr" file="scripts/manager_combat_adnd_op_hr.lua" />
     <script name="DataCommonADND1e" file="scripts/data_common_adnd1e.lua" />
+    <script name="AttackSaveMatricesAdndOpHr" file="scripts/manager_attack_save_matrices.lua" />
+    <!-- <script name="NpcClickChooser" file="campaign/scripts/npc_click_chooser.lua" /> -->
 
     <includefile source="strings/strings_adnd_op_hr.xml" />
   </base>

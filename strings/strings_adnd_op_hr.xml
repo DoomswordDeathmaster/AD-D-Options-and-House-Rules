@@ -27,5 +27,9 @@
   <string name="option_val_npc">NPC</string>
   <string name="option_val_neither">Neither</string>
   <string name="option_val_both">Both</string>
+
+  <!-- NPC sheet -->
+  <string name="npc_label_fights_as">Fights As</string>
+  <string name="npc_label_saves_as">Saves As</string>
 </root>
     

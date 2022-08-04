@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root>
+    <template name="chooser_label">
+    <label name="chooser">
+      <static textres="char_label_click_to_choose" />
+      <font>list-empty</font>
+      <script file="campaign/scripts/char_click_chooser.lua" />
+    </label>
+  </template>
+</root>

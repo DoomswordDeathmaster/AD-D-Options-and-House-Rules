@@ -15,6 +15,17 @@ aWarriorSaves = {};
 -- required for npcs, hit matrix when used
 aMatrix = {};
 
+-- class hit matrices
+aAssassinToHitMatrix = {};
+aClericToHitMatrix = {};
+aDruidToHitMatrix = {};
+aFighterToHitMatrix = {};
+aIllusionistToHitMatrix = {};
+aMagicUserToHitMatrix = {};
+aPaladinToHitMatrix = {};
+aRangerToHitMatrix = {};
+aThiefToHitMatrix = {};
+
 function onInit()
   bOptAdd1eProperties = (OptionsManager.getOption("add1eProperties") == 'on');
 
@@ -251,6 +262,11 @@ function onInit()
 
     -- make sure the ruleset uses the same
     DataCommonADND.aWarriorSaves=aWarriorSaves; 
+    
+    aAssassinToHitMatrix[1] = {11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24,25,26};
+    aAssassinToHitMatrix[5] = {9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24};
+    aAssassinToHitMatrix[9] = {};
+    aAssassinToHitMatrix[13] = {};
     
     -- matrix style hit table for monsters
     -- AC 10 .. -10  
