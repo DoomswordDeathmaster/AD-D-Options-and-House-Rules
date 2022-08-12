@@ -26,6 +26,10 @@ aPaladinToHitMatrix = {};
 aRangerToHitMatrix = {};
 aThiefToHitMatrix = {};
 
+-- class saves
+aAssassinSaves = {};
+aClericSaves = {};
+
 function onInit()
   bOptAdd1eProperties = (OptionsManager.getOption("add1eProperties") == 'on');
 
@@ -259,14 +263,72 @@ function onInit()
     aWarriorSaves[19] = {3,5,4,4,6};
     aWarriorSaves[20] = {3,5,4,4,6};
     aWarriorSaves[21] = {3,5,4,4,6};
-
     -- make sure the ruleset uses the same
-    DataCommonADND.aWarriorSaves=aWarriorSaves; 
+    DataCommonADND.aWarriorSaves=aWarriorSaves;
     
+    aAssassinSaves[1]  = {14,16,13,12,15};
+    aAssassinSaves[2]  = {14,16,13,12,15};
+    aAssassinSaves[3]  = {14,16,13,12,15};
+    aAssassinSaves[4]  = {14,16,13,12,15};
+    aAssassinSaves[5]  = {12,15,12,11,13};
+    aAssassinSaves[6]  = {12,15,12,11,13};
+    aAssassinSaves[7]  = {12,15,12,11,13};
+    aAssassinSaves[8]  = {12,15,12,11,13};
+    aAssassinSaves[9]  = {10,14,11,10,11};
+    aAssassinSaves[10] = {10,14,11,10,11};
+    aAssassinSaves[11] = {10,14,11,10,11};
+    aAssassinSaves[12] = {10,14,11,10,11};
+    aAssassinSaves[13] = {8,13,10,9,9};
+    aAssassinSaves[14] = {8,13,10,9,9};
+    aAssassinSaves[15] = {8,13,10,9,9};
+    DataCommonADND.aAssassinSaves = aAssassinSaves;
+
     aAssassinToHitMatrix[1] = {11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24,25,26};
+    aAssassinToHitMatrix[2] = {11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24,25,26};
+    aAssassinToHitMatrix[3] = {11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24,25,26};
+    aAssassinToHitMatrix[4] = {11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24,25,26};
     aAssassinToHitMatrix[5] = {9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24};
-    aAssassinToHitMatrix[9] = {};
-    aAssassinToHitMatrix[13] = {};
+    aAssassinToHitMatrix[6] = {9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24};
+    aAssassinToHitMatrix[7] = {9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24};
+    aAssassinToHitMatrix[8] = {9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24};
+    aAssassinToHitMatrix[9] = {6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21};
+    aAssassinToHitMatrix[10] = {6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21};
+    aAssassinToHitMatrix[11] = {6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21};
+    aAssassinToHitMatrix[12] = {6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21};
+    aAssassinToHitMatrix[13] = {4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20};
+    aAssassinToHitMatrix[14] = {4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20};
+    aAssassinToHitMatrix[15] = {4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20};
+    DataCommonADND.aAssassinToHitMatrix = aAssassinToHitMatrix;
+
+    aClericToHitMatrix[1] = {10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24,25};
+    aClericToHitMatrix[2] = {10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24,25};
+    aClericToHitMatrix[3] = {10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23,24,25};
+    aClericToHitMatrix[4] = {8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23};
+    aClericToHitMatrix[5] = {8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23};
+    aClericToHitMatrix[6] = {8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21,22,23};
+    aClericToHitMatrix[7] = {6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21};
+    aClericToHitMatrix[8] = {6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21};
+    aClericToHitMatrix[9] = {6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20,20,21};
+    aClericToHitMatrix[10] = {4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20};
+    aClericToHitMatrix[11] = {4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20};
+    aClericToHitMatrix[12] = {4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20,20,20};
+    aClericToHitMatrix[13] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20};
+    aClericToHitMatrix[14] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20};
+    aClericToHitMatrix[15] = {2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,20,20};
+    aClericToHitMatrix[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+    aClericToHitMatrix[17] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+    aClericToHitMatrix[18] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+    aClericToHitMatrix[19] = {-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+    DataCommonADND.aClericToHitMatrix = aClericToHitMatrix;
+
+    DataCommonADND.aDruidToHitMatrix = {};
+    DataCommonADND.aFighterToHitMatrix = {};
+    DataCommonADND.aIllusionistToHitMatrix = {};
+    DataCommonADND.aMagicUserToHitMatrix = {};
+    DataCommonADND.aPaladinToHitMatrix = {};
+    DataCommonADND.aRangerToHitMatrix = {};
+    DataCommonADND.aThiefToHitMatrix = {};
+
     
     -- matrix style hit table for monsters
     -- AC 10 .. -10  

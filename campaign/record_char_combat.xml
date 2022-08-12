@@ -18,5 +18,54 @@
 		  </button_charinitdelay>
 		</sheetdata>
 	</windowclass>
+
+	<!-- for thaco matrix attacks 10..-10 ac with d20 value matching -->
+	<windowclass name="combat_mini_thaco_matrix" merge="join">
+		<script file="campaign/scripts/char_matrix_thaco.lua" />
+		<sheetdata>
+		<anchor_left name="leftanchor" />
+		<label name="thaco_attack_matrix_title_label">
+		<font>bold11</font>
+			<anchored >
+			<top parent="leftanchor" anchor="bottom" relation="relative" offset="1" />
+			<left offset="150" />
+			<right />
+			</anchored>
+			<static textres="thaco_attack_matrix_title" />
+		</label>
+		<line_column name="divider1">       
+			<anchored >
+			<top parent="leftanchor" anchor="bottom" relation="relative" offset="-3" />
+			<left />
+			<right />
+			</anchored>
+			<center />
+		</line_column>
+		<label name="matrix_ac_label">
+		<font>bold11</font>
+			<anchored width="20" height="15" >
+			<top parent="leftanchor" anchor="bottom" relation="relative" offset="1"/>
+			<left offset="5" />
+			</anchored>
+			<static textres="thaco_attack_matrix_ac" />
+		</label>
+		<label name="matrix_roll_label">
+		<font>bold11</font>
+			<anchored width="20" height="15" >
+			<top parent="leftanchor" anchor="bottom" relation="relative" offset="1" />
+			<left offset="5" />
+			</anchored>
+			<static textres="class_advancement_details_matrix_roll" />
+		</label>
+		<line_column name="divider2">       
+			<anchored >
+			<top parent="leftanchor" anchor="bottom" relation="relative" offset="1" />
+			<left />
+			<right />
+			</anchored>
+			<center />
+		</line_column>
+		</sheetdata>
+	</windowclass>
 </root>
     

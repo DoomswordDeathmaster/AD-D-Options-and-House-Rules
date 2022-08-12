@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root>
+  <!-- for matrix attacks 10..-10 ac with d20 value matching -->
+  <windowclass name="class_advancement_editor_matrix_1e" merge="join">
+    <script file="campaign/scripts/char_matrix.lua" />
+    <sheetdata>
+      <anchor_column name="columnanchor" />
+      <anchor_left name="leftanchor" />
+      
+      <header_column name="header_adv_matrix">
+        <static textres="class_advancement_header_matrix"/>
+        <center />
+      </header_column>
+      <label name="matrix_ac_label">
+        <anchored >
+          <top parent="columnanchor" anchor="bottom" relation="relative" offset="5" />
+          <left />
+          <right />
+        </anchored>
+        <static textres="class_advancement_details_matrix_ac" />
+        <center />
+      </label>
+      <label name="matrix_roll_label">
+        <anchored width="35" height="20" >
+          <top parent="columnanchor" anchor="bottom" relation="relative" offset="12" />
+          <left offset="5" />
+        </anchored>
+        <static textres="class_advancement_details_matrix_roll" />
+      </label>
+      
+    </sheetdata>
+  </windowclass>  
+  <!-- for matrix attacks 10..-10 ac with d20 value matching -->
+  <windowclass name="char_matrix_edit_1e" merge="join">
+    <script file="campaign/scripts/char_matrix.lua" />
+    <sheetdata>
+      <anchor_column name="columnanchor" />
+      <anchor_left name="leftanchor" />
+      
+      <label name="matrix_title_label">
+        <font>bold11</font>
+        <anchored >
+          <top parent="columnanchor" anchor="bottom" relation="relative" offset="1" />
+          <left />
+          <right />
+        </anchored>
+        <static textres="class_advancement_header_matrix" />
+        <center />
+      </label>
+
+      <label name="matrix_ac_label">
+        <font>bold11</font>
+        <anchored width="20" height="15" >
+          <top parent="leftanchor" anchor="bottom" relation="relative" offset="8"/>
+          <left offset="5" />
+        </anchored>
+        <static textres="thaco_attack_matrix_ac" />
+      </label>
+      <label name="matrix_roll_label">
+        <font>bold11</font>
+        <anchored width="25" height="20" >
+          <top parent="leftanchor" anchor="bottom" relation="relative" offset="1" />
+          <left offset="5" />
+        </anchored>
+        <static textres="class_advancement_details_matrix_roll" />
+      </label>
+      
+    </sheetdata>
+  </windowclass>  
+</root>

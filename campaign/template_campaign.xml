@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+    <template name="number_column_npc_remainder">
+        <basicnumber>
+        <anchored position="righthigh" offset="10,0" height="20">
+            <right parent="" offset="-5" />
+        </anchored>
+        </basicnumber>
+    </template>
+</root>

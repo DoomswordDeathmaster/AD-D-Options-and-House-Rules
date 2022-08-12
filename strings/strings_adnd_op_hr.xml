@@ -29,7 +29,10 @@
   <string name="option_val_both">Both</string>
 
   <!-- NPC sheet -->
+  <string name="npc_label_click_to_choose">Click to select...</string>
   <string name="npc_label_fights_as">Fights As</string>
+  <string name="npc_label_fights_as_hd_level">Level or HD</string>
   <string name="npc_label_saves_as">Saves As</string>
+  <string name="npc_label_saves_as_hd_level">Level or HD</string>
 </root>
     

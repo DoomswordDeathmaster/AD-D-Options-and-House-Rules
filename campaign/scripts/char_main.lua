@@ -1,4 +1,5 @@
 function onInit()
+    -- TODO: test super.oninit here
     local nodeChar = getDatabaseNode();
     DB.addHandler("options.HouseRule_ASCENDING_AC", "onUpdate", updateAscendingValues);
   

@@ -19,10 +19,13 @@
   <base>
     <includefile source="campaign/record_char_combat.xml" />
     <includefile source="campaign/record_char_main.xml" />
+    <includefile source="campaign/record_class.xml" />
     <includefile source="campaign/record_npc.xml" />
+    <!-- <includefile source="campaign/template_campaign_adnd.xml" /> -->
     <includefile source="campaign/template_char_adnd.xml" />
     <includefile source="campaign/template_cta.xml" />
     <includefile source="campaign/template_npc.xml" />
+    <includefile source="campaign/template_campaign.xml" />
     <includefile source="cta/cta_host.xml" />
     <includefile source="graphics/graphics_frames_adnd.xml" />
 		<includefile source="graphics/graphics_icons.xml" />
@@ -31,9 +34,12 @@
     <script name="ActionSurpriseAdndOpHr" file="scripts/manager_action_surprise_adnd_op_hr.lua" />
     <script name="AdndOpHrManager" file="scripts/manager_adnd_op_hr.lua" />
     <script name="CombatManagerAdndOpHr" file="scripts/manager_combat_adnd_op_hr.lua" />
+    <script name="FightsSavesAsManager" file="scripts/manager_fights_saves_as.lua" />
+    <script name="AttackMatrixManager" file="scripts/manager_attack_matrix.lua" />
+      <!-- AD&D, this needs to be above manager_version2 or the updates wont work properly  -->
+    <script name="DataCommonADND" file="scripts/data_common_adnd.lua" />
     <script name="DataCommonADND1e" file="scripts/data_common_adnd1e.lua" />
-    <script name="AttackSaveMatricesAdndOpHr" file="scripts/manager_attack_save_matrices.lua" />
-    <!-- <script name="NpcClickChooser" file="campaign/scripts/npc_click_chooser.lua" /> -->
+    <script name="NpcClickChooser" file="campaign/scripts/npc_click_chooser.lua" />
 
     <includefile source="strings/strings_adnd_op_hr.xml" />
   </base>
