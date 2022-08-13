@@ -21,6 +21,9 @@ function onInit()
     CombatManagerADND.rollRandomInit = rollRandomInitNew;
     CombatManager2.rollRandomInit = rollRandomInitNew;
 
+    getACHitFromMatrixForNPCOrig = CombatManagerADND.getACHitFromMatrixForNPC;
+    CombatManagerADND.getACHitFromMatrixForNPC = getACHitFromMatrixForNPCNew;
+
     CombatManagerADND.handleInitiativeChange = handleInitiativeChange;
     OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_CHANGEINIT, handleInitiativeChange);
 
@@ -374,4 +377,155 @@ function resetCombatantInit(nodeCT)
     CharlistManagerADND.turnOffAllInitRolled();
     -- toggle all "initrun" values to not run
     CharlistManagerADND.turnOffAllInitRun();
+end
+
+-- return the Best ac hit from a roll for this NPC
+function getACHitFromMatrixForNPCNew(nodeCT,nRoll)
+    Debug.console(nodeCT, sHitDice, aMatrixRolls);
+
+    local sClass, nodePath = DB.getValue(nodeCT,"sourcelink");
+    local nodeNPC = DB.findNode(nodePath);
+    Debug.console("394", sClass, nodeNPC);
+    Debug.console("395", rActor, nodeNPC, sHitDice, aMatrixRolls);
+
+    
+    local nACHit = 20;
+    local sHitDice = CombatManagerADND.getNPCHitDice(nodeCT);
+    local aMatrixRolls = {}
+
+    -- default value is 1e.
+    local nLowAC = -10;
+    local nHighAC = 10;
+    local nTotalACs = 11;
+    
+    if (DataCommonADND.coreVersion == "becmi") then
+        nLowAC = -20;
+        nHighAC = 19;
+        nTotalACs = 20;
+    end
+
+    fightsAsClass = DB.getValue(nodeNPC, "fights_as");
+      fightsAsClass = string.gsub(fightsAsClass, "%s+", "");
+      fightsAsHdLevel = DB.getValue(nodeNPC, "fights_as_hd_level");
+
+      if (fightsAsHdLevel == 0) then
+        fightsAsHdLevel = tonumber(sHitDice);
+      end
+
+      Debug.console("fightsAsClass", fightsAsClass);
+      Debug.console("fightsAsHdLevel", fightsAsHdLevel);
+
+      if (fightsAsClass ~= "") then
+        if (fightsAsClass == "Assassin") then
+
+            if (fightsAsHdLevel >= 13) then
+                fightsAsHdLevel = 13;
+            end
+
+            aMatrixRolls = DataCommonADND.aAssassinToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Cleric") then
+
+            if (fightsAsHdLevel >= 19) then
+                fightsAsHdLevel = 19;
+            end
+
+            aMatrixRolls = DataCommonADND.aClericToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Druid") then
+
+            if (fightsAsHdLevel >= 13) then
+                fightsAsHdLevel = 13;
+            end
+
+            aMatrixRolls = DataCommonADND.aDruidToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Fighter") then
+
+            if (fightsAsHdLevel >= 20) then
+                fightsAsHdLevel = 20;
+            end
+
+            aMatrixRolls = DataCommonADND.aFighterToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Illusionist") then
+
+            if (fightsAsHdLevel >= 21) then
+                fightsAsHdLevel = 21;
+            end
+
+            aMatrixRolls = DataCommonADND.aIllusionistToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "MagicUser") then
+
+            if (fightsAsHdLevel >= 21) then
+                fightsAsHdLevel = 21;
+            end
+
+            aMatrixRolls = DataCommonADND.aMagicUserToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Paladin") then
+
+            if (fightsAsHdLevel >= 20) then
+                fightsAsHdLevel = 20;
+            end
+
+            aMatrixRolls = DataCommonADND.aPaladinToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Ranger") then
+
+            if (fightsAsHdLevel >= 20) then
+                fightsAsHdLevel = 20;
+            end
+
+            aMatrixRolls = DataCommonADND.aRangerToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Thief") then
+
+            if (fightsAsHdLevel >= 21) then
+                fightsAsHdLevel = 21;
+            end
+
+            aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel];
+        end
+    else
+        if (fightsAsHdLevel >= 16) then
+            fightsAsHdLevel = 16;
+        end
+
+        aMatrixRolls = DataCommonADND.aMatrix[tostring(fightsAsHdLevel)];
+    end
+
+    Debug.console("manager_combat_adnd_op_hr","getACHitFromMatrixForNPCNew","aMatrixRolls",aMatrixRolls);
+    local nACBase = 11;
+      
+    if (DataCommonADND.coreVersion == "becmi") then 
+        nACBase = 20;
+    end
+      
+    for i=#aMatrixRolls,1,-1 do
+        local sCurrentTHAC = "thac" .. i;
+        local nAC = nACBase - i;
+        local nCurrentTHAC = aMatrixRolls[i];
+
+        -- get value from db, in case it's been explicitly set
+        local nTHACDb = DB.getValue(nodeNPC, "thac" .. i);
+        Debug.console("char_matrix_thaco:151", "nTHACDb", nTHACDb);
+
+        -- get value from aMatrixRolls
+        local nTHACM = aMatrixRolls[math.abs(i - nTotalACs)];
+        Debug.console("char_matrix_thaco:155", "nTHACM", nTHACM);
+
+        if (fightsAsClass ~= "" or (fightsAsHdLevel ~= 0 and fightsAsHdLevel ~= tonumber(sHitDice))) then
+            Debug.console("119", fightsAsClass, fightsAsHdLevel, tonumber(sHitDice));
+            sCurrentTHAC = nTHACM;
+            Debug.console("char_matrix_thaco:173", "nTHAC", nTHAC);
+        elseif (nTHACDb ~= nil and nTHACDb ~= nTHACM) then
+            sCurrentTHAC = nTHACDb;
+            Debug.console("char_matrix_thaco:176", "nTHAC", nTHAC);
+        else
+            sCurrentTHAC = nTHACM;
+            Debug.console("char_matrix_thaco:179", "nTHAC", nTHAC);
+        end
+
+        if nRoll >= nCurrentTHAC then
+          -- find first AC that matches our roll
+          nACHit = nAC;
+          break;
+        end
+    end
+
+    return nACHit;
 end

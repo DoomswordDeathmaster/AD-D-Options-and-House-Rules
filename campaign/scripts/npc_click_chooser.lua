@@ -46,20 +46,6 @@ function onClose()
   end
 end
 
--- update check for a control style
--- function update()
---   if sControl then
---     if window and sControl and window[sControl] then
---       local sControlValue = window[sControl].getValue() or "";
---       if sControlValue == "" then
---         setVisible(true);
---       else
---         setVisible(false);
---       end
---     end
---   end
--- end
-
 -- update check for a database node style
 function updateForNode()
   local node = DB.findNode(sRecord);

@@ -61,20 +61,21 @@ function createAttackMatrix()
     -- assign the proper hit dice and class or monster matrix
     if bUseMatrix and not bisPC and not bClassRecord then
         fightsAsClass = DB.getValue(node, "fights_as");
+        fightsAsClass = fightsAsClass:gsub("%s+", "");
         fightsAsHdLevel = DB.getValue(node, "fights_as_hd_level");
-
-        Debug.console("fightsAsClass", fightsAsClass);
-        Debug.console("fightsAsHdLevel", fightsAsHdLevel);
 
         if (fightsAsHdLevel == 0) then
             fightsAsHdLevel = tonumber(sHitDice);
         end
 
+        Debug.console("fightsAsClass", fightsAsClass);
+        Debug.console("fightsAsHdLevel", fightsAsHdLevel);
+
         if (fightsAsClass ~= "") then
             if (fightsAsClass == "Assassin") then
 
-                if (fightsAsHdLevel >= 15) then
-                    fightsAsHdLevel = 15;
+                if (fightsAsHdLevel >= 13) then
+                    fightsAsHdLevel = 13;
                 end
 
                 aMatrixRolls = DataCommonADND.aAssassinToHitMatrix[fightsAsHdLevel];
@@ -84,7 +85,56 @@ function createAttackMatrix()
                     fightsAsHdLevel = 19;
                 end
 
-                aMatrixRolls = DataCommonADND.aClericToHitMatrix[fightsAsHdLevel]
+                aMatrixRolls = DataCommonADND.aClericToHitMatrix[fightsAsHdLevel];
+            elseif (fightsAsClass == "Druid") then
+
+                if (fightsAsHdLevel >= 13) then
+                    fightsAsHdLevel = 13;
+                end
+
+                aMatrixRolls = DataCommonADND.aDruidToHitMatrix[fightsAsHdLevel];
+            elseif (fightsAsClass == "Fighter") then
+
+                    if (fightsAsHdLevel >= 20) then
+                        fightsAsHdLevel = 20;
+                    end
+
+                    aMatrixRolls = DataCommonADND.aFighterToHitMatrix[fightsAsHdLevel];
+            elseif (fightsAsClass == "Illusionist") then
+
+                if (fightsAsHdLevel >= 21) then
+                    fightsAsHdLevel = 21;
+                end
+
+                aMatrixRolls = DataCommonADND.aIllusionistToHitMatrix[fightsAsHdLevel];
+            elseif (fightsAsClass == "MagicUser") then
+
+                if (fightsAsHdLevel >= 21) then
+                    fightsAsHdLevel = 21;
+                end
+
+                aMatrixRolls = DataCommonADND.aMagicUserToHitMatrix[fightsAsHdLevel];
+            elseif (fightsAsClass == "Paladin") then
+
+                if (fightsAsHdLevel >= 20) then
+                    fightsAsHdLevel = 20;
+                end
+
+                aMatrixRolls = DataCommonADND.aPaladinToHitMatrix[fightsAsHdLevel];
+            elseif (fightsAsClass == "Ranger") then
+
+                if (fightsAsHdLevel >= 20) then
+                    fightsAsHdLevel = 20;
+                end
+
+                aMatrixRolls = DataCommonADND.aRangerToHitMatrix[fightsAsHdLevel];
+            elseif (fightsAsClass == "Thief") then
+
+                if (fightsAsHdLevel >= 21) then
+                    fightsAsHdLevel = 21;
+                end
+
+                aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel];
             end
         else
             if (fightsAsHdLevel >= 16) then
@@ -98,38 +148,6 @@ function createAttackMatrix()
     local sACLabelName = "matrix_ac_label";
     local sRollLabelName = "matrix_roll_label";
     local matrixControlReadOnly = "false";
-
---   local fightsAsClass = "";
-
---   -- 1e matrix
---   local bUseMatrix = (DataCommonADND.coreVersion == "1e");
---   local bisPC = (ActorManager.isPC(node)); 
---   local aMatrixRolls = {};
-  
---   --Debug.console("char_matrix.lua:39", bClassRecord, bUseMatrix, bisPC);
-  
---   -- if it's a 1e npc, use either the class-based matrix or the default hd-based matrix
---   if not bClassRecord and bUseMatrix and not bisPC then
---     local sHitDice = CombatManagerADND.getNPCHitDice(node);
-
---     fightsAsClass = DB.getValue(node, "fights_as");
-
---     --Debug.console("char_matrix.lua:47", "fightsAsClass", fightsAsClass);
-    
---     -- check if fights_as is set and use the values from the class matrix
---     if (fightsAsClass ~= "") then
---         -- TODO factor in hit dice and finish matrices
---         if (fightsAsClass == "Assassin") then
---             aMatrixRolls = DataCommonADND.aAssassinToHitMatrix[1];
---             --Debug.console("charmatrix.lua:54", "set class-based matrix");
---             --Debug.console("char_matrix.lua:54","createAttackMatrix","isAssassin","aMatrixRolls",aMatrixRolls);
---         end
---     -- use the default hd-based matrix
---     else
---         --Debug.console("charmatrix.lua:58", "set hd-based matrix");
---         aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
---     end
---   end
   
     -- loop through possible ac values and assign a to-hit value
     for i=nLowAC, nHighAC, 1 do
@@ -170,31 +188,6 @@ function createAttackMatrix()
                 end
             end
         end
-        --Debug.console("char_matrix.lua:68", nTHAC);
-
-        -- get value from db, in case it's been explicitly set
-        --local nTHACDb = DB.getValue(node, "thac" .. i, 20);
-        --Debug.console("char_matrix.lua:71", "nTHACDb", nTHACDb);
-
-        -- if bUseMatrix then
-        --     -- get value from aMatrixRolls
-        --     local nTHACM = aMatrixRolls[math.abs(i - nTotalACs)];
-        --     --Debug.console("char_matrix.lua:75", "nTHACM", nTHACM);
-
-        --     Debug.console("79", nTHAC, nTHACDb, nTHACM);
-
-        --     -- compare and take class-based value if fights_as has been set, otherwise take db value (if set) or default hd-based matrix value
-        --     if (fightsAsClass ~= "") then
-        --         nTHAC = nTHACM;
-        --         --Debug.console("char_matrix.lua:80", "nTHAC", nTHAC);
-        --     elseif (nTHACDb ~= nTHACM) then
-        --         nTHAC = nTHACDb;
-        --         Debug.console("char_matrix.lua:86", "nTHAC", nTHAC);
-        --     else
-        --         nTHAC = nTHACM;
-        --         --Debug.console("char_matrix.lua:86", "nTHAC", nTHAC);
-        --     end
-        -- end
 
         local sMatrixACName = "matrix_ac_" .. i;
         local sMatrixACValue = i;
@@ -212,10 +205,6 @@ function createAttackMatrix()
         end
 
         cntNum.setValue(nTHAC);
-
-        -- if not bClassRecord and bUseMatrix and not bisPC then
-        --     cntNum.setReadOnly(false);
-        -- end
 
         local cntAC = createControl("label_fieldtop_matrix", sMatrixACName);
         

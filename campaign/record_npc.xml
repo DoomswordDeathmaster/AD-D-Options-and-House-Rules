@@ -8,35 +8,6 @@
 <root>
   <windowclass name="npc_combat" merge="join">
     <script file="campaign/scripts/npc_fights_saves_as.lua" />
-    <!-- <script>
-      function update()   
-        super.update();
-      end
-      function update()   
-        super.update();
-        local nodeRecord = getDatabaseNode();
-        local bReadOnly = WindowManager.getReadOnlyState(nodeRecord);
-
-        updateControl("fights_as", bReadOnly);
-        fights_as.setReadOnly(bReadOnly);
-        updateControl("saves_as", bReadOnly);
-        saves_as.setReadOnly(bReadOnly);
-      end
-
-      function onInit()
-        super.onInit();
-        local nodeRecord = getDatabaseNode();
-        local bReadOnly = WindowManager.getReadOnlyState(nodeRecord);
-
-        updateControl("fights_as", bReadOnly);
-        fights_as.setReadOnly(bReadOnly);
-        updateControl("saves_as", bReadOnly);
-        saves_as.setReadOnly(bReadOnly);
-      end
-      function onInit()
-        super.onInit();
-      end
-    </script> -->
     <sheetdata>
       <label_column name="fights_as_label" insertbefore="thaco_label">
           <static textres="npc_label_fights_as" />

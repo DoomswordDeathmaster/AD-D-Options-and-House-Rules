@@ -11,8 +11,6 @@ function onInit()
     --Debug.console("char_matrix_thaco.lua","onInit","bUseMatrix1",bUseMatrix);    
   
     if bUseMatrix then
-        --DB.addHandler(DB.getPath(node, "combat.matrix.*"), "onUpdate", update);
-        -- TODO: add handlers for all thacs
         -- default value is 1e.
         local nLowAC = -10;
         local nHighAC = 10;
@@ -89,7 +87,12 @@ function createTHACOMatrix()
   local nTHACO = DB.getValue(node, "combat.thaco.score", 20);
   local fightsAsClass = "";
   local fightsAsHdLevel = 0;
-  
+  local sACLabelName = "matrix_ac_label";
+  local sRollLabelName = "matrix_roll_label";
+  local sHightlightColor = "a5a7aa";
+  local sRedColor = "ddaf90";
+  local bHighlight = true;
+
   --Debug.console("char_matrix_thaco.lua: 47", "createTHACOMatrix", "node", node);
   
   if (not bisPC) then
@@ -101,51 +104,94 @@ function createTHACOMatrix()
 
   -- assign the proper hit dice and class or monster matrix
   if bUseMatrix and not bisPC then
-    fightsAsClass = DB.getValue(node, "fights_as");
-    fightsAsHdLevel = DB.getValue(node, "fights_as_hd_level");
+      fightsAsClass = DB.getValue(node, "fights_as");
+      fightsAsClass = fightsAsClass:gsub("%s+", "");
+      fightsAsHdLevel = DB.getValue(node, "fights_as_hd_level");
 
-    if (fightsAsHdLevel == 0) then
-      fightsAsHdLevel = tonumber(sHitDice);
-    end
+      if (fightsAsHdLevel == 0) then
+        fightsAsHdLevel = tonumber(sHitDice);
+      end
 
-    Debug.console("fightsAsClass", fightsAsClass);
-    Debug.console("fightsAsHdLevel", fightsAsHdLevel);
+      Debug.console("fightsAsClass", fightsAsClass);
+      Debug.console("fightsAsHdLevel", fightsAsHdLevel);
 
-    if (fightsAsClass ~= "") then
-        if (fightsAsClass == "Assassin") then
+      if (fightsAsClass ~= "") then
+          if (fightsAsClass == "Assassin") then
 
-            if (fightsAsHdLevel >= 15) then
-                fightsAsHdLevel = 15;
-            end
+              if (fightsAsHdLevel >= 13) then
+                  fightsAsHdLevel = 13;
+              end
 
-            aMatrixRolls = DataCommonADND.aAssassinToHitMatrix[fightsAsHdLevel];
-        elseif (fightsAsClass == "Cleric") then
+              aMatrixRolls = DataCommonADND.aAssassinToHitMatrix[fightsAsHdLevel];
+          elseif (fightsAsClass == "Cleric") then
 
-            if (fightsAsHdLevel >= 15) then
-                fightsAsHdLevel = 15;
-            end
+              if (fightsAsHdLevel >= 19) then
+                  fightsAsHdLevel = 19;
+              end
 
-            aMatrixRolls = DataCommonADND.aClericToHitMatrix[fightsAsHdLevel];
-        end
-    else
+              aMatrixRolls = DataCommonADND.aClericToHitMatrix[fightsAsHdLevel];
+          elseif (fightsAsClass == "Druid") then
+
+              if (fightsAsHdLevel >= 13) then
+                  fightsAsHdLevel = 13;
+              end
+
+              aMatrixRolls = DataCommonADND.aDruidToHitMatrix[fightsAsHdLevel];
+          elseif (fightsAsClass == "Fighter") then
+
+                if (fightsAsHdLevel >= 20) then
+                    fightsAsHdLevel = 20;
+                end
+
+                aMatrixRolls = DataCommonADND.aFighterToHitMatrix[fightsAsHdLevel];
+          elseif (fightsAsClass == "Illusionist") then
+
+              if (fightsAsHdLevel >= 21) then
+                  fightsAsHdLevel = 21;
+              end
+
+              aMatrixRolls = DataCommonADND.aIllusionistToHitMatrix[fightsAsHdLevel];
+          elseif (fightsAsClass == "MagicUser") then
+
+              if (fightsAsHdLevel >= 21) then
+                  fightsAsHdLevel = 21;
+              end
+
+              aMatrixRolls = DataCommonADND.aMagicUserToHitMatrix[fightsAsHdLevel];
+          elseif (fightsAsClass == "Paladin") then
+
+              if (fightsAsHdLevel >= 20) then
+                  fightsAsHdLevel = 20;
+              end
+
+              aMatrixRolls = DataCommonADND.aPaladinToHitMatrix[fightsAsHdLevel];
+          elseif (fightsAsClass == "Ranger") then
+
+              if (fightsAsHdLevel >= 20) then
+                  fightsAsHdLevel = 20;
+              end
+
+              aMatrixRolls = DataCommonADND.aRangerToHitMatrix[fightsAsHdLevel];
+          elseif (fightsAsClass == "Thief") then
+
+              if (fightsAsHdLevel >= 21) then
+                  fightsAsHdLevel = 21;
+              end
+
+              aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel];
+          end
+      else
           if (fightsAsHdLevel >= 16) then
               fightsAsHdLevel = 16;
           end
 
           aMatrixRolls = DataCommonADND.aMatrix[tostring(fightsAsHdLevel)];
-    end
+      end
   end
-  
-  local sACLabelName = "matrix_ac_label";
-  local sRollLabelName = "matrix_roll_label";
-  local sHightlightColor = "a5a7aa";
-  local sRedColor = "ddaf90";
-  local bHighlight = true;
 
   -- assign matrix values
   for i=nLowAC, nHighAC, 1 do
     local nTHAC = nTHACO - i; -- to hit AC value. Current THACO for this Armor Class. so 20 - 10 for AC 10 would be 30.
-
     
     Debug.console("char_matrix_thaco:138", "node", node);
     -- db values only for PCs, calculated values for NPCs
@@ -214,8 +260,6 @@ function createTHACOMatrix()
     cntAC.setAnchor("left", sMatrixNumberName,"left","absolute",0);
     
     bHighlight = not bHighlight;
-
-    --Debug.console(DB.getChildren(node, "thac-10"));
   end
 end
 
