@@ -19,34 +19,80 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
     end
 
     fightsAsClass = DB.getValue(nodeNPC, "fights_as");
+    fightsAsClass = fightsAsClass:gsub("%s+", "");
     fightsAsHdLevel = DB.getValue(nodeNPC, "fights_as_hd_level");
+
+    if (fightsAsHdLevel == 0) then
+    fightsAsHdLevel = tonumber(sHitDice);
+    end
 
     Debug.console("fightsAsClass", fightsAsClass);
     Debug.console("fightsAsHdLevel", fightsAsHdLevel);
 
-    if (fightsAsHdLevel == 0) then
-        fightsAsHdLevel = tonumber(sHitDice);
-    end
-
-    Debug.console("31", "fightsAsHdLevel", fightsAsHdLevel);
-
     if (fightsAsClass ~= "") then
         if (fightsAsClass == "Assassin") then
-            
-            if (fightsAsHdLevel >= 15) then
-                fightsAsHdLevel = 15;
+
+            if (fightsAsHdLevel >= 13) then
+                fightsAsHdLevel = 13;
             end
 
             aMatrixRolls = DataCommonADND.aAssassinToHitMatrix[fightsAsHdLevel];
-            
-            Debug.console("36", "Assassin");
         elseif (fightsAsClass == "Cleric") then
-            
+
             if (fightsAsHdLevel >= 19) then
                 fightsAsHdLevel = 19;
             end
-            
-            aMatrixRolls = DataCommonADND.aClericToHitMatrix[fightsAsHdLevel]
+
+            aMatrixRolls = DataCommonADND.aClericToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Druid") then
+
+            if (fightsAsHdLevel >= 13) then
+                fightsAsHdLevel = 13;
+            end
+
+            aMatrixRolls = DataCommonADND.aDruidToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Fighter") then
+
+            if (fightsAsHdLevel >= 20) then
+                fightsAsHdLevel = 20;
+            end
+
+            aMatrixRolls = DataCommonADND.aFighterToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Illusionist") then
+
+            if (fightsAsHdLevel >= 21) then
+                fightsAsHdLevel = 21;
+            end
+
+            aMatrixRolls = DataCommonADND.aIllusionistToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "MagicUser") then
+
+            if (fightsAsHdLevel >= 21) then
+                fightsAsHdLevel = 21;
+            end
+
+            aMatrixRolls = DataCommonADND.aMagicUserToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Paladin") then
+
+            if (fightsAsHdLevel >= 20) then
+                fightsAsHdLevel = 20;
+            end
+
+            aMatrixRolls = DataCommonADND.aPaladinToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Ranger") then
+
+            if (fightsAsHdLevel >= 20) then
+                fightsAsHdLevel = 20;
+            end
+
+            aMatrixRolls = DataCommonADND.aRangerToHitMatrix[fightsAsHdLevel];
+        elseif (fightsAsClass == "Thief") then
+
+            if (fightsAsHdLevel >= 21) then
+                fightsAsHdLevel = 21;
+            end
+
+            aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel];
         end
     else
         if (fightsAsHdLevel >= 16) then
@@ -54,8 +100,6 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
         end
 
         aMatrixRolls = DataCommonADND.aMatrix[tostring(fightsAsHdLevel)];
-        Debug.console("53", fightsAsHdLevel, DataCommonADND.aMatrix);
-        Debug.console("54", aMatrixRolls);
     end
 
     Debug.console("56", aMatrixRolls);
@@ -146,21 +190,74 @@ function setNPCSave(nodeEntry, sSave, nodeNPC, savesAsClass, savesAsHdLevel)
     local nSaveIndex = DataCommonADND.saves_table_index[sSave];
     local aSaveScores = {};
 
+    savesAsClass = savesAsClass:gsub("%s+", "");
+
     Debug.console("84", savesAsClass);
     
     if (savesAsClass ~= "") then
         if (savesAsClass == "Assassin") then
-            if (savesAsHdLevel <= 15) then
-                aSaveScores = DataCommonADND.aAssassinSaves[savesAsHdLevel];
-            else
-                aSaveScores = DataCommonADND.aAssassinSaves[15];
+
+            if (savesAsHdLevel >= 13) then
+                savesAsHdLevel = 13;
             end
+
+            aSaveScores = DataCommonADND.aAssassinSaves[savesAsHdLevel];
         elseif (savesAsClass == "Cleric") then
-            if (savesAsHdLevel <= 19) then
-                aSaveScores = DataCommonADND.aClericSaves[savesAsHdLevel];
-            else
-                aSaveScores = DataCommonADND.aAssassinSaves[19];
+
+            if (savesAsHdLevel >= 19) then
+                savesAsHdLevel = 19;
             end
+
+            aSaveScores = DataCommonADND.aClericSaves[savesAsHdLevel];
+        elseif (savesAsClass == "Druid") then
+
+            if (savesAsHdLevel >= 13) then
+                savesAsHdLevel = 13;
+            end
+
+            aSaveScores = DataCommonADND.aDruidSaves[savesAsHdLevel];
+        elseif (savesAsClass == "Fighter") then
+
+            if (savesAsHdLevel >= 20) then
+                savesAsHdLevel = 20;
+            end
+
+            aSaveScores = DataCommonADND.aFighterSaves[savesAsHdLevel];
+        elseif (savesAsClass == "Illusionist") then
+
+            if (savesAsHdLevel >= 21) then
+                savesAsHdLevel = 21;
+            end
+
+            aSaveScores = DataCommonADND.aIllusionistSaves[savesAsHdLevel];
+        elseif (savesAsClass == "MagicUser") then
+
+            if (savesAsHdLevel >= 21) then
+                savesAsHdLevel = 21;
+            end
+
+            aSaveScores = DataCommonADND.aMagicUserSaves[savesAsHdLevel];
+        elseif (savesAsClass == "Paladin") then
+
+            if (savesAsHdLevel >= 20) then
+                savesAsHdLevel = 20;
+            end
+
+            aSaveScores = DataCommonADND.aPaladinSaves[savesAsHdLevel];
+        elseif (savesAsClass == "Ranger") then
+
+            if (savesAsHdLevel >= 20) then
+                savesAsHdLevel = 20;
+            end
+
+            aSaveScores = DataCommonADND.aRangerSaves[savesAsHdLevel];
+        elseif (savesAsClass == "Thief") then
+
+            if (savesAsHdLevel >= 21) then
+                savesAsHdLevel = 21;
+            end
+
+            aSaveScores = DataCommonADND.aThiefSaves[savesAsHdLevel];
         end
     else
         aSaveScores = DataCommonADND.aWarriorSaves[savesAsHdLevel];
