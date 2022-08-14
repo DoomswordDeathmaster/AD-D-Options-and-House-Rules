@@ -35,21 +35,15 @@ function createAttackMatrix()
         nHighAC = 19;
         nTotalACs = 20;
     end
-  
---   local node = getDatabaseNode();
---   local bClassRecord = node.getPath():match("^class%.");
---   --Debug.console("char_matrix.lua","createAttackMatrix","node",node);
 
     local node = getDatabaseNode();
     local bisPC = (ActorManager.isPC(node)); 
     local bUseMatrix = (DataCommonADND.coreVersion == "1e");
-    local sHitDice = DB.getValue(node, "hitDice"); --CombatManagerADND.getNPCHitDice(node);
+    local sHitDice = DB.getValue(node, "hitDice");
     local bClassRecord = node.getPath():match("^class%.");
     local nTHACO = DB.getValue(node, "combat.thaco.score", 20);
     local fightsAsClass = "";
     local fightsAsHdLevel = 0;
-    
-    --Debug.console("char_matrix_thaco.lua: 47", "createTHACOMatrix", "node", node);
     
     if (not bisPC) then
         nTHACO = DB.getValue(node, "thaco", 20);
@@ -161,24 +155,6 @@ function createAttackMatrix()
                 aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel];
             end
         else
-            -- if (fightsAsHdLevel >= 20) then
-            --     fightsAsHdLevel = 20;
-            -- end
-
-            -- local bUseOsricMonsterMatrix = (OptionsManager.getOption("useOsricMonsterMatrix") == 'on');
-
-            -- if bUseOsricMonsterMatrix then
-            --     aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel];
-            -- else
-            --     aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
-                
-            --   -- for hit dice above 16, use 16
-            --   if (aMatrixRolls == nil) then
-            --     sHitDice = "16";
-            --     aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
-            --   end
-            -- end
-
             if (fightsAsHdLevel >= 20) then
                 fightsAsHdLevel = 20;
             end
@@ -216,7 +192,7 @@ function createAttackMatrix()
                 Debug.console("char_matrix:116", bisPC, bClassRecord);
                 nTHAC = DB.getValue(node,"combat.matrix.thac" .. i, 20);
                 matrixControlReadOnly = "true";
-            else--if not bisPC and #aMatrixRolls > 0 then
+            else
                 -- math.abs(i-11), this table is reverse of how we display the matrix
                 -- so we start at the end instead of at the front by taking I - 11 then get the absolute value of it.
                 nTHAC = aMatrixRolls[math.abs(i-11)];
@@ -250,9 +226,8 @@ function createAttackMatrix()
 
         local cntNum = nil;
 
-        cntNum = createControl("number_matrix", sMatrixNumberName); --, "combat.matrix." .. sMatrixNumberName);
+        cntNum = createControl("number_matrix", sMatrixNumberName);
 
-        --Debug.console("char_matrix.lua:97", sMatrixACName, sMatrixACValue, sMatrixNumberName, nTHAC);
         if (matrixControlReadOnly == "false") then
             cntNum.setReadOnly(false);
         else
@@ -265,7 +240,6 @@ function createAttackMatrix()
         
         cntAC.setReadOnly(true);
         cntAC.setValue(sMatrixACValue);
-        --cntAC.setValue(nTHAC);
         cntAC.setAnchor("left", sMatrixNumberName,"left","absolute",0);
     end
 end

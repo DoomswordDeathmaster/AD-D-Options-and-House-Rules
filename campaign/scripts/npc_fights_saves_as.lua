@@ -6,10 +6,6 @@ function onInit()
         Debug.console("super and oninit found");
         super.onInit();
     end
-
-    --DB.addHandler(DB.getPath(node, "saves.paralyzation.base"), "onUpdate", update);
-    --DB.addHandler(DB.getPath(node, "fights_as_Level_hd"), "onUpdate", updateFightsAs);
-    --DB.addHandler(DB.getPath(node, "saves_as_Level_hd"), "onUpdate", updateSavesAs);
 end
 
 function onClose()
@@ -17,10 +13,6 @@ function onClose()
         Debug.console("super and onclose found");
         super.onClose();
     end
-
-    --DB.removeHandler(DB.getPath(node, "saves.paralyzation.base"), "onUpdate", update);
-    --DB.removeHandler(DB.getPath(node, "fights_as_level_hd"), "onUpdate", updateFightsAs);
-    --DB.removeHandler(DB.getPath(node, "saves_as_level_hd"), "onUpdate", updateSavesAs);
 end
 
 -- allow drag/drop of class/race/backgrounds onto main sheet
@@ -41,15 +33,12 @@ function onDrop(x, y, draginfo)
                 local fightsAsClass = draginfo.getDescription():gsub("Class: ", "");
                 addFightsAsDb(node, sClass, fightsAsClass);
                 Debug.console(fightsAsClass);
-                FightsSavesAsManager.updateCombatValuesNPC(node, fightsAsClass, 0)
-                --updateAttackMatrixNpc(getDatabaseNode(), fightsAsClass);
-                --update();
+                FightsSavesAsManager.updateCombatValuesNPC(node, fightsAsClass, 0);
             elseif y >= 327 and y <= 352 then
                 local savesAsClass = draginfo.getDescription():gsub("Class: ", "");
                 addSavesAsDb(node, sClass, savesAsClass);
                 Debug.console(savesAsClass);
                 FightsSavesAsManager.updateSavesNPC(node, savesAsClass, 0);
-                --updateSavesNpc(savesAsClass);
             end
         end
     end

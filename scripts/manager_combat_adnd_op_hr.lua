@@ -505,23 +505,6 @@ function getACHitFromMatrixForNPCNew(nodeCT,nRoll)
             aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel];
         end
     else
-        -- if (fightsAsHdLevel >= 20) then
-        --     fightsAsHdLevel = 20;
-        -- end
-
-        -- local bUseOsricMonsterMatrix = (OptionsManager.getOption("useOsricMonsterMatrix") == 'on');
-        
-        -- if bUseOsricMonsterMatrix then
-        --     aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel];
-        -- else
-        --     aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
-            
-        --     -- for hit dice above 16, use 16
-        --     if (aMatrixRolls == nil) then
-        --     sHitDice = "16";
-        --     aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
-        --     end
-        -- end
         if (fightsAsHdLevel >= 20) then
             fightsAsHdLevel = 20;
         end

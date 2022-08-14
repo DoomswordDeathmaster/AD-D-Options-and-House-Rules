@@ -3,12 +3,9 @@
 ---
 ---
 function onInit()
-    local node = getDatabaseNode();
-    --Debug.console("char_matrix_thaco.lua","onInit","node",node);      
-    local bisPC = (ActorManager.isPC(node)); 
-    --Debug.console("char_matrix_thaco.lua","onInit","bisPC",bisPC);      
-    local bUseMatrix = (DataCommonADND.coreVersion == "1e");
-    --Debug.console("char_matrix_thaco.lua","onInit","bUseMatrix1",bUseMatrix);    
+    local node = getDatabaseNode();     
+    local bisPC = (ActorManager.isPC(node));     
+    local bUseMatrix = (DataCommonADND.coreVersion == "1e");   
   
     if bUseMatrix then
         -- default value is 1e.
@@ -42,7 +39,6 @@ function onClose()
     local bUseMatrix = (DataCommonADND.coreVersion == "1e");
 
     if bUseMatrix then
-        --DB.removeHandler(DB.getPath(node, "combat.matrix.*"), "onUpdate", update);
         -- default value is 1e.
         local nLowAC = -10;
         local nHighAC = 10;
@@ -82,8 +78,7 @@ function createTHACOMatrix()
   local node = getDatabaseNode();
   local bisPC = (ActorManager.isPC(node));
   local bUseMatrix = (DataCommonADND.coreVersion == "1e");
-  local sHitDice = DB.getValue(node, "hitDice"); --CombatManagerADND.getNPCHitDice(node);
-  --local bClassRecord = node.getPath():match("^class%.");
+  local sHitDice = DB.getValue(node, "hitDice"); 
   local nTHACO = DB.getValue(node, "combat.thaco.score", 20);
   local fightsAsClass = "";
   local fightsAsHdLevel = 0;
@@ -92,8 +87,6 @@ function createTHACOMatrix()
   local sHightlightColor = "a5a7aa";
   local sRedColor = "ddaf90";
   local bHighlight = true;
-
-  --Debug.console("char_matrix_thaco.lua: 47", "createTHACOMatrix", "node", node);
   
   if (not bisPC) then
     nTHACO = DB.getValue(node, "thaco", 20);
@@ -230,11 +223,9 @@ function createTHACOMatrix()
   for i=nLowAC, nHighAC, 1 do
     local nTHAC = nTHACO - i; -- to hit AC value. Current THACO for this Armor Class. so 20 - 10 for AC 10 would be 30.
     
-    --Debug.console("char_matrix_thaco:138", "node", node);
     -- db values only for PCs, calculated values for NPCs
     if bUseMatrix then
       if bisPC then
-          --Debug.console("char_matrix_thaco:142", bisPC);
           nTHAC = DB.getValue(node,"combat.matrix.thac" .. i, 20);
       else--if not bisPC and #aMatrixRolls > 0 then
           -- math.abs(i-11), this table is reverse of how we display the matrix
@@ -243,22 +234,16 @@ function createTHACOMatrix()
 
           -- get value from db, in case it's been explicitly set
           local nTHACDb = DB.getValue(node, "thac" .. i);
-          --Debug.console("char_matrix_thaco:151", "nTHACDb", nTHACDb);
 
           -- get value from aMatrixRolls
           local nTHACM = aMatrixRolls[math.abs(i - nTotalACs)];
-          --Debug.console("char_matrix_thaco:155", "nTHACM", nTHACM);
 
           if (fightsAsClass ~= "" or (fightsAsHdLevel ~= 0 and fightsAsHdLevel ~= tonumber(sHitDice))) then
-              --Debug.console("119", fightsAsClass, fightsAsHdLevel, tonumber(sHitDice));
               nTHAC = nTHACM;
-              --Debug.console("char_matrix_thaco:173", "nTHAC", nTHAC);
           elseif (nTHACDb ~= nil and nTHACDb ~= nTHACM) then
               nTHAC = nTHACDb;
-              --Debug.console("char_matrix_thaco:176", "nTHAC", nTHAC);
           else
               nTHAC = nTHACM;
-              --Debug.console("char_matrix_thaco:179", "nTHAC", nTHAC);
           end
 
           DB.setValue(node,"thac" .. i, "number", nTHAC);
@@ -278,9 +263,6 @@ function createTHACOMatrix()
     
     cntNum.setFrame(nil);
     cntNum.setValue(nTHAC);
-    --DB.setValue(node,"combat.matrix.thac" .. i, "number", nTHAC);
-
-    --Debug.console("char_matrix_thaco.lua:112", cntNum.getValue())
 
     local cntAC = createControl("label_fieldtop_thaco_matrix", sMatrixACName);
     cntAC.setReadOnly(false);
@@ -304,9 +286,7 @@ end
 function update()
     Debug.console("char_matrix_thaco.lua:130", "updating combat_mini_thaco_matrix");
     local node = getDatabaseNode();
-    --Debug.console("char_matrix_thaco.lua:132","update","node",node);
-    local bisPC = (ActorManager.isPC(node)); 
-    --Debug.console("char_matrix_thaco.lua:134","createTHACOMatrix","node",node);
+    local bisPC = (ActorManager.isPC(node));
     local bUseMatrix = (DataCommonADND.coreVersion ~= "2e");
 
     local nTHACO = DB.getValue(node,"combat.thaco.score",20);
@@ -319,16 +299,13 @@ function update()
     for i=-10, 10, 1 do
         local nTHAC = nTHACO - i;
         
-        -- IF SOMETHING BREAKS, re-add combat.matrix. to thac
         if bUseMatrix then
           nTHAC = DB.getValue(node,"thac" .. i, 20);
-          --Debug.console("char_matrix_thaco.lua:151", nTHAC);
         end
         
         local sMatrixNumberName = "thac" .. i; -- control name for the THACO label
         local cnt = self[sMatrixNumberName];   -- get the control for this, stringcontrol named thac-10 .. thac10
         
-        --uncomment for updates
         if cnt then
             cnt.setValue(nTHAC); -- set new to hit AC value
         end

@@ -2,9 +2,8 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
     Debug.console("updateCombatValuesNPC", nodeNPC, fightsAsClass, fightsAsHdLevel);
 
     local bUseMatrix = (DataCommonADND.coreVersion == "1e");
-    --local bClassRecord = node.getPath():match("^class%.");
     local nTHACO = DB.getValue(nodeNPC, "combat.thaco.score", 20);
-    local sHitDice = DB.getValue(nodeNPC, "hitDice"); --CombatManagerADND.getNPCHitDice(node);
+    local sHitDice = DB.getValue(nodeNPC, "hitDice");
     local aMatrixRolls = {};
 
     -- default value is 1e.
@@ -21,23 +20,6 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
     fightsAsClass = DB.getValue(nodeNPC, "fights_as");
     fightsAsClass = fightsAsClass:gsub("%s+", "");
     fightsAsHdLevel = DB.getValue(nodeNPC, "fights_as_hd_level");
-
-    -- local bUseOsricMonsterMatrix = (OptionsManager.getOption("useOsricMonsterMatrix") == 'on');
-
-    -- if (fightsAsHdLevel == nil or fightsAsHdLevel == 0) then
-    --     if (sHitDice == "-1") then
-    --         fightsAsHdLevel = 0;
-    --     elseif (sHitDice == "1-1") then
-    --         fightsAsHdLevel = 1;
-    --     elseif (fightsAsClass == "" and bUseOsricMonsterMatrix) then
-    --         fightsAsHdLevel = tonumber(sHitDice) + 1;
-    --     else
-    --         fightsAsHdLevel = tonumber(sHitDice);
-    --     end
-    -- end
-
-    -- Debug.console("fightsAsClass", fightsAsClass);
-    -- Debug.console("fightsAsHdLevel", fightsAsHdLevel);
 
     Debug.console("111", "npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel);
     
@@ -136,21 +118,6 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
             aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel];
         end
     else
-        -- if (fightsAsHdLevel >= 20) then
-        --     fightsAsHdLevel = 20;
-        -- end
-
-        -- if bUseOsricMonsterMatrix then
-        --     aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel];
-        -- else
-        --     aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
-            
-        --     -- for hit dice above 16, use 16
-        --     if (aMatrixRolls == nil) then
-        --     sHitDice = "16";
-        --     aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
-        --     end
-        -- end
         if (fightsAsHdLevel >= 20) then
             fightsAsHdLevel = 20;
         end
@@ -183,7 +150,7 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
             if bisPC then
                 Debug.console("manager_fights_saves_as:142", bisPC);
                 nTHAC = DB.getValue(nodeNPC,"combat.matrix.thac" .. i, 20);
-            else--if not bisPC and #aMatrixRolls > 0 then
+            else
                 -- math.abs(i-11), this table is reverse of how we display the matrix
                 -- so we start at the end instead of at the front by taking I - 11 then get the absolute value of it.
                 nTHAC = aMatrixRolls[math.abs(i-11)];
@@ -216,7 +183,6 @@ end
 
 function updateSavesNPC(nodeNPC, savesAsClass, savesAsHdLevel)
     Debug.console("updateSavesNpc");
-    --local nodeNPC = getDatabaseNode();
     Debug.console(nodeNPC);
     local sHitDice = CombatManagerADND.getNPCHitDice(nodeNPC);
     local aSaveScores = {};
