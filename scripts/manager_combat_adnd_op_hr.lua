@@ -408,8 +408,16 @@ function getACHitFromMatrixForNPCNew(nodeCT,nRoll)
       fightsAsClass = string.gsub(fightsAsClass, "%s+", "");
       fightsAsHdLevel = DB.getValue(nodeNPC, "fights_as_hd_level");
 
-      if (fightsAsHdLevel == 0) then
-        fightsAsHdLevel = tonumber(sHitDice);
+      if (fightsAsHdLevel == nil or fightsAsHdLevel == 0) then
+        if (sHitDice == "-1") then
+            fightsAsHdLevel = 0;
+        elseif (sHitDice == "1-1") then
+            fightsAsHdLevel = 1;
+        elseif (fightsAsClass == "") then
+            fightsAsHdLevel = tonumber(sHitDice) + 1;
+        else
+            fightsAsHdLevel = tonumber(sHitDice);
+        end
       end
 
       Debug.console("fightsAsClass", fightsAsClass);
@@ -481,11 +489,23 @@ function getACHitFromMatrixForNPCNew(nodeCT,nRoll)
             aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel];
         end
     else
-        if (fightsAsHdLevel >= 16) then
-            fightsAsHdLevel = 16;
+        if (fightsAsHdLevel >= 20) then
+            fightsAsHdLevel = 20;
         end
 
-        aMatrixRolls = DataCommonADND.aMatrix[tostring(fightsAsHdLevel)];
+        local bUseOsricMonsterMatrix = (OptionsManager.getOption("useOsricMonsterMatrix") == 'on');
+        
+        if bUseOsricMonsterMatrix then
+            aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel];
+        else
+            aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
+            
+            -- for hit dice above 16, use 16
+            if (aMatrixRolls == nil) then
+            sHitDice = "16";
+            aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
+            end
+        end
     end
 
     Debug.console("manager_combat_adnd_op_hr","getACHitFromMatrixForNPCNew","aMatrixRolls",aMatrixRolls);

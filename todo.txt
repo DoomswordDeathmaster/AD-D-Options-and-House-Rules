@@ -37,7 +37,7 @@ Xset saves and fights when value in main changes?
 
 
 test 1-1 and 1+1 HD, etc
-move amatrixrolls decision-making to manager file so we're not repeating code
+fights and saves as working in 2e base
 
 
 

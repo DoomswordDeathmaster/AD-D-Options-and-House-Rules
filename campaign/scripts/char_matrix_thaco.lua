@@ -108,12 +108,22 @@ function createTHACOMatrix()
       fightsAsClass = fightsAsClass:gsub("%s+", "");
       fightsAsHdLevel = DB.getValue(node, "fights_as_hd_level");
 
-      if (fightsAsHdLevel == 0) then
-        fightsAsHdLevel = tonumber(sHitDice);
+      Debug.console("npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel);
+    
+      if (fightsAsHdLevel == nil or fightsAsHdLevel == 0) then
+          if (sHitDice == "-1") then
+              fightsAsHdLevel = 0;
+          elseif (sHitDice == "1-1") then
+              fightsAsHdLevel = 1;
+          elseif (fightsAsClass == "") then
+              fightsAsHdLevel = tonumber(sHitDice) + 1;
+          else
+              fightsAsHdLevel = tonumber(sHitDice);
+          end
       end
 
-      Debug.console("fightsAsClass", fightsAsClass);
-      Debug.console("fightsAsHdLevel", fightsAsHdLevel);
+      Debug.console("121", fightsAsClass, fightsAsClass);
+      Debug.console("122", fightsAsHdLevel, fightsAsHdLevel);
 
       if (fightsAsClass ~= "") then
           if (fightsAsClass == "Assassin") then
@@ -181,11 +191,24 @@ function createTHACOMatrix()
               aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel];
           end
       else
-          if (fightsAsHdLevel >= 16) then
-              fightsAsHdLevel = 16;
+          if (fightsAsHdLevel >= 20) then
+              fightsAsHdLevel = 20;
           end
 
-          aMatrixRolls = DataCommonADND.aMatrix[tostring(fightsAsHdLevel)];
+          local bUseOsricMonsterMatrix = (OptionsManager.getOption("useOsricMonsterMatrix") == 'on');
+          Debug.console("198", "fightsAsHdLevel", fightsAsHdLevel, "bUseOsricMonsterMatrix", bUseOsricMonsterMatrix);
+          
+          if bUseOsricMonsterMatrix then
+              aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel];
+          else
+              aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
+              
+              -- for hit dice above 16, use 16
+              if (aMatrixRolls == nil) then
+                sHitDice = "16";
+                aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
+              end
+          end
       end
   end
 
