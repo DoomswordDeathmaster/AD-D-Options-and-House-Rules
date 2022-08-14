@@ -82,7 +82,7 @@ function createTHACOMatrix()
   local node = getDatabaseNode();
   local bisPC = (ActorManager.isPC(node));
   local bUseMatrix = (DataCommonADND.coreVersion == "1e");
-  local sHitDice = CombatManagerADND.getNPCHitDice(node);
+  local sHitDice = DB.getValue(node, "hitDice"); --CombatManagerADND.getNPCHitDice(node);
   --local bClassRecord = node.getPath():match("^class%.");
   local nTHACO = DB.getValue(node, "combat.thaco.score", 20);
   local fightsAsClass = "";
@@ -108,22 +108,36 @@ function createTHACOMatrix()
       fightsAsClass = fightsAsClass:gsub("%s+", "");
       fightsAsHdLevel = DB.getValue(node, "fights_as_hd_level");
 
-      Debug.console("npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel);
+      Debug.console("111", "npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel);
     
+      -- fights_as_hd_level not set
       if (fightsAsHdLevel == nil or fightsAsHdLevel == 0) then
-          if (sHitDice == "-1") then
+          if (sHitDice == "0") then
+              sHitDice = "-1";
               fightsAsHdLevel = 0;
           elseif (sHitDice == "1-1") then
               fightsAsHdLevel = 1;
+          -- string contains a +, as in hd 1+1
+          elseif string.find(sHitDice, "%+") then
+              -- OSRIC
+              fightsAsHdLevel = string.match(sHitDice, "%d+") + 2;
+              -- 1e DMG
+              if (sHitDice ~= "1+1") then
+                  sHitDice = string.match(sHitDice, "%d+");
+              else
+                  sHitDice = "1+";
+              end
+
           elseif (fightsAsClass == "") then
               fightsAsHdLevel = tonumber(sHitDice) + 1;
           else
+              -- fights_as is set, so take the creature's hd
               fightsAsHdLevel = tonumber(sHitDice);
           end
       end
 
-      Debug.console("121", fightsAsClass, fightsAsClass);
-      Debug.console("122", fightsAsHdLevel, fightsAsHdLevel);
+      Debug.console("121", "fightsAsClass", fightsAsClass);
+      Debug.console("122", "fightsAsHdLevel", fightsAsHdLevel, "sHitDice", sHitDice);
 
       if (fightsAsClass ~= "") then
           if (fightsAsClass == "Assassin") then
@@ -196,13 +210,13 @@ function createTHACOMatrix()
           end
 
           local bUseOsricMonsterMatrix = (OptionsManager.getOption("useOsricMonsterMatrix") == 'on');
-          Debug.console("198", "fightsAsHdLevel", fightsAsHdLevel, "bUseOsricMonsterMatrix", bUseOsricMonsterMatrix);
+          Debug.console("213", "fightsAsHdLevel", fightsAsHdLevel, "bUseOsricMonsterMatrix", bUseOsricMonsterMatrix);
           
           if bUseOsricMonsterMatrix then
               aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel];
           else
               aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
-              
+
               -- for hit dice above 16, use 16
               if (aMatrixRolls == nil) then
                 sHitDice = "16";
@@ -216,11 +230,11 @@ function createTHACOMatrix()
   for i=nLowAC, nHighAC, 1 do
     local nTHAC = nTHACO - i; -- to hit AC value. Current THACO for this Armor Class. so 20 - 10 for AC 10 would be 30.
     
-    Debug.console("char_matrix_thaco:138", "node", node);
+    --Debug.console("char_matrix_thaco:138", "node", node);
     -- db values only for PCs, calculated values for NPCs
     if bUseMatrix then
       if bisPC then
-          Debug.console("char_matrix_thaco:142", bisPC);
+          --Debug.console("char_matrix_thaco:142", bisPC);
           nTHAC = DB.getValue(node,"combat.matrix.thac" .. i, 20);
       else--if not bisPC and #aMatrixRolls > 0 then
           -- math.abs(i-11), this table is reverse of how we display the matrix
@@ -229,22 +243,22 @@ function createTHACOMatrix()
 
           -- get value from db, in case it's been explicitly set
           local nTHACDb = DB.getValue(node, "thac" .. i);
-          Debug.console("char_matrix_thaco:151", "nTHACDb", nTHACDb);
+          --Debug.console("char_matrix_thaco:151", "nTHACDb", nTHACDb);
 
           -- get value from aMatrixRolls
           local nTHACM = aMatrixRolls[math.abs(i - nTotalACs)];
-          Debug.console("char_matrix_thaco:155", "nTHACM", nTHACM);
+          --Debug.console("char_matrix_thaco:155", "nTHACM", nTHACM);
 
           if (fightsAsClass ~= "" or (fightsAsHdLevel ~= 0 and fightsAsHdLevel ~= tonumber(sHitDice))) then
-              Debug.console("119", fightsAsClass, fightsAsHdLevel, tonumber(sHitDice));
+              --Debug.console("119", fightsAsClass, fightsAsHdLevel, tonumber(sHitDice));
               nTHAC = nTHACM;
-              Debug.console("char_matrix_thaco:173", "nTHAC", nTHAC);
+              --Debug.console("char_matrix_thaco:173", "nTHAC", nTHAC);
           elseif (nTHACDb ~= nil and nTHACDb ~= nTHACM) then
               nTHAC = nTHACDb;
-              Debug.console("char_matrix_thaco:176", "nTHAC", nTHAC);
+              --Debug.console("char_matrix_thaco:176", "nTHAC", nTHAC);
           else
               nTHAC = nTHACM;
-              Debug.console("char_matrix_thaco:179", "nTHAC", nTHAC);
+              --Debug.console("char_matrix_thaco:179", "nTHAC", nTHAC);
           end
 
           DB.setValue(node,"thac" .. i, "number", nTHAC);

@@ -43,7 +43,7 @@ function createAttackMatrix()
     local node = getDatabaseNode();
     local bisPC = (ActorManager.isPC(node)); 
     local bUseMatrix = (DataCommonADND.coreVersion == "1e");
-    local sHitDice = CombatManagerADND.getNPCHitDice(node);
+    local sHitDice = DB.getValue(node, "hitDice"); --CombatManagerADND.getNPCHitDice(node);
     local bClassRecord = node.getPath():match("^class%.");
     local nTHACO = DB.getValue(node, "combat.thaco.score", 20);
     local fightsAsClass = "";
@@ -64,20 +64,36 @@ function createAttackMatrix()
         fightsAsClass = fightsAsClass:gsub("%s+", "");
         fightsAsHdLevel = DB.getValue(node, "fights_as_hd_level");
 
+        Debug.console("111", "npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel);
+    
+        -- fights_as_hd_level not set
         if (fightsAsHdLevel == nil or fightsAsHdLevel == 0) then
-            if (sHitDice == "-1") then
+            if (sHitDice == "0") then
+                sHitDice = "-1";
                 fightsAsHdLevel = 0;
             elseif (sHitDice == "1-1") then
                 fightsAsHdLevel = 1;
+            -- string contains a +, as in hd 1+1
+            elseif string.find(sHitDice, "%+") then
+                -- OSRIC
+                fightsAsHdLevel = string.match(sHitDice, "%d+") + 2;
+                -- 1e DMG
+                if (sHitDice ~= "1+1") then
+                    sHitDice = string.match(sHitDice, "%d+");
+                else
+                    sHitDice = "1+";
+                end
+
             elseif (fightsAsClass == "") then
                 fightsAsHdLevel = tonumber(sHitDice) + 1;
             else
+                -- fights_as is set, so take the creature's hd
                 fightsAsHdLevel = tonumber(sHitDice);
             end
         end
 
-        Debug.console("fightsAsClass", fightsAsClass);
-        Debug.console("fightsAsHdLevel", fightsAsHdLevel);
+        Debug.console("121", "fightsAsClass", fightsAsClass);
+        Debug.console("122", "fightsAsHdLevel", fightsAsHdLevel, "sHitDice", sHitDice);
 
         if (fightsAsClass ~= "") then
             if (fightsAsClass == "Assassin") then
@@ -145,22 +161,41 @@ function createAttackMatrix()
                 aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel];
             end
         else
+            -- if (fightsAsHdLevel >= 20) then
+            --     fightsAsHdLevel = 20;
+            -- end
+
+            -- local bUseOsricMonsterMatrix = (OptionsManager.getOption("useOsricMonsterMatrix") == 'on');
+
+            -- if bUseOsricMonsterMatrix then
+            --     aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel];
+            -- else
+            --     aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
+                
+            --   -- for hit dice above 16, use 16
+            --   if (aMatrixRolls == nil) then
+            --     sHitDice = "16";
+            --     aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
+            --   end
+            -- end
+
             if (fightsAsHdLevel >= 20) then
                 fightsAsHdLevel = 20;
             end
-
+  
             local bUseOsricMonsterMatrix = (OptionsManager.getOption("useOsricMonsterMatrix") == 'on');
-
+            Debug.console("171", "fightsAsHdLevel", fightsAsHdLevel, "bUseOsricMonsterMatrix", bUseOsricMonsterMatrix);
+            
             if bUseOsricMonsterMatrix then
                 aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel];
             else
                 aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
-                
-              -- for hit dice above 16, use 16
-              if (aMatrixRolls == nil) then
-                sHitDice = "16";
-                aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
-              end
+  
+                -- for hit dice above 16, use 16
+                if (aMatrixRolls == nil) then
+                  sHitDice = "16";
+                  aMatrixRolls = DataCommonADND.aMatrix[sHitDice];
+                end
             end
         end
     end
