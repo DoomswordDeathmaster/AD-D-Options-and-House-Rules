@@ -14,7 +14,7 @@
     </ruleset>
   </properties>
 
-  <announcement text="AD&amp;D Options and House Rules\r -- by Doomsword and including Celestian's 1E properties. If you find issues, find me on the Discord." font="emotefont" icon="doomsword_icon" />
+  <announcement text="AD&amp;D Options and House Rules\rby Doomsword and including Celestian's 1E properties with enhancements.\rFor issues or feature requests, find me on the Discord." font="emotefont" icon="doomsword_icon" />
 
   <base>
     <includefile source="campaign/record_char_combat.xml" />
