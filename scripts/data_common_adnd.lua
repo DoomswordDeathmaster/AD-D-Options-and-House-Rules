@@ -253,8 +253,9 @@ auraColors = {
 function onInit()
     local sRulesetName = User.getRulesetName();
     
-    -- default initiative dice size 
-    nDefaultInitiativeDice = 10;
+    -- default initiative dice size
+    -- take whatever the initiative die option is set to
+    nDefaultInitiativeDice = OptionsManager.getOption("initiativeDie"):gsub("d", ""); --10;
     -- default coin weight, 50 coins = 1 pound
     nDefaultCoinWeight = 0.02;
     -- default surprise dice

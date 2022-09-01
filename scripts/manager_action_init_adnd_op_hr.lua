@@ -3,6 +3,12 @@ NPC_LASTINIT = 0;
 OOB_MSGTYPE_APPLYINIT = "applyinit";
 
 function onInit()
+    -- force initiative die to whatever is set in the options, irrespective of Core 1e option selection
+    -- local initiativeDie = OptionsManager.getOption("initiativeDie");
+    -- local initiativeDieNumber = initiativeDie:gsub("d", "");
+
+    --DataCommonADND.nDefaultInitiativeDice = initiativeDieNumber;
+
 	getRollOrig = ActionInit.getRoll;
 	ActionInit.getRoll = getRollNew;
 
@@ -14,6 +20,7 @@ end
 
 -- initiative with modifiers, from item entry in ct or init button on character
 function getRollNew(rActor, bSecretRoll, rItem)
+    --Debug.console("getRollNew", rActor, bSecretRoll, rItem);
     local rRoll;
 
     if OptionsManager.getOption("initiativeModifiersAllow") == "on" then
@@ -24,15 +31,18 @@ function getRollNew(rActor, bSecretRoll, rItem)
         rRoll = getRollNoMods(rActor, bSecretRoll, rItem);
     end
 
+    --Debug.console("getRollNew", rRoll.aDice);
     return rRoll;
 end
 
 -- initiative without modifiers, from item entry in ct or init button on character
 function getRollNoMods(rActor, bSecretRoll, rItem)
+    --Debug.console("getRollNoMods", rActor, bSecretRoll, rItem);
     local rRoll = {};
     
     rRoll.sType = "init";
     rRoll.aDice = { "d" .. DataCommonADND.nDefaultInitiativeDice };
+    --Debug.console("getRollNomods", rRoll.aDice);
     rRoll.nMod = 0;
     rRoll.sDesc = "[INIT]";
     rRoll.bSecret = bSecretRoll;

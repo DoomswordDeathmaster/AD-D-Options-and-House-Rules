@@ -8,10 +8,10 @@ NPC_LASTINIT = 0;
 OOB_MSGTYPE_CHANGEINIT = "changeinitiative";
 
 function onInit()
-    local initiativeDie = OptionsManager.getOption("initiativeDie");
-    local initiativeDieNumber = initiativeDie:gsub("d", "");
+    -- local initiativeDie = OptionsManager.getOption("initiativeDie");
+    -- local initiativeDieNumber = initiativeDie:gsub("d", "");
 
-    DataCommonADND.nDefaultInitiativeDice = initiativeDieNumber;
+    -- DataCommonADND.nDefaultInitiativeDice = initiativeDieNumber;
 
     rollEntryInitOrig = CombatManagerADND.rollEntryInit;
     CombatManagerADND.rollEntryInit = rollEntryInitNew;
