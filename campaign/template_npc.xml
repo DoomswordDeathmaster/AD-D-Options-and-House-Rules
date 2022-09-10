@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <root>
-    <template name="npc_chooser_label">
-    <label name="chooser">
-      <static textres="npc_label_click_to_choose" />
-      <font>list-empty</font>
-      <script file="campaign/scripts/npc_click_chooser.lua" />
-    </label>
-  </template>
+	<template name="npc_chooser_label">
+		<label name="chooser">
+			<static textres="npc_label_click_to_choose" />
+			<font>list-empty</font>
+			<script file="campaign/scripts/npc_click_chooser.lua" />
+		</label>
+	</template>
 </root>

@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <root>
-  <!-- Options header strings  -->
-  <string name="option_header_adnd_op_hr">AD&amp;D Options and House Rules</string>
-  
-  <!-- Option label strings -->
-  <string name="option_label_adnd_op_hr_ability_check_allow">Allow Ability Checks</string>
-  <string name="option_label_adnd_op_hr_initiative_delay_allow">Allow Initiative Delay</string>
-  <string name="option_label_adnd_op_hr_initiative_die">Initiative Die</string>
-  <string name="option_label_adnd_op_hr_initiative_ordering">Initiative Ordering</string>
-  <string name="option_label_adnd_op_hr_initiative_grouping">Initiative Grouping</string>
-  <string name="option_label_adnd_op_hr_initiative_grouping_swap">Initiative Grouping: Swap Results</string>
-  <string name="option_label_adnd_op_hr_initiative_modifiers_allow">Allow Initiative Modifiers</string>
-  <string name="option_label_adnd_op_hr_initiative_ties_allow">Initiative Grouping: Allow Ties</string>
-  <string name="option_label_adnd_op_hr_surprise_die">Surprise Die</string>
-  <string name="option_label_adnd_op_hr_use_2e_kits">Use 2e Kits</string>
-  <string name="option_label_adnd_op_hr_round_start_reset_init">Initiative Reset on Round Start</string>
-  <string name="option_label_adnd_op_hr_add1e_properties">Use 1e Properties</string>
-  <string name="option_label_adnd_op_hr_osric_monster_matrices">Use OSRIC Monster Attack Matrices</string>
-  
-  <!-- Option value strings -->
-  <string name="option_val_d6">d6</string>
-  <string name="option_val_d10">d10</string>
-  <string name="option_val_d12">d12</string>
-  <string name="option_val_ascending">Ascending</string>
-  <string name="option_val_descending">Descending</string>pc
-  <string name="option_val_pc">PC</string>
-  <string name="option_val_npc">NPC</string>
-  <string name="option_val_neither">Neither</string>
-  <string name="option_val_both">Both</string>
+	<!-- Options header strings  -->
+	<string name="option_header_adnd_op_hr">AD&amp;D Options and House Rules</string>
 
-  <!-- NPC sheet -->
-  <string name="npc_label_click_to_choose">Click to select...</string>
-  <string name="npc_label_fights_as">Fights As</string>
-  <string name="npc_label_fights_as_hd_level">Level or HD</string>
-  <string name="npc_label_saves_as">Saves As</string>
-  <string name="npc_label_saves_as_hd_level">Level or HD</string>
+	<!-- Option label strings -->
+	<string name="option_label_adnd_op_hr_ability_check_allow">Allow Ability Checks</string>
+	<string name="option_label_adnd_op_hr_initiative_delay_allow">Allow Initiative Delay</string>
+	<string name="option_label_adnd_op_hr_initiative_die">Initiative Die</string>
+	<string name="option_label_adnd_op_hr_initiative_ordering">Initiative Ordering</string>
+	<string name="option_label_adnd_op_hr_initiative_grouping">Initiative Grouping</string>
+	<string name="option_label_adnd_op_hr_initiative_grouping_swap">Initiative Grouping: Swap Results</string>
+	<string name="option_label_adnd_op_hr_initiative_modifiers_allow">Allow Initiative Modifiers</string>
+	<string name="option_label_adnd_op_hr_initiative_ties_allow">Initiative Grouping: Allow Ties</string>
+	<string name="option_label_adnd_op_hr_surprise_die">Surprise Die</string>
+	<string name="option_label_adnd_op_hr_use_2e_kits">Use 2e Kits</string>
+	<string name="option_label_adnd_op_hr_round_start_reset_init">Initiative Reset on Round Start</string>
+	<string name="option_label_adnd_op_hr_add1e_properties">Use 1e Properties</string>
+	<string name="option_label_adnd_op_hr_osric_monster_matrices">Use OSRIC Monster Attack Matrices</string>
+
+	<!-- Option value strings -->
+	<string name="option_val_d6">d6</string>
+	<string name="option_val_d10">d10</string>
+	<string name="option_val_d12">d12</string>
+	<string name="option_val_ascending">Ascending</string>
+	<string name="option_val_descending">Descending</string>pc
+	<string name="option_val_pc">PC</string>
+	<string name="option_val_npc">NPC</string>
+	<string name="option_val_neither">Neither</string>
+	<string name="option_val_both">Both</string>
+
+	<!-- NPC sheet -->
+	<string name="npc_label_click_to_choose">Click to select...</string>
+	<string name="npc_label_fights_as">Fights As</string>
+	<string name="npc_label_fights_as_hd_level">Level or HD</string>
+	<string name="npc_label_saves_as">Saves As</string>
+	<string name="npc_label_saves_as_hd_level">Level or HD</string>
 </root>
     

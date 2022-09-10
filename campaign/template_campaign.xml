@@ -6,11 +6,11 @@
 -->
 
 <root>
-    <template name="number_column_npc_remainder">
-        <basicnumber>
-        <anchored position="righthigh" offset="10,0" height="20">
-            <right parent="" offset="-5" />
-        </anchored>
-        </basicnumber>
-    </template>
+	<template name="number_column_npc_remainder">
+		<basicnumber>
+			<anchored position="righthigh" offset="10,0" height="20">
+				<right parent="" offset="-5" />
+			</anchored>
+		</basicnumber>
+	</template>
 </root>

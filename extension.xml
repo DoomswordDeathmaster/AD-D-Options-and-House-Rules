@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <root version="3.0">
-  <properties>
-    <name>AD&amp;D Options and House Rules</name>
-    <version>1.3</version>
-    <author>Doomsword</author>
-    <description>
-      <text>AD&amp;D Options and House Rules</text>
-      <author>Doomsword</author>
-    </description>
-    <loadorder>99</loadorder>
-    <ruleset>
-      <name>2E</name>
-    </ruleset>
-  </properties>
+	<properties>
+		<name>AD&amp;D Options and House Rules</name>
+		<version>1.3</version>
+		<author>Doomsword</author>
+		<description>
+			<text>AD&amp;D Options and House Rules</text>
+			<author>Doomsword</author>
+		</description>
+		<loadorder>99</loadorder>
+		<ruleset>
+			<name>2E</name>
+		</ruleset>
+	</properties>
 
-  <announcement text="AD&amp;D Options and House Rules\rby Doomsword and including Celestian's 1E properties with enhancements.\rFor issues or feature requests, find me on the Discord." font="emotefont" icon="doomsword_icon" />
+	<announcement text="AD&amp;D Options and House Rules\rby Doomsword and including Celestian's 1E properties with enhancements.\rFor issues or feature requests, find me on the Discord." font="emotefont" icon="doomsword_icon" />
 
-  <base>
-    <includefile source="campaign/record_char_combat.xml" />
-    <includefile source="campaign/record_char_main.xml" />
-    <includefile source="campaign/record_class.xml" />
-    <includefile source="campaign/record_npc.xml" />
-    <includefile source="campaign/template_char_adnd.xml" />
-    <includefile source="campaign/template_cta.xml" />
-    <includefile source="campaign/template_npc.xml" />
-    <includefile source="campaign/template_campaign.xml" />
-    <includefile source="cta/cta_host.xml" />
-    <includefile source="graphics/graphics_frames_adnd.xml" />
+	<base>
+		<includefile source="campaign/record_char_combat.xml" />
+		<includefile source="campaign/record_char_main.xml" />
+		<includefile source="campaign/record_class.xml" />
+		<includefile source="campaign/record_npc.xml" />
+		<includefile source="campaign/template_char_adnd.xml" />
+		<includefile source="campaign/template_cta.xml" />
+		<includefile source="campaign/template_npc.xml" />
+		<includefile source="campaign/template_campaign.xml" />
+		<includefile source="cta/cta_host.xml" />
+		<includefile source="graphics/graphics_frames_adnd.xml" />
 		<includefile source="graphics/graphics_icons.xml" />
 
-    <script name="ActionInitAdndOpHr" file="scripts/manager_action_init_adnd_op_hr.lua" />
-    <script name="ActionSurpriseAdndOpHr" file="scripts/manager_action_surprise_adnd_op_hr.lua" />
-    <script name="AdndOpHrManager" file="scripts/manager_adnd_op_hr.lua" />
-    <script name="CombatManagerAdndOpHr" file="scripts/manager_combat_adnd_op_hr.lua" />
-    <script name="FightsSavesAsManager" file="scripts/manager_fights_saves_as.lua" />
-    <script name="DataCommonADND" file="scripts/data_common_adnd.lua" />
-    <script name="DataCommonADND1e" file="scripts/data_common_adnd1e.lua" />
-    <script name="NpcClickChooser" file="campaign/scripts/npc_click_chooser.lua" />
+		<script name="ActionInitAdndOpHr" file="scripts/manager_action_init_adnd_op_hr.lua" />
+		<script name="ActionSurpriseAdndOpHr" file="scripts/manager_action_surprise_adnd_op_hr.lua" />
+		<script name="AdndOpHrManager" file="scripts/manager_adnd_op_hr.lua" />
+		<script name="CombatManagerAdndOpHr" file="scripts/manager_combat_adnd_op_hr.lua" />
+		<script name="FightsSavesAsManager" file="scripts/manager_fights_saves_as.lua" />
+		<script name="DataCommonADND" file="scripts/data_common_adnd.lua" />
+		<script name="DataCommonADND1e" file="scripts/data_common_adnd1e.lua" />
+		<script name="NpcClickChooser" file="campaign/scripts/npc_click_chooser.lua" />
 
-    <includefile source="strings/strings_adnd_op_hr.xml" />
-  </base>
+		<includefile source="strings/strings_adnd_op_hr.xml" />
+	</base>
 </root>

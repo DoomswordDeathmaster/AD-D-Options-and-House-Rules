@@ -6,102 +6,102 @@
 -->
 
 <root>
-  <windowclass name="npc_combat" merge="join">
-    <script file="campaign/scripts/npc_fights_saves_as.lua" />
-    <script>
-        function onInit()
-          if (DataCommonADND.coreVersion ~= "1e") then
-              fights_as_label.setVisible(false);
-              fights_as.setVisible(false);
-              fights_as_hd_level_label.setVisible(false);
-              fights_as_hd_level.setVisible(false);
-              npc_click_choose_fights_as.setVisible(false);
-              saves_as_label.setVisible(false);
-              saves_as.setVisible(false);
-              saves_as_hd_level_label.setVisible(false);
-              saves_as_hd_level.setVisible(false);
-              npc_click_choose_saves_as.setVisible(false);
-          end
-        end
-    </script>
-    <sheetdata>
-      <label_column name="fights_as_label" insertbefore="thaco_label">
-          <static textres="npc_label_fights_as" />
-      </label_column>
+	<windowclass name="npc_combat" merge="join">
+		<script file="campaign/scripts/npc_fights_saves_as.lua" />
+		<script>
+			function onInit()
+			if (DataCommonADND.coreVersion ~= "1e") then
+				fights_as_label.setVisible(false);
+				fights_as.setVisible(false);
+				fights_as_hd_level_label.setVisible(false);
+				fights_as_hd_level.setVisible(false);
+				npc_click_choose_fights_as.setVisible(false);
+				saves_as_label.setVisible(false);
+				saves_as.setVisible(false);
+				saves_as_hd_level_label.setVisible(false);
+				saves_as_hd_level.setVisible(false);
+				npc_click_choose_saves_as.setVisible(false);
+			end
+			end
+		</script>
+		<sheetdata>
+			<label_column name="fights_as_label" insertbefore="thaco_label">
+				<static textres="npc_label_fights_as" />
+			</label_column>
 
-      <string_columnh name="fights_as" insertbefore="thaco_label">
-        <anchored width="120">
-          <right merge="delete" />
-        </anchored>
-        <script>
-          function onValueChanged()
-            window.onSummaryChanged();
-          end
-        </script>
-      </string_columnh>
-      
-      <npc_chooser_label name="npc_click_choose_fights_as">
-        <record>fights_as</record>
-        <class>class</class>
-        <path>masterindex</path>
-        <anchored to="fights_as" position="insidetopleft" />
-      </npc_chooser_label>
+			<string_columnh name="fights_as" insertbefore="thaco_label">
+				<anchored width="120">
+					<right merge="delete" />
+				</anchored>
+				<script>
+					function onValueChanged()
+						window.onSummaryChanged();
+					end
+				</script>
+			</string_columnh>
 
-      <label_npc name="fights_as_hd_level_label" insertbefore="thaco_label">
-        <static textres="npc_label_fights_as_hd_level" />
-        <anchored to="fights_as" position="right" offset="10,0" />
-      </label_npc>
+			<npc_chooser_label name="npc_click_choose_fights_as">
+				<record>fights_as</record>
+				<class>class</class>
+				<path>masterindex</path>
+				<anchored to="fights_as" position="insidetopleft" />
+			</npc_chooser_label>
 
-      <number_column_npc_remainder name="fights_as_hd_level" insertbefore="thaco_label">
-        <anchored to="fights_as_hd_level_label" />
-        <script>
-          function onValueChanged()
-              local nodeNPC = getDatabaseNode().getParent();
-              local fightsAsClass = window.fights_as.getValue();
-              local fightsAsHdLevel = window.fights_as_hd_level.getValue();
-              FightsSavesAsManager.updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel);
-          end
-        </script>
-      </number_column_npc_remainder>
+			<label_npc name="fights_as_hd_level_label" insertbefore="thaco_label">
+				<static textres="npc_label_fights_as_hd_level" />
+				<anchored to="fights_as" position="right" offset="10,0" />
+			</label_npc>
 
-      <label_column name="saves_as_label" insertbefore="morale_label">
-        <static textres="npc_label_saves_as" />
-      </label_column>
+			<number_column_npc_remainder name="fights_as_hd_level" insertbefore="thaco_label">
+				<anchored to="fights_as_hd_level_label" />
+				<script>
+					function onValueChanged()
+						local nodeNPC = getDatabaseNode().getParent();
+						local fightsAsClass = window.fights_as.getValue();
+						local fightsAsHdLevel = window.fights_as_hd_level.getValue();
+						FightsSavesAsManager.updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel);
+					end
+				</script>
+			</number_column_npc_remainder>
 
-      <string_columnh name="saves_as" insertbefore="morale_label">
-        <anchored width="120">
-          <right merge="delete" />
-        </anchored>
-        <script>
-          function onValueChanged()
-            window.onSummaryChanged();
-          end
-        </script>
-      </string_columnh>
-      
-      <npc_chooser_label name="npc_click_choose_saves_as">
-        <record>saves_as</record>
-        <class>class</class>
-        <path>masterindex</path>
-        <anchored to="saves_as" position="insidetopleft" />
-      </npc_chooser_label>
+			<label_column name="saves_as_label" insertbefore="morale_label">
+				<static textres="npc_label_saves_as" />
+			</label_column>
 
-      <label_npc name="saves_as_hd_level_label" insertbefore="morale_label">
-        <static textres="npc_label_saves_as_hd_level" />
-        <anchored to="saves_as" position="right" offset="10,0" />
-      </label_npc>
+			<string_columnh name="saves_as" insertbefore="morale_label">
+				<anchored width="120">
+					<right merge="delete" />
+				</anchored>
+				<script>
+					function onValueChanged()
+						window.onSummaryChanged();
+					end
+				</script>
+			</string_columnh>
 
-      <number_column_npc_remainder name="saves_as_hd_level" insertbefore="morale_label">
-        <anchored to="saves_as_hd_level_label" />
-        <script>
-          function onValueChanged()
-              local nodeNPC = getDatabaseNode().getParent();
-              local savesAsClass = window.saves_as.getValue();
-              local savesAsHdLevel = window.saves_as_hd_level.getValue();
-              FightsSavesAsManager.updateSavesNPC(nodeNPC, savesAsClass, savesAsHdLevel);
-          end
-        </script>
-      </number_column_npc_remainder>
-    </sheetdata>
-  </windowclass>
+			<npc_chooser_label name="npc_click_choose_saves_as">
+				<record>saves_as</record>
+				<class>class</class>
+				<path>masterindex</path>
+				<anchored to="saves_as" position="insidetopleft" />
+			</npc_chooser_label>
+
+			<label_npc name="saves_as_hd_level_label" insertbefore="morale_label">
+				<static textres="npc_label_saves_as_hd_level" />
+				<anchored to="saves_as" position="right" offset="10,0" />
+			</label_npc>
+
+			<number_column_npc_remainder name="saves_as_hd_level" insertbefore="morale_label">
+				<anchored to="saves_as_hd_level_label" />
+				<script>
+					function onValueChanged()
+						local nodeNPC = getDatabaseNode().getParent();
+						local savesAsClass = window.saves_as.getValue();
+						local savesAsHdLevel = window.saves_as_hd_level.getValue();
+						FightsSavesAsManager.updateSavesNPC(nodeNPC, savesAsClass, savesAsHdLevel);
+					end
+				</script>
+			</number_column_npc_remainder>
+		</sheetdata>
+	</windowclass>
 </root>
