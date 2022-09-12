@@ -10,6 +10,7 @@
 		</description>
 		<loadorder>99</loadorder>
 		<ruleset>
+			<name>OSRIC</name>
 			<name>2E</name>
 		</ruleset>
 	</properties>
@@ -31,12 +32,16 @@
 
 		<script name="ActionInitAdndOpHr" file="scripts/manager_action_init_adnd_op_hr.lua" />
 		<script name="ActionSurpriseAdndOpHr" file="scripts/manager_action_surprise_adnd_op_hr.lua" />
-		<script name="AdndOpHrManager" file="scripts/manager_adnd_op_hr.lua" />
+		<script name="AdndOpHrManager" file="scripts/data_options_adnd_op_hr.lua" />
+		<script name="ActionDamageManagerAdndOpHr" file="scripts/manager_action_damage_adnd_op_hr.lua" />
 		<script name="CombatManagerAdndOpHr" file="scripts/manager_combat_adnd_op_hr.lua" />
 		<script name="FightsSavesAsManager" file="scripts/manager_fights_saves_as.lua" />
 		<script name="DataCommonADND" file="scripts/data_common_adnd.lua" />
 		<script name="DataCommonADND1e" file="scripts/data_common_adnd1e.lua" />
 		<script name="NpcClickChooser" file="campaign/scripts/npc_click_chooser.lua" />
+		<script name="ActorHealthManagerAdndOpHr" file="scripts/manager_actor_health_adnd_op_hr.lua" />
+		<script name="Options5E" file="scripts/data_options_5E.lua" />
+  		<script name="OptionsADND" file="scripts/data_options_adnd.lua" />
 
 		<includefile source="strings/strings_adnd_op_hr.xml" />
 	</base>
