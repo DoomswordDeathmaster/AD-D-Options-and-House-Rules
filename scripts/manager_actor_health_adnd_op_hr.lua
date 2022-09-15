@@ -1,14 +1,15 @@
 function onInit()
-    ActorHealthManager.getWoundPercent = getWoundPercentNew
+    ActorHealthManager.getWoundPercent = getWoundPercentAdndOpHr
 end
 
-function getWoundPercentNew(rActor)
+function getWoundPercentAdndOpHr(rActor)
     --Debug.console("manager_actor_helth_osric.lua 7", "getWoundPercentNew")
     -- local rActor = ActorManager.resolveActor(node);
     -- local node = ActorManager.getCreatureNode(rActor);
     local sNodeType, node = ActorManager.getTypeAndNode(rActor)
     local nHP = 0
     local nWounds = 0
+    local nConScore = DB.getValue(node, "abilities.constitution.score", 0)
 
     -- Debug.console("manager_actor_adnd.lua","getWoundPercent","sNodeType",sNodeType);
     if sNodeType == "pc" then
@@ -37,6 +38,16 @@ function getWoundPercentNew(rActor)
 
     -- changing death's door options, since it always exists in 1e
     local nDeathDoorThreshold = 0
+
+    local sOptPcDeadAtValue = OptionsManager.getOption("pcDeadAtValue")
+
+    local nDEAD_AT = -10
+
+    if sOptPcDeadAtValue == "minusCon" then
+        nDEAD_AT = nConScore
+        Debug.console("actorhealth: ndeadat", nDEAD_AT)
+    end
+    
     local nDEAD_AT = -10
 
     local sOptHouseRuleDeathsDoor = OptionsManager.getOption("HouseRule_DeathsDoor")

@@ -1,9 +1,9 @@
 function onInit()
 	getRollOrig = ActionSurprise.getRoll
-	ActionSurprise.getRoll = getRollNew
+	ActionSurprise.getRoll = getRollAdndOpHr
 end
 
-function getRollNew(rActor, nTargetDC, bSecretRoll)
+function getRollAdndOpHr(rActor, nTargetDC, bSecretRoll)
 	sOptSurpriseDie = OptionsManager.getOption("surpriseDie")
 
 	if sOptSurpriseDie == "d6" then
@@ -49,7 +49,7 @@ function getSurpriseTarget(node)
 end
 
 function performRoll(draginfo, rActor, nTargetDC, bSecretRoll)
-	local rRoll = getRollNew(rActor, nTargetDC, bSecretRoll)
+	local rRoll = getRollAdndOpHr(rActor, nTargetDC, bSecretRoll)
 
 	ActionsManager.performAction(draginfo, rActor, rRoll)
 end

@@ -11,6 +11,8 @@
 		<loadorder>99</loadorder>
 		<ruleset>
 			<name>OSRIC</name>
+		</ruleset>
+		<ruleset>
 			<name>2E</name>
 		</ruleset>
 	</properties>

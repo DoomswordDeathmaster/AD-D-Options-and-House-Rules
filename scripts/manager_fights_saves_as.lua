@@ -112,10 +112,10 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
 			fightsAsHdLevel = 20
 		end
 
-		local bUseOsricMonsterMatrix = (OptionsManager.getOption("useOsricMonsterMatrix") == "on")
-		Debug.console("128", "fightsAsHdLevel", fightsAsHdLevel, "bUseOsricMonsterMatrix", bUseOsricMonsterMatrix)
+		local bmosterAttackMatrices = (OptionsManager.getOption("mosterAttackMatrices") == "on")
+		Debug.console("128", "fightsAsHdLevel", fightsAsHdLevel, "bmosterAttackMatrices", bmosterAttackMatrices)
 
-		if bUseOsricMonsterMatrix then
+		if bmosterAttackMatrices then
 			aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel]
 		else
 			aMatrixRolls = DataCommonADND.aMatrix[sHitDice]

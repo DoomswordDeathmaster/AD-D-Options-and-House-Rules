@@ -5,7 +5,7 @@
 			<button_charinitdelay name="initiativedelay" merge="replace">
 				<script>
 					function onInit()
-						if OptionsManager.getOption("initiativeDelayAllow") == "off" then
+						if OptionsManager.getOption("initiativeDelay") == "off" then
 							setVisible(false);
 							window.label_initdelaytop.setVisible(false);
 						end

@@ -7,7 +7,7 @@
 
 	<!-- Option label strings -->
 	<string name="option_label_adnd_op_hr_ability_check_allow">PC: Allow Ability Checks</string>
-	<string name="option_label_adnd_op_hr_initiative_delay_allow">Init: Allow Delay</string>
+	<string name="option_label_adnd_op_hr_initiative_delay">Init: Allow Delaying</string>
 	<string name="option_label_adnd_op_hr_initiative_die">Init: Die</string>
 	<string name="option_label_adnd_op_hr_initiative_ordering">Init: Ordering</string>
 	<string name="option_label_adnd_op_hr_initiative_grouping">Init: Grouping</string>
@@ -15,10 +15,10 @@
 	<string name="option_label_adnd_op_hr_initiative_modifiers_allow">Init: Allow Modifiers</string>
 	<string name="option_label_adnd_op_hr_initiative_ties_allow">Init: Allow Group Ties</string>
 	<string name="option_label_adnd_op_hr_surprise_die">Surprise: Die</string>
-	<string name="option_label_adnd_op_hr_use_2e_kits">System: 2e Kits</string>
+	<string name="option_label_adnd_op_hr_use_2e_kits">PC: Allow Kits</string>
 	<string name="option_label_adnd_op_hr_round_start_reset_init">Init: Reset on Round Start</string>
-	<string name="option_label_adnd_op_hr_add1e_properties">System: 1e Properties</string>
-	<string name="option_label_adnd_op_hr_osric_monster_matrices">System: OSRIC Monster Attack Matrices</string>
+	<string name="option_label_adnd_op_hr_add1e_properties">System: Use OSRIC/1E Data\r\tRequires reload for Monster Matrices Options</string>
+	<string name="option_label_adnd_op_hr_osric_monster_matrices">System: Monster Attack Matrices</string>
 
 	<!-- Option value strings -->
 	<string name="option_val_d6">d6</string>
@@ -33,6 +33,11 @@
 	<string name="option_val_zero">HP 0</string>
 	<string name="option_val_minus_three">HP 0 to -3</string>
 	<string name="option_val_zero_or_less">HP 0 to -9</string>
+	<string name="option_val_minus_ten">-10</string>
+	<string name="option_val_minus_con">-CON score</string>
+	<string name="option_val_off">Off</string>
+	<string name="option_val_osric">OSRIC</string>
+	<string name="option_val_1e">1E</string>
 
 	<!-- NPC sheet -->
 	<string name="npc_label_click_to_choose">Click to select...</string>
@@ -46,5 +51,6 @@
 	<string name="option_label_autoNpcInitiative">Init: Auto NPC initiative</string>
 	<string name="option_label_ADND_DEATHSDOOR">PC: Death's Door Threshold</string>
 	<string name="option_label_HRNH">NPC: Hit points</string>
+	<string name= "option_label_adnd_op_hr_pc_dead_at_value">PC: Dead At HP</string>
 </root>
     

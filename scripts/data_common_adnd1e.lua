@@ -1,6 +1,3 @@
--- what version of AD&D is this
-coreVersion = "1e"
-
 -- ability scores
 aStrength = {}
 aDexterity = {}
@@ -42,7 +39,7 @@ function onInit()
 	bOptAdd1eProperties = (OptionsManager.getOption("add1eProperties") == "on")
 
 	if bOptAdd1eProperties then
-		DataCommonADND.coreVersion = coreVersion
+		DataCommonADND.coreVersion = "1e"
 
 		-- default coin weight, 10 coins = 1 pound, 1e, ouch
 		DataCommonADND.nDefaultCoinWeight = 0.1
@@ -862,5 +859,7 @@ function onInit()
 		aOsricToHitMatrix[19] = {-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
 		aOsricToHitMatrix[20] = {-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
 		DataCommonADND.aOsricToHitMatrix = aOsricToHitMatrix
+
+		CharEncumbranceManager.addCustomCalc(CharManager.calcWeightCarried);
 	end
 end

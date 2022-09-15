@@ -9,17 +9,19 @@ function onInit()
 
     --DataCommonADND.nDefaultInitiativeDice = initiativeDieNumber;
 
+    --Debug.console("actioninit", RULESET_NAME)
+
     getRollOrig = ActionInit.getRoll
-    ActionInit.getRoll = getRollNew
+    ActionInit.getRoll = getRollAdndOpHr
 
     handleApplyInitOrig = ActionInit.handleApplyInit
-    ActionInit.handleApplyInit = handleApplyInitNew
+    ActionInit.handleApplyInit = handleApplyInitAdndOpHr
 
-    OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_APPLYINIT, handleApplyInitNew)
+    OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_APPLYINIT, handleApplyInitAdndOpHr)
 end
 
 -- initiative with modifiers, from item entry in ct or init button on character
-function getRollNew(rActor, bSecretRoll, rItem)
+function getRollAdndOpHr(rActor, bSecretRoll, rItem)
     --Debug.console("getRollNew", rActor, bSecretRoll, rItem);
     local rRoll
 
@@ -50,7 +52,7 @@ function getRollNoMods(rActor, bSecretRoll, rItem)
     return rRoll
 end
 
-function handleApplyInitNew(msgOOB)
+function handleApplyInitAdndOpHr(msgOOB)
     local rSource = ActorManager.resolveActor(msgOOB.sSourceNode)
     local nTotal = tonumber(msgOOB.nTotal) or 0
 

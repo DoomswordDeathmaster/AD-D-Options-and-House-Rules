@@ -5,9 +5,7 @@
 
 function onInit()
     registerOptions()
-    --OptionsManager.registerCallback("OPTIONS_MENU", updateMenuStyle);
-    --OptionsManager.registerCallback("OPTIONAL_ENCUMBRANCE", updateForEncumbranceOption);
-    --OptionsManager.registerCallback("OPTIONS_EFFECT_AURA", TokenManagerADND.applyAuras);
+    OptionsManager.registerCallback("OPTIONAL_ENCUMBRANCE", updateForEncumbranceOption);
     createBackupDBOnStartCheck()
 end
 
@@ -39,7 +37,7 @@ function registerOptions()
     -- deprecate option
     -- OptionsManager.registerOption2(
     --     "OPTIONAL_ENCUMBRANCE",
-    --     false,
+    --     false,update
     --     "option_header_adnd_options",
     --     "option_label_OPTIONAL_ENCUMBRANCE",
     --     "option_entry_cycler",
@@ -295,9 +293,9 @@ function createBackupDBOnStartCheck()
     end
 end
 
--- recheck encumbrance settings with value changed.
--- function updateForEncumbranceOption()
---   for _,nodeChar in pairs(DB.getChildren("charsheet")) do
---     CharManager.calcWeightCarried(nodeChar)
---   end
--- end
+--recheck encumbrance settings with value changed.
+function updateForEncumbranceOption()
+    for _,nodeChar in pairs(DB.getChildren("charsheet")) do
+        CharManager.calcWeightCarried(nodeChar)
+    end
+end

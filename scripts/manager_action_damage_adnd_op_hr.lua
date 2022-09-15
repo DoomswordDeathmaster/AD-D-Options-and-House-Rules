@@ -1,11 +1,11 @@
 function onInit()
-    Debug.console("manager_action_damage_osric.lua", "init")
-    ActionDamage.applyDamage = applyDamageNew
-    ActionDamage.modDamage = modDamageNew
+    Debug.console("manager_action_damage_AdndOpHr.lua", "init")
+    ActionDamage.applyDamage = applyDamageAdndOpHr
+    ActionDamage.modDamage = modDamageAdndOpHr
 end
 
 -- brought this in to later remove critical options
-function modDamageNew(rSource, rTarget, rRoll)
+function modDamageAdndOpHr(rSource, rTarget, rRoll)
     ActionDamage.decodeDamageTypes(rRoll)
     CombatManager2.addRightClickDiceToClauses(rRoll)
 
@@ -390,7 +390,7 @@ function modDamageNew(rSource, rTarget, rRoll)
 end
 
 -- brought this is to handle Death's Door changes, TODO: apply new Death's Door Threshold options
-function applyDamageNew(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
+function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
     Debug.console("manager_action_damage_osric.lua", "applyDamageNew", "aDice", aDice)
     -- Get health fields
     local sTargetType, nodeTarget = ActorManager.getTypeAndNode(rTarget)
@@ -398,7 +398,7 @@ function applyDamageNew(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
     local nAdjustedDamage = 0
     local nDmgBeyondTotalHp = 0
 
-    local nTotalHP, nTempHP, nWounds, nPrevWounds, nDeathSaveSuccess, nDeathSaveFail, nCurrentHp
+    local nTotalHP, nTempHP, nWounds, nPrevWounds, nDeathSaveSuccess, nDeathSaveFail, nCurrentHp, nConScore
 
     if sTargetType == "pc" then
         nTotalHP = DB.getValue(nodeTarget, "hp.total", 0)
@@ -408,6 +408,7 @@ function applyDamageNew(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
         nCurrentHp = (nTotalHP + nTempHP) - nWounds
         nDeathSaveSuccess = DB.getValue(nodeTarget, "hp.deathsavesuccess", 0)
         nDeathSaveFail = DB.getValue(nodeTarget, "hp.deathsavefail", 0)
+        nConScore = DB.getValue(nodeTarget, "abilities.constitution.score", 0)
     else
         nTotalHP = DB.getValue(nodeTarget, "hptotal", 0)
         nTempHP = DB.getValue(nodeTarget, "hptemp", 0)
@@ -429,7 +430,15 @@ function applyDamageNew(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
 
     -- changing death's door options, since it always exists in 1e
     local nDeathDoorThreshold = 0
+
+    local sOptPcDeadAtValue = OptionsManager.getOption("pcDeadAtValue")
+
     local nDEAD_AT = -10
+
+    if sOptPcDeadAtValue == "minusCon" then
+        nDEAD_AT = nConScore
+        Debug.console("actiondamagadnd: ndeadat", nDEAD_AT)
+    end
 
     local sOptHouseRuleDeathsDoor = OptionsManager.getOption("HouseRule_DeathsDoor")
 
@@ -700,14 +709,14 @@ function applyDamageNew(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
                 -- todo: System Shock
                 -- Add check here for nAdjustedDamage > 50 and if so perform system shock check?-- celestian, AD&D
                 -- hit after having zero or less hp - dead
-                -- new hit causing damage beyond threshold = dead
-                if nAdjustedDamage > nCurrentHp + nDeathDoorThreshold then
+                -- new hit causing damage beyond threshold or deadAt = dead
+                if (nAdjustedDamage > nCurrentHp + nDeathDoorThreshold) or (nAdjustedDamage >= nCurrentHp + nDEAD_AT) then
                     table.insert(aNotifications, "[INSTANT DEATH]")
                     nDeathSaveFail = 3
                 elseif (nAdjustedDamage == nCurrentHp) then
                     -- new hit causing hit points to fall within threshold
                     table.insert(aNotifications, "[DAMAGE EQUALS HIT POINTS - AT DEATH'S DOOR]")
-                elseif (nAdjustedDamage > nCurrentHp) and (nAdjustedDamage <= nCurrentHp + nDeathDoorThreshold) then
+                elseif (nAdjustedDamage > nCurrentHp) and ((nAdjustedDamage <= nCurrentHp + nDeathDoorThreshold) and (nAdjustedDamage < nCurrentHp + nDEAD_AT)) then
                     table.insert(
                         aNotifications,
                         "[DAMAGE EXCEEDS HIT POINTS BY " .. nDmgBeyondTotalHp .. "  - AT DEATH'S DOOR]"
@@ -830,6 +839,7 @@ function applyDamageNew(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
             nPrevWounds,
             nTotalHP,
             nDeathDoorThreshold,
+            nDEAD_AT,
             rTarget,
             nCurrentHp,
             nAdjustedDamage
@@ -915,6 +925,7 @@ function updatePcCondition(
     nPrevWounds,
     nTotalHP,
     nDeathDoorThreshold,
+    nDEAD_AT,
     rTarget,
     nCurrentHp,
     nAdjustedDamage)
@@ -933,6 +944,7 @@ function updatePcCondition(
         nPrevWounds,
         nTotalHP,
         nDeathDoorThreshold,
+        nDEAD_AT,
         rTarget,
         nCurrentHp,
         nAdjustedDamage
@@ -1040,8 +1052,7 @@ function updatePcCondition(
             -- Add check here for nAdjustedDamage > 50 and if so perform system shock check?-- celestian, AD&D
             -- hit after having zero or less hp - dead
             -- new hit causing damage beyond threshold = dead
-            if nAdjustedDamage > nCurrentHp + nDeathDoorThreshold then
-                -- new hit causing hit points to drop to 0
+            if (nAdjustedDamage > nCurrentHp + nDeathDoorThreshold) or (nAdjustedDamage >= nCurrentHp + nDEAD_AT) then
                 if not EffectManager5E.hasEffect(rTarget, "Dead") then
                     EffectManager.removeEffect(ActorManager.getCTNode(rTarget), "Unconscious");
                     EffectManager.addEffect(
@@ -1052,8 +1063,8 @@ function updatePcCondition(
                         true
                     )
                 end
+            -- new hit dropping hp to zero
             elseif (nAdjustedDamage == nCurrentHp) then
-                -- new hit causing hit points to fall within threshold
                 EffectManager.addEffect(
                     "",
                     "",
@@ -1061,7 +1072,8 @@ function updatePcCondition(
                     {sName = "Unconscious;DMGO:1", sLabel = "Unconscious;DMGO:1", nDuration = 0},
                     true
                 )
-            elseif (nAdjustedDamage > nCurrentHp) and (nAdjustedDamage <= nCurrentHp + nDeathDoorThreshold) then
+            -- new hit causing damage to fall within threshold
+            elseif (nAdjustedDamage > nCurrentHp) and ((nAdjustedDamage <= nCurrentHp + nDeathDoorThreshold) and (nAdjustedDamage < nCurrentHp + nDEAD_AT)) then
                 EffectManager.addEffect(
                     "",
                     "",

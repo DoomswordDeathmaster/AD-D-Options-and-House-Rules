@@ -14,25 +14,27 @@ function onInit()
 	-- DataCommonADND.nDefaultInitiativeDice = initiativeDieNumber;
 
 	rollEntryInitOrig = CombatManagerADND.rollEntryInit
-	CombatManagerADND.rollEntryInit = rollEntryInitNew
-	CombatManager2.rollEntryInit = rollEntryInitNew
+	CombatManagerADND.rollEntryInit = rollEntryInitAdndOpHr
+	CombatManager2.rollEntryInit = rollEntryInitAdndOpHr
 
 	rollRandomInitOrig = CombatManagerADND.rollRandomInit
-	CombatManagerADND.rollRandomInit = rollRandomInitNew
-	CombatManager2.rollRandomInit = rollRandomInitNew
+	CombatManagerADND.rollRandomInit = rollRandomInitAdndOpHr
+	CombatManager2.rollRandomInit = rollRandomInitAdndOpHr
+
+	CombatManagerADND.getLastInitiative = getLastInitiative
 
 	getACHitFromMatrixForNPCOrig = CombatManagerADND.getACHitFromMatrixForNPC
-	CombatManagerADND.getACHitFromMatrixForNPC = getACHitFromMatrixForNPCNew
+	CombatManagerADND.getACHitFromMatrixForNPC = getACHitFromMatrixForNPCAdndOpHr
 
 	CombatManagerADND.handleInitiativeChange = handleInitiativeChange
 	OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_CHANGEINIT, handleInitiativeChange)
 
-	CombatManager.setCustomCombatReset(resetInitNew)
-	CombatManager.setCustomRoundStart(onRoundStartNew)
-	CombatManager.setCustomSort(sortfuncADnDNew)
+	CombatManager.setCustomCombatReset(resetInitAdndOpHr)
+	CombatManager.setCustomRoundStart(onRoundStartAdndOpHr)
+	CombatManager.setCustomSort(sortfuncAdndOpHr)
 end
 
-function rollRandomInitNew(nMod, bADV)
+function rollRandomInitAdndOpHr(nMod, bADV)
 	if OptionsManager.getOption("initiativeModifiersAllow") == "off" then
 		-- no modifiers
 		nMod = 0
@@ -41,7 +43,7 @@ function rollRandomInitNew(nMod, bADV)
 	rollRandomInitOrig(nMod, bADV)
 end
 
-function rollEntryInitNew(nodeEntry)
+function rollEntryInitAdndOpHr(nodeEntry)
 	local bOptInitMods = (OptionsManager.getOption("initiativeModifiersAllow") == "on")
 	local bOptInitTies = (OptionsManager.getOption("initiativeTiesAllow") == "on")
 	local sOptInitGrouping = OptionsManager.getOption("initiativeGrouping")
@@ -265,7 +267,7 @@ end
 --
 -- AD&D Style ordering (low to high initiative)
 --
-function sortfuncADnDNew(node2, node1)
+function sortfuncAdndOpHr(node2, node1)
 	local sOptInitOrdering = OptionsManager.getOption("initiativeOrdering")
 	local bHost = Session.IsHost
 	local sOptCTSI = OptionsManager.getOption("CTSI")
@@ -341,7 +343,7 @@ function handleInitiativeChange(msgOOB)
 	end
 end
 
-function resetInitNew()
+function resetInitAdndOpHr()
 	-- set last init results to 0
 	PC_LASTINIT = 0
 	NPC_LASTINIT = 0
@@ -351,7 +353,7 @@ function resetInitNew()
 	end
 end
 
-function onRoundStartNew(nCurrent)
+function onRoundStartAdndOpHr(nCurrent)
 	local bOptRoundStartResetInit = (OptionsManager.getOption("roundStartResetInit") == "on")
 
 	PC_LASTINIT = 0
@@ -376,7 +378,7 @@ function resetCombatantInit(nodeCT)
 end
 
 -- return the Best ac hit from a roll for this NPC
-function getACHitFromMatrixForNPCNew(nodeCT, nRoll)
+function getACHitFromMatrixForNPCAdndOpHr(nodeCT, nRoll)
 	--Debug.console(nodeCT, sHitDice, aMatrixRolls)
 
 	local sClass, nodePath = DB.getValue(nodeCT, "sourcelink")
@@ -503,10 +505,10 @@ function getACHitFromMatrixForNPCNew(nodeCT, nRoll)
 			fightsAsHdLevel = 20
 		end
 
-		local bUseOsricMonsterMatrix = (OptionsManager.getOption("useOsricMonsterMatrix") == "on")
-		Debug.console("514", "fightsAsHdLevel", fightsAsHdLevel, "bUseOsricMonsterMatrix", bUseOsricMonsterMatrix)
+		local bmosterAttackMatrices = (OptionsManager.getOption("mosterAttackMatrices") == "on")
+		Debug.console("514", "fightsAsHdLevel", fightsAsHdLevel, "bmosterAttackMatrices", bmosterAttackMatrices)
 
-		if bUseOsricMonsterMatrix then
+		if bmosterAttackMatrices then
 			aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel]
 		else
 			aMatrixRolls = DataCommonADND.aMatrix[sHitDice]
@@ -559,4 +561,26 @@ function getACHitFromMatrixForNPCNew(nodeCT, nRoll)
 	end
 
 	return nACHit
+end
+
+-- return the initiative value of the last entry with initiative.
+function getLastInitiative()
+	iibOptAdd1eProperties = (OptionsManager.getOption("add1eProperties") == "on")
+
+	if DataCommonADND.coreVersion == "1e" then
+		nLastInit = 7
+	else
+		local nLastInit = -100
+		for _, nodeCT in pairs(CombatManager.getCombatantNodes()) do
+
+
+			local nInit = DB.getValue(nodeCT, "initresult", 0)
+
+			if nInit > nLastInit then
+				nLastInit = nInit
+			end
+		end
+	end
+	
+	return nLastInit
 end
