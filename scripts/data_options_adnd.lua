@@ -5,7 +5,8 @@
 
 function onInit()
     registerOptions()
-    OptionsManager.registerCallback("OPTIONAL_ENCUMBRANCE", updateForEncumbranceOption);
+    OptionsManager.registerCallback("OPTIONAL_ENCUMBRANCE", updateForEncumbranceOption)
+
     createBackupDBOnStartCheck()
 end
 
@@ -29,45 +30,59 @@ function registerOptions()
 
     -- GAME
     -- use Fighter Handbook armor damagepoint rules
-    -- deprecate option
-    -- OptionsManager.registerOption2("OPTIONAL_ARMORDP", false, "option_header_adnd_options", "option_label_OPTIONAL_ARMORDB", "option_entry_cycler",
-    --   { labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off" });
+    if User.getRuleSetName ~= "OSRIC" then
+        OptionsManager.registerOption2(
+            "OPTIONAL_ARMORDP",
+            false,
+            "option_header_adnd_op_hr",
+            "option_label_OPTIONAL_ARMORDB",
+            "option_entry_cycler",
+            {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off"}
+        )
+    end
 
-    -- encumbrance should be mandatory
-    -- deprecate option
-    -- OptionsManager.registerOption2(
-    --     "OPTIONAL_ENCUMBRANCE",
-    --     false,update
-    --     "option_header_adnd_options",
-    --     "option_label_OPTIONAL_ENCUMBRANCE",
-    --     "option_entry_cycler",
-    --     {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
-    -- )
+    -- encumbrance optional
+    OptionsManager.registerOption2(
+        "OPTIONAL_ENCUMBRANCE",
+        false,
+        "option_header_adnd_op_hr",
+        "option_label_OPTIONAL_ENCUMBRANCE",
+        "option_entry_cycler",
+        {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
+    )
 
     -- Doesn't exist in 2e ruleset, needs to be removed there
     -- OptionsManager.registerOption2("OPTIONAL_ENCUMBRANCE_COIN", false, "option_header_adnd_options", "option_label_OPTIONAL_ENCUMBRANCE_COIN", "option_entry_cycler",
     --   { labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off" });
 
     -- Changed to a threshold to account for differences between 1e and OSRIC
-    OptionsManager.registerOption2(
-        "HouseRule_DeathsDoor",
-        false,
-        "option_header_adnd_op_hr",
-        "option_label_ADND_DEATHSDOOR",
-        "option_entry_cycler",
-        {
-            labels = "option_val_zero|option_val_minus_three",
-            values = "exactlyZero|zeroToMinusThree",
-            baselabel = "option_val_zero_or_less",
-            baseval = "zeroOrLess",
-            default = "zeroOrLess"
-        }
-    )
+    --if user.getRuleSetName == "OSRIC" then
 
-    -- size mods don't exist in 1e or OSRIC
-    -- deprecate option and functions
-    -- OptionsManager.registerOption2("OPTIONAL_INIT_SIZEMODS", false, "option_header_adnd_options", "option_label_OPTIONAL_INIT_SIZEMODS", "option_entry_cycler",
-    --   { labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on" });
+    --else
+    -- let's try to move this to see if dynamic option works if we do...
+    -- it does, TODO: consider moving other modified options to mod options file
+    -- OptionsManager.registerOption2(
+    --     "HouseRule_DeathsDoor",
+    --     false,
+    --     "option_header_adnd_op_hr",
+    --     "option_label_ADND_DEATHSDOOR",
+    --     "option_entry_cycler",
+    --     {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
+    -- )
+    --end
+
+    -- size mods and init mods don't exist in 1e or OSRIC, make 2e only
+    -- move to options mod file
+    -- if User.getRulesetName ~= "OSRIC" then
+    --     OptionsManager.registerOption2(
+    --         "OPTIONAL_INIT_SIZEMODS",
+    --         false,
+    --         "option_header_adnd_op_hr",
+    --         "option_label_OPTIONAL_INIT_SIZEMODS",
+    --         "option_entry_cycler",
+    --         {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
+    --     )
+    -- end
 
     -- skip 0 hitpoint NPCs in the CT when advancing initiative.
     -- COMBAT
@@ -91,7 +106,7 @@ function registerOptions()
     )
 
     -- PC vs NPC initiative type
-    -- doesn't exist in 1e/OSRIC and seems to be of limited usefulness
+    -- doesn't exist in 1e/OSRIC and seems to be of limited usefulness in 2e
     -- deprecate option
     -- OptionsManager.registerOption2("PCVNPCINIT", false, "option_header_combat", "option_label_PCVNPCINIT", "option_entry_cycler",
     --     { labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off" });
@@ -196,26 +211,33 @@ function registerOptions()
     )
 
     -- init each round
-    -- always happens in 1e/OSRIC
-    -- deprecate option
-    -- OptionsManager.registerOption2("HouseRule_InitEachRound", false, "option_header_houserule", "option_label_HOUSE_RULE_INIT_EACH_ROUND", "option_entry_cycler",
-    --     { labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on" });
+    -- always happens in 1e/OSRIC, make 2e only
+    if User.getRuleSetName ~= "OSRIC" then
+        OptionsManager.registerOption2(
+            "HouseRule_InitEachRound",
+            false,
+            "option_header_adnd_op_hr",
+            "option_label_HOUSE_RULE_INIT_EACH_ROUND",
+            "option_entry_cycler",
+            {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
+        )
+    end
 
-    -- deprecate
-    -- OptionsManager.registerOption2(
-    --     "HouseRule_CRIT_TYPE",
-    --     false,
-    --     "option_header_houserule",
-    --     "option_label_HR_CRIT",
-    --     "option_entry_cycler",
-    --     {
-    --         labels = "option_val_hr_crit_maxdmg|option_val_hr_crit_timestwo|option_val_hr_crit_doubledice",
-    --         values = "max|timestwo|doubledice",
-    --         baselabel = "option_val_hr_crit_none",
-    --         baseval = "none",
-    --         default = "none"
-    --     }
-    -- )
+    -- crtical types
+    OptionsManager.registerOption2(
+        "HouseRule_CRIT_TYPE",
+        false,
+        "option_header_adnd_op_hr",
+        "option_label_HR_CRIT",
+        "option_entry_cycler",
+        {
+            labels = "option_val_hr_crit_maxdmg|option_val_hr_crit_timestwo|option_val_hr_crit_doubledice",
+            values = "max|timestwo|doubledice",
+            baselabel = "option_val_hr_crit_none",
+            baseval = "none",
+            default = "none"
+        }
+    )
 
     -- this is not a option in AD&D 2e?
     -- OptionsManager.registerOption2("HouseRule_ASCENDING_AC", false, "option_header_houserule", "option_label_HR_ASENDING_AC", "option_entry_cycler",
@@ -295,7 +317,7 @@ end
 
 --recheck encumbrance settings with value changed.
 function updateForEncumbranceOption()
-    for _,nodeChar in pairs(DB.getChildren("charsheet")) do
+    for _, nodeChar in pairs(DB.getChildren("charsheet")) do
         CharManager.calcWeightCarried(nodeChar)
     end
 end

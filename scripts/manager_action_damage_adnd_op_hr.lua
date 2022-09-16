@@ -428,6 +428,10 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
     -- Decode damage/heal description
     local rDamageOutput = ActionDamage.decodeDamageText(nTotal, sDamage)
 
+    -- CONTINUE FROM HERE - 09/15/22
+    -- death's door option
+    local bDeathsDoor = OptionsManager.isOption("HouseRule_DeathsDoor", "on")
+
     -- changing death's door options, since it always exists in 1e
     local nDeathDoorThreshold = 0
 
@@ -440,15 +444,17 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
         Debug.console("actiondamagadnd: ndeadat", nDEAD_AT)
     end
 
-    local sOptHouseRuleDeathsDoor = OptionsManager.getOption("HouseRule_DeathsDoor")
 
-    if sOptHouseRuleDeathsDoor == "exactlyZero" then
+    local sOptHouseRuleDeathsDoorThreshold = OptionsManager.getOption("HouseRule_DeathsDoorThreshold")
+
+    if sOptHouseRuleDeathsDoorThreshold == "exactlyZero" then
         nDeathDoorThreshold = 0
-    elseif sOptHouseRuleDeathsDoor == "zeroToMinusThree" then
+    elseif sOptHouseRuleDeathsDoorThreshold == "zeroToMinusThree" then
         nDeathDoorThreshold = 3
     else
-        -- 9 because -10 = dead
-        nDeathDoorThreshold = 9
+        -- nDEAD_AT -1
+        nDeathDoorThreshold = nDEAD_AT - 1
+        Debug.console("actiondamagadnd: ndeathsdoorthreshold", ndeathsdoorthreshold)
     end
 
     -- Healing
@@ -722,7 +728,7 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
                         "[DAMAGE EXCEEDS HIT POINTS BY " .. nDmgBeyondTotalHp .. "  - AT DEATH'S DOOR]"
                     )
                 end
-                -- todo: see if this stuff is used in the 2e ruleset
+
                 if nPrevWounds >= nTotalHP then
                     if rDamageOutput.bCritical then
                         nDeathSaveFail = nDeathSaveFail + 2
@@ -812,15 +818,15 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
             end
         end
 
-        -- deprecating, useless in 1e
+        -- useless in 1E, apply only in 2E
         -- if optional rule from Fighter's Handbook using Armor Damage (DP) then...
-        -- if OptionsManager.getOption("OPTIONAL_ARMORDP") == "on" then
-        --     -- armor takes 1 damage each time "damaged"
-        --     -- local nodeCT = DB.findNode(ActorManager.getCTNodeName(rTarget));
-        --     local nodeCT = ActorManager.getCTNode(rTarget)
-        --     local nodeChar = CombatManagerADND.getNodeFromCT(nodeCT)
-        --     ActionDamage.damageArmorWorn(nodeChar, 1)
-        -- end
+        if OptionsManager.getOption("OPTIONAL_ARMORDP") == "on" then
+            -- armor takes 1 damage each time "damaged"
+            -- local nodeCT = DB.findNode(ActorManager.getCTNodeName(rTarget));
+            local nodeCT = ActorManager.getCTNode(rTarget)
+            local nodeChar = CombatManagerADND.getNodeFromCT(nodeCT)
+            ActionDamage.damageArmorWorn(nodeChar, 1)
+        end
 
         -- Update the damage output variable to reflect adjustments
         rDamageOutput.nVal = nAdjustedDamage

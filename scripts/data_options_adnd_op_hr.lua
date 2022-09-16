@@ -4,6 +4,7 @@ function onInit()
 	--OptionsManager.registerCallback("add1eProperties", dynamicOsricOption);
 	registerOptions()
 	dynamicOsricOptions()
+	dynamic2eOptions()
 end
 
 function registerOptions()
@@ -128,8 +129,8 @@ function registerOptions()
 			{labels = "option_val_off", values = "off", baselabel = "option_val_on", baseval = "on", default = "on"}
 		)
 	end
-	
-	-- Deat at, -10 or -con
+
+	-- Dead at, -10 or -con
 	OptionsManager.registerOption2(
 		"pcDeadAtValue",
 		false,
@@ -183,9 +184,18 @@ function registerOptions()
 			{labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off"}
 		)
 	end
+
+	-- death's door
+	OptionsManager.registerOption2(
+        "HouseRule_DeathsDoor",
+        false,
+        "option_header_adnd_op_hr",
+        "option_label_ADND_DEATHSDOOR",
+        "option_entry_cycler",
+        {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
+    )
 end
 
--- doesn't work correctly
 -- 2E: If the add 1e option is set
 function dynamicOsricOptions()
 	local bOptAdd1eProperties = OptionsManager.isOption("add1eProperties", "on");
@@ -200,5 +210,41 @@ function dynamicOsricOptions()
 			"option_entry_cycler",
 			{labels = "option_val_osric", values = "on", baselabel = "option_val_1e", baseval = "off", default = "off"}
 		)
+	end
+end
+
+--2E: if death's door turned on
+function dynamic2eOptions()
+	local bOptDeathsDoor = OptionsManager.isOption("HouseRule_DeathsDoor", "on");
+	Debug.console("DeathsDoor", bOptDeathsDoor)
+	if bOptDeathsDoor then
+		OptionsManager.registerOption2(
+			"HouseRule_DeathsDoor_Threshold",
+			false,
+			"option_header_adnd_op_hr",
+			"option_label_ADND_DEATHSDOOR_Threshold",
+			"option_entry_cycler",
+			{
+				labels = "option_val_zero|option_val_minus_three",
+				values = "exactlyZero|zeroToMinusThree",
+				baselabel = "option_val_zero_or_less",
+				baseval = "zeroOrLess",
+				default = "zeroOrLess"
+			}
+		)
+	end
+	local bOptInitModifiersAllow = OptionsManager.isOption("initiativeModifiersAllow", "on");
+	Debug.console("InitModifiersAllow", bOptInitModifiersAllow)
+	if bOptInitModifiersAllow then
+		if User.getRulesetName ~= "OSRIC" then
+			OptionsManager.registerOption2(
+				"OPTIONAL_INIT_SIZEMODS",
+				false,
+				"option_header_adnd_op_hr",
+				"option_label_OPTIONAL_INIT_SIZEMODS",
+				"option_entry_cycler",
+				{labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
+			)
+		end
 	end
 end

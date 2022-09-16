@@ -87,7 +87,6 @@ function performInit()
 			return
 		end
 
-		-- todo: comment out to deprecate, if desired
 		OptionsManager.registerOption2(
 			"CURR",
 			false,

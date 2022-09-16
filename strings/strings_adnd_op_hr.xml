@@ -12,12 +12,13 @@
 	<string name="option_label_adnd_op_hr_initiative_ordering">Init: Ordering</string>
 	<string name="option_label_adnd_op_hr_initiative_grouping">Init: Grouping</string>
 	<string name="option_label_adnd_op_hr_initiative_grouping_swap">Init: Swap Group Results (OSRIC)</string>
-	<string name="option_label_adnd_op_hr_initiative_modifiers_allow">Init: Allow Modifiers</string>
+	<string name="option_label_adnd_op_hr_initiative_modifiers_allow">Init: Allow Modifiers\r\tChange requires reload for Initiative Size Modifiers Options</string>
 	<string name="option_label_adnd_op_hr_initiative_ties_allow">Init: Allow Group Ties</string>
 	<string name="option_label_adnd_op_hr_surprise_die">Surprise: Die</string>
 	<string name="option_label_adnd_op_hr_use_2e_kits">PC: Allow Kits</string>
+	<string name="option_label_ADND_DEATHSDOOR_Threshold">PC: Death's Door Threshold</string>
 	<string name="option_label_adnd_op_hr_round_start_reset_init">Init: Reset on Round Start</string>
-	<string name="option_label_adnd_op_hr_add1e_properties">System: Use OSRIC/1E Data\r\tRequires reload for Monster Matrices Options</string>
+	<string name="option_label_adnd_op_hr_add1e_properties">System: Use OSRIC/1E Data\r\tChange requires reload for Monster Attack Matrices Options</string>
 	<string name="option_label_adnd_op_hr_osric_monster_matrices">System: Monster Attack Matrices</string>
 
 	<!-- Option value strings -->
@@ -32,7 +33,7 @@
 	<string name="option_val_both">Both</string>
 	<string name="option_val_zero">HP 0</string>
 	<string name="option_val_minus_three">HP 0 to -3</string>
-	<string name="option_val_zero_or_less">HP 0 to -9</string>
+	<string name="option_val_zero_or_less">HP 0 to Death -1</string>
 	<string name="option_val_minus_ten">-10</string>
 	<string name="option_val_minus_con">-CON score</string>
 	<string name="option_val_off">Off</string>
@@ -49,8 +50,13 @@
 	<!-- Overrides -->
 	<!-- change the name on this one because it was maddeningly confusing -->
 	<string name="option_label_autoNpcInitiative">Init: Auto NPC initiative</string>
-	<string name="option_label_ADND_DEATHSDOOR">PC: Death's Door Threshold</string>
+	<string name="option_label_OPTIONAL_INIT_SIZEMODS">Init: Size Modifiers</string>
+	<string name="option_label_ADND_DEATHSDOOR">PC: Death's Door\r\tChange requires reload for Death's Door Threshold Options</string>
+	<string name="option_label_OPTIONAL_ARMORDB">PC: Armor Damage</string>
+	<string name="option_label_OPTIONAL_ENCUMBRANCE">PC: Encumbrance</string>
+	<string name="option_label_HR_CRIT">Combat: Critical Hit Type</string>
+	<string name="option_label_CURR">PC: Include Coin Encumbrance</string>
 	<string name="option_label_HRNH">NPC: Hit points</string>
-	<string name= "option_label_adnd_op_hr_pc_dead_at_value">PC: Dead At HP</string>
+	<string name="option_label_adnd_op_hr_pc_dead_at_value">PC: Dead At HP</string>
 </root>
     
