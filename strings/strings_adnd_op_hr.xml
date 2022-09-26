@@ -2,23 +2,26 @@
 <root>
 	<!-- Options header strings  -->
 	<string name="option_header_adnd_op_hr">AD&amp;D Options and House Rules</string>
-	<!-- do this so I don't have to bring the entire ad&d effectsmanager in -->
+	<!-- do this so I don't have to bring the entire ad&d effectsmanager in to change categorization of these options -->
 	<string name="option_header_houserule">AD&amp;D Options and House Rules</string>
 
+	<!-- Option Groups -->
+	<!-- <string name="option_label_ADND_DEATHSDOOR_OPTIONS">_Death's Door Options\r\trequires reload</string> -->
 	<!-- Option label strings -->
-	<string name="option_label_adnd_op_hr_ability_check_allow">PC: Allow Ability Checks</string>
-	<string name="option_label_adnd_op_hr_initiative_delay">Init: Allow Delaying</string>
-	<string name="option_label_adnd_op_hr_initiative_die">Init: Die</string>
+	<string name="option_label_adnd_op_hr_ability_check_allow">PC: Allow Ability Checks\r\trequires reload for character sheet changes</string>
+	<string name="option_label_adnd_op_hr_initiative_delay">Init: Allow Delaying\r\trequires reload for character sheet changes</string>
+	<string name="option_label_adnd_op_hr_initiative_die">Init: Die\r\trequires reload for dice icon changes</string>
 	<string name="option_label_adnd_op_hr_initiative_ordering">Init: Ordering</string>
-	<string name="option_label_adnd_op_hr_initiative_grouping">Init: Grouping</string>
-	<string name="option_label_adnd_op_hr_initiative_grouping_swap">Init: Swap Group Results (OSRIC)</string>
-	<string name="option_label_adnd_op_hr_initiative_modifiers_allow">Init: Allow Modifiers\r\tChange requires reload for Initiative Size Modifiers Options</string>
-	<string name="option_label_adnd_op_hr_initiative_ties_allow">Init: Allow Group Ties</string>
+	<string name="option_label_adnd_op_hr_initiative_grouping">Init: Grouping\r\tnot = "neither" ignores init mods</string>
+	<string name="option_label_adnd_op_hr_initiative_grouping_osric">Init: Grouping</string>
+	<string name="option_label_adnd_op_hr_initiative_grouping_swap">Init: Grouping: Swap Results\r\trequires Init:Grouping not = "neither"</string>
+	<string name="option_label_adnd_op_hr_initiative_modifiers_allow">Init: Modifiers: Mods\r\trequires reload for Initiative Size Modifiers option</string>
+	<string name="option_label_adnd_op_hr_initiative_ties_allow">Init: Grouping: Allow Ties</string>
 	<string name="option_label_adnd_op_hr_surprise_die">Surprise: Die</string>
-	<string name="option_label_adnd_op_hr_use_2e_kits">PC: Allow Kits</string>
-	<string name="option_label_ADND_DEATHSDOOR_Threshold">PC: Death's Door Threshold</string>
-	<string name="option_label_adnd_op_hr_round_start_reset_init">Init: Reset on Round Start</string>
-	<string name="option_label_adnd_op_hr_add1e_properties">System: Use OSRIC/1E Data\r\tChange requires reload for Monster Attack Matrices Options</string>
+	<string name="option_label_adnd_op_hr_use_2e_kits">PC: Allow Kits\r\trequires reload for character sheet changes</string>
+	<string name="option_label_ADND_DEATHSDOOR_Threshold">PC Death: Death's Door Threshold</string>
+	<string name="option_label_adnd_op_hr_round_start_reset_init">Init: Round Start: Reset</string>
+	<string name="option_label_adnd_op_hr_add1e_properties">System: Use OSRIC/1E Data\r\trequires reload for Monster Attack Matrices option</string>
 	<string name="option_label_adnd_op_hr_osric_monster_matrices">System: Monster Attack Matrices</string>
 
 	<!-- Option value strings -->
@@ -49,14 +52,16 @@
 
 	<!-- Overrides -->
 	<!-- change the name on this one because it was maddeningly confusing -->
-	<string name="option_label_autoNpcInitiative">Init: Auto NPC initiative</string>
-	<string name="option_label_OPTIONAL_INIT_SIZEMODS">Init: Size Modifiers</string>
-	<string name="option_label_ADND_DEATHSDOOR">PC: Death's Door\r\tChange requires reload for Death's Door Threshold Options</string>
+	<string name="option_label_autoNpcInitiative">Init: Round Start: Auto-Roll NPCs</string>
+	<string name="option_label_OPTIONAL_INIT_SIZEMODS">Init: Modifiers: NPC Size Mods</string>
 	<string name="option_label_OPTIONAL_ARMORDB">PC: Armor Damage</string>
 	<string name="option_label_OPTIONAL_ENCUMBRANCE">PC: Encumbrance</string>
-	<string name="option_label_HR_CRIT">Combat: Critical Hit Type</string>
+	<string name="option_label_HR_CRIT">Damage: Critical Hit Type</string>
+	<string name="option_label_HOUSE_RULE_AUTO_INIT_EACH_ROUND">Init: Round Start: Auto-Roll All</string>
 	<string name="option_label_CURR">PC: Include Coin Encumbrance</string>
-	<string name="option_label_HRNH">NPC: Hit points</string>
-	<string name="option_label_adnd_op_hr_pc_dead_at_value">PC: Dead At HP</string>
+	<string name="option_label_HRNH">NPC: Auto Hit Points</string>
+	<string name="option_label_adnd_op_hr_pc_dead_at_value">PC Death: Dead At HP</string>
+	<string name="option_label_ADND_DEATHSDOOR">PC Death: Death's Door\r\trequires reload for other PC Death options</string>
+	<string name="option_label_HRFC">Damage: Fumble/Crit Tables</string>
 </root>
     

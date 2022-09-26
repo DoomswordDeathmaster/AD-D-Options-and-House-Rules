@@ -32,7 +32,7 @@
 			<script>
                 function onInit()
                     setVisible(true);
-                    if OptionsManager.getOption("use2eKits") == "off" then
+                    if (OptionsManager.getOption("use2eKits") == "off") or (User.getRulesetName() == "OSRIC") then
                         setVisible(false);
                     end
                 end
@@ -47,7 +47,7 @@
 			<script>
                 function onInit()
                     setVisible(false);
-                    if OptionsManager.getOption("use2eKits") == "off" then
+                    if (OptionsManager.getOption("use2eKits") == "off") or (User.getRulesetName() == "OSRIC") then
                         setVisible(true);
                     end
                 end

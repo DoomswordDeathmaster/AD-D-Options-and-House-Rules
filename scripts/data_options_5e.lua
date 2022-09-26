@@ -54,7 +54,7 @@ function registerOptions()
         "option_header_adnd_op_hr",
         "option_label_autoNpcInitiative",
         "option_entry_cycler",
-        {labels = "option_val_off", values = "off", baselabel = "option_val_on", baseval = "on", default = "on"}
+        {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off"}
     )
 
     OptionsManager.registerOption2(
@@ -108,21 +108,23 @@ function registerOptions()
         }
     )
 
-    -- deprecating
-    -- OptionsManager.registerOption2(
-    --     "HRFC",
-    --     false,
-    --     "option_header_houserule",
-    --     "option_label_HRFC",
-    --     "option_entry_cycler",
-    --     {
-    --         labels = "option_val_fumbleandcrit|option_val_fumble|option_val_crit",
-    --         values = "both|fumble|criticalhit",
-    --         baselabel = "option_val_off",
-    --         baseval = "off",
-    --         default = "off"
-    --     }
-    -- )
+    -- 2E only
+    if User.getRulesetName() ~= "OSRIC" then
+        OptionsManager.registerOption2(
+            "HRFC",
+            false,
+            "option_header_adnd_op_hr",
+            "option_label_HRFC",
+            "option_entry_cycler",
+            {
+                labels = "option_val_fumbleandcrit|option_val_fumble|option_val_crit",
+                values = "both|fumble|criticalhit",
+                baselabel = "option_val_off",
+                baseval = "off",
+                default = "off"
+            }
+        )
+    end
 
     if Interface.getVersion() < 4 then
         OptionsManager.registerOption2(

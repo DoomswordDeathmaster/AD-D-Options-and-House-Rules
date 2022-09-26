@@ -432,8 +432,15 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
     -- death's door option
     local bDeathsDoor = OptionsManager.isOption("HouseRule_DeathsDoor", "on")
 
-    -- changing death's door options, since it always exists in 1e
-    local nDeathDoorThreshold = 0
+    -- just a default
+    local nDeathsDoorThreshold = 0
+
+    -- maybe different defaults for different rulesets, maybe revisit this
+    -- if User.getRuleSetName() == "OSRIC" then
+    --     nDeathDoorThreshold = 0
+    -- elseif User.getRuleSetName() == "2E" then
+    --     nDeathsDoorThreshold = 0
+    -- end
 
     local sOptPcDeadAtValue = OptionsManager.getOption("pcDeadAtValue")
 
@@ -443,7 +450,6 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
         nDEAD_AT = nConScore
         Debug.console("actiondamagadnd: ndeadat", nDEAD_AT)
     end
-
 
     local sOptHouseRuleDeathsDoorThreshold = OptionsManager.getOption("HouseRule_DeathsDoorThreshold")
 

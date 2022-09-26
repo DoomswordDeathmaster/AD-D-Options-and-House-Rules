@@ -6,7 +6,7 @@
 				function onInit()
 					super.onInit();
 					setVisible(true);
-					if OptionsManager.getOption("initiativeDie") == "d6" then
+					if (OptionsManager.getOption("initiativeDie") == "d6") or (User.getRulesetName() == "OSRIC") then
 						setVisible(false);
 					end
 				end
@@ -39,7 +39,7 @@
 				function onInit()
 					super.onInit();
 					setVisible(false);
-					if OptionsManager.getOption("initiativeDie") == "d6" then
+					if (OptionsManager.getOption("initiativeDie") == "d6") or (User.getRulesetName() == "OSRIC") then
 						setVisible(true);
 					end
 				end

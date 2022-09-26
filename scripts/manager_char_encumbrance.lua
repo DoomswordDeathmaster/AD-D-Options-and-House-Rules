@@ -87,14 +87,16 @@ function performInit()
 			return
 		end
 
-		OptionsManager.registerOption2(
-			"CURR",
-			false,
-			"option_header_adnd_op_hr",
-			"option_label_CURR",
-			"option_entry_cycler",
-			{labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
-		)
+		--if User.getRuleSetName() ~= "OSRIC" then
+			OptionsManager.registerOption2(
+				"CURR",
+				false,
+				"option_header_adnd_op_hr",
+				"option_label_CURR",
+				"option_entry_cycler",
+				{labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
+			)
+		--end
 
 		if Session.IsHost then
 			OptionsManager.registerCallback("CURR", CharEncumbranceManager.onCurrencyOptionUpdate)

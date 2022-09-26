@@ -8,9 +8,9 @@
 					function onInit()
 						setVisible(true);
 						window.backgroundlink.setVisible(true);
-						if OptionsManager.getOption("use2eKits") == "off" then
-						setVisible(false);
-						window.backgroundlink.setVisible(false);
+						if (OptionsManager.getOption("use2eKits") == "off") or (User.getRulesetName() == "OSRIC") then
+							setVisible(false);
+							window.backgroundlink.setVisible(false);
 						end
 					end
 				</script>
@@ -22,8 +22,8 @@
 					function onInit()
 						super.onInit();
 						setVisible(true);
-						if OptionsManager.getOption("use2eKits") == "off" then
-						setVisible(false);
+						if (OptionsManager.getOption("use2eKits") == "off") or (User.getRulesetName() == "OSRIC") then
+							setVisible(false);
 						end
 					end
 				</script>

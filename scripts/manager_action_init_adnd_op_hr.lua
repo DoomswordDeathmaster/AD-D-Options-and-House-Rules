@@ -3,14 +3,6 @@ NPC_LASTINIT = 0
 OOB_MSGTYPE_APPLYINIT = "applyinit"
 
 function onInit()
-    -- force initiative die to whatever is set in the options, irrespective of Core 1e option selection
-    -- local initiativeDie = OptionsManager.getOption("initiativeDie");
-    -- local initiativeDieNumber = initiativeDie:gsub("d", "");
-
-    --DataCommonADND.nDefaultInitiativeDice = initiativeDieNumber;
-
-    --Debug.console("actioninit", RULESET_NAME)
-
     getRollOrig = ActionInit.getRoll
     ActionInit.getRoll = getRollAdndOpHr
 
@@ -54,16 +46,17 @@ end
 
 function handleApplyInitAdndOpHr(msgOOB)
     local rSource = ActorManager.resolveActor(msgOOB.sSourceNode)
+    local nodeEntry = ActorManager.getCTNode(rSource)
+
     local nTotal = tonumber(msgOOB.nTotal) or 0
 
-    local bOptPCVNPCINIT = (OptionsManager.getOption("PCVNPCINIT") == "on")
     local bOptInitTies = (OptionsManager.getOption("initiativeTiesAllow") == "on")
     local sOptInitGrouping = OptionsManager.getOption("initiativeGrouping")
     local bOptInitGroupingSwap = (OptionsManager.getOption("initiativeGroupingSwap") == "on")
 
     -- grouped initiative options
-    if bOptPCVNPCINIT or (sOptInitGrouping ~= "neither") then
-        if (bOptPCVNPCINIT or sOptInitGrouping == "both") then
+    if (sOptInitGrouping ~= "neither") then
+        if (sOptInitGrouping == "both") then
             if ActorManager.isPC(rSource) then
                 CombatManagerAdndOpHr.applyInitResultToAllPCs(nTotal)
                 PC_LASTINIT = nTotal
@@ -76,7 +69,7 @@ function handleApplyInitAdndOpHr(msgOOB)
                 CombatManagerAdndOpHr.applyInitResultToAllPCs(nTotal)
                 PC_LASTINIT = nTotal
             elseif not ActorManager.isPC(rSource) then
-                CombatManagerAdndOpHr.applyIndividualInit(nTotal, rSource)
+                CombatManagerAdndOpHr.applyIndividualInit(nTotal, nodeEntry)
                 NPC_LASTINIT = nTotal
             end
         elseif (sOptInitGrouping == "npc") then
@@ -84,13 +77,13 @@ function handleApplyInitAdndOpHr(msgOOB)
                 CombatManagerAdndOpHr.applyInitResultToAllNPCs(nTotal)
                 NPC_LASTINIT = nTotal
             elseif ActorManager.isPC(rSource) then
-                CombatManagerAdndOpHr.applyIndividualInit(nTotal, rSource)
+                CombatManagerAdndOpHr.applyIndividualInit(nTotal, nodeEntry)
                 PC_LASTINIT = nTotal
             end
         end
     else
         -- no group options set
-        CombatManagerAdndOpHr.applyIndividualInit(nTotal, rSource)
+        CombatManagerAdndOpHr.applyIndividualInit(nTotal, nodeEntry)
     end
 
     -- if ties are turned off
@@ -170,7 +163,7 @@ function handleApplyInitAdndOpHr(msgOOB)
 
     -- init grouping swap
     if bOptInitGroupingSwap then
-        if bOptPCVNPCINIT or (sOptInitGrouping ~= "neither") then
+        if (sOptInitGrouping ~= "neither") then
             CombatManagerAdndOpHr.applyInitResultToAllPCs(NPC_LASTINIT)
             CombatManagerAdndOpHr.applyInitResultToAllNPCs(PC_LASTINIT)
         end

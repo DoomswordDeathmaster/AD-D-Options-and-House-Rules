@@ -30,7 +30,7 @@ function registerOptions()
 
     -- GAME
     -- use Fighter Handbook armor damagepoint rules
-    if User.getRuleSetName ~= "OSRIC" then
+    if User.getRulesetName() ~= "OSRIC" then
         OptionsManager.registerOption2(
             "OPTIONAL_ARMORDP",
             false,
@@ -42,14 +42,16 @@ function registerOptions()
     end
 
     -- encumbrance optional
-    OptionsManager.registerOption2(
-        "OPTIONAL_ENCUMBRANCE",
-        false,
-        "option_header_adnd_op_hr",
-        "option_label_OPTIONAL_ENCUMBRANCE",
-        "option_entry_cycler",
-        {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
-    )
+    --if User.getRuleSetName() ~= "OSRIC" then
+        OptionsManager.registerOption2(
+            "OPTIONAL_ENCUMBRANCE",
+            false,
+            "option_header_adnd_op_hr",
+            "option_label_OPTIONAL_ENCUMBRANCE",
+            "option_entry_cycler",
+            {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
+        )
+    --end
 
     -- Doesn't exist in 2e ruleset, needs to be removed there
     -- OptionsManager.registerOption2("OPTIONAL_ENCUMBRANCE_COIN", false, "option_header_adnd_options", "option_label_OPTIONAL_ENCUMBRANCE_COIN", "option_entry_cycler",
@@ -210,18 +212,15 @@ function registerOptions()
         }
     )
 
-    -- init each round
-    -- always happens in 1e/OSRIC, make 2e only
-    if User.getRuleSetName ~= "OSRIC" then
-        OptionsManager.registerOption2(
-            "HouseRule_InitEachRound",
-            false,
-            "option_header_adnd_op_hr",
-            "option_label_HOUSE_RULE_INIT_EACH_ROUND",
-            "option_entry_cycler",
-            {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "on"}
-        )
-    end
+    -- auto init each round, on round start?
+    OptionsManager.registerOption2(
+        "HouseRule_InitEachRound",
+        false,
+        "option_header_adnd_op_hr",
+        "option_label_HOUSE_RULE_AUTO_INIT_EACH_ROUND",
+        "option_entry_cycler",
+        {labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off"}
+    )
 
     -- crtical types
     OptionsManager.registerOption2(

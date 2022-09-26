@@ -8,11 +8,6 @@ NPC_LASTINIT = 0
 OOB_MSGTYPE_CHANGEINIT = "changeinitiative"
 
 function onInit()
-	-- local initiativeDie = OptionsManager.getOption("initiativeDie");
-	-- local initiativeDieNumber = initiativeDie:gsub("d", "");
-
-	-- DataCommonADND.nDefaultInitiativeDice = initiativeDieNumber;
-
 	rollEntryInitOrig = CombatManagerADND.rollEntryInit
 	CombatManagerADND.rollEntryInit = rollEntryInitAdndOpHr
 	CombatManager2.rollEntryInit = rollEntryInitAdndOpHr
@@ -34,17 +29,34 @@ function onInit()
 	CombatManager.setCustomSort(sortfuncAdndOpHr)
 end
 
-function rollRandomInitAdndOpHr(nMod, bADV)
+function rollRandomInitAdndOpHr(nMod, bADV, combatantSide)
 	if OptionsManager.getOption("initiativeModifiersAllow") == "off" then
 		-- no modifiers
 		nMod = 0
 	end
 
-	rollRandomInitOrig(nMod, bADV)
+	Debug.console("combatantSide", combatantSide)
+
+	-- roll only for non-friend CT nodes
+	if combatantSide == "npc" then
+		for _, nodeEntry in pairs(CombatManager.getCombatantNodes()) do
+			if DB.getValue(nodeEntry, "friendfoe") ~= "friend" then
+				rollEntryInitAdndOpHr(nodeEntry)
+			end
+		end
+	-- roll for all CT nodes
+	elseif combatantSide == "both" then
+		for _, nodeEntry in pairs(CombatManager.getCombatantNodes()) do
+			rollEntryInitAdndOpHr(nodeEntry)
+		end
+	end
 end
 
 function rollEntryInitAdndOpHr(nodeEntry)
+	Debug.console("rollEntryInitAdndOpHr", nodeEntry)
+
 	local bOptInitMods = (OptionsManager.getOption("initiativeModifiersAllow") == "on")
+	local bOptInitSizeMods = (OptionsManager.getOption("OPTIONAL_INIT_SIZEMODS") == "on")
 	local bOptInitTies = (OptionsManager.getOption("initiativeTiesAllow") == "on")
 	local sOptInitGrouping = OptionsManager.getOption("initiativeGrouping")
 	local bOptInitGroupingSwap = (OptionsManager.getOption("initiativeGroupingSwap") == "on")
@@ -53,213 +65,217 @@ function rollEntryInitAdndOpHr(nodeEntry)
 		return
 	end
 
-	local bOptPCVNPCINIT = (OptionsManager.getOption("PCVNPCINIT") == "on")
-	-- default init mods to 0
+	-- default init mods to 0, should stay that way in OSRIC
 	local nInitMOD = 0
 
-	-- mods on
+	-- effect mods
+	-- mods on - 2E option only, no init mods in OSRIC
 	if bOptInitMods then
-		-- Start with the base initiative bonus
-		local nInit = DB.getValue(nodeEntry, "init", 0)
 		-- Get any effect modifiers
 		local rActor = ActorManager.resolveActor(nodeEntry)
 		local aEffectDice, nEffectBonus = EffectManager5E.getEffectsBonus(rActor, "INIT")
-		nInitMOD = StringManager.evalDice(aEffectDice, nEffectBonus)
+
+		nInitEffectMod = StringManager.evalDice(aEffectDice, nEffectBonus)
+		Debug.console("nInitEffectMod", nInitEffectMod)
 	end
 
 	-- Check for the ADVINIT effect
 	local bADV = EffectManager5E.hasEffectCondition(rActor, "ADVINIT")
 
+	-- set custom init to 0
+	local nCustomInit = 0
+	-- get actual value
+	nCustomInit = DB.getValue(nodeEntry, "init", 0)
+	Debug.console("nCustomInit", nCustomInit)
+
 	-- PC/NPC init
 	local sClass, sRecord = DB.getValue(nodeEntry, "link", "", "")
+	--Debug.console("sClass", sClass, sRecord)
 
 	-- it's a pc
 	if sClass == "charsheet" then
-		local nodeChar = DB.findNode(sRecord)
-		-- default PC initiative totals to 0
-		local nInitPC = 0
-		local nInitResult = 0
-
-		-- if init mods are on
-		if bOptInitMods then
-			nInitPC = DB.getValue(nodeChar, "initiative.total", 0)
-		end
-
-		-- if grouping involving pcs is on
-		if bOptPCVNPCINIT or (sOptInitGrouping == "pc" or sOptInitGrouping == "both") then
-			-- roll without mods
-			nInitResult = rollRandomInitOrig(0, bADV)
-			-- group init - apply init result to remaining PCs
-			applyInitResultToAllPCs(nInitResult)
-			-- set last init for comparison for ties and swapping
-			PC_LASTINIT = nInitResult
-		else
-			-- individual init
-			nInitResult = rollRandomInitOrig(nInitPC + nInitMOD, bADV)
-		end
-
-		-- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
-		DB.setValue(nodeEntry, "initresult", "number", nInitResult)
-		DB.setValue(nodeEntry, "initresult_d6", "number", nInitResult)
-	else
-		-- it's an npc
-		-- if grouping involving npcs is on
-		if bOptPCVNPCINIT or (sOptInitGrouping == "npc" or sOptInitGrouping == "both") then
-			-- roll without mods
-			nInitResult = rollRandomInitOrig(0, bADV)
-			-- group init - apply init result to remaining NPCs
-			applyInitResultToAllNPCs(nInitResult)
-			-- set last init for comparison for ties and swapping
-			NPC_LASTINIT = nInitResult
-		else
-			-- set nInit to 0 for disallowing mods
-			local nInit = 0
-			-- for npcs we allow them to have custom initiative. Check for it
-			-- and set nInit.
-			local nTotal = DB.getValue(nodeEntry, "initiative.total", 0)
-
-			if bOptInitMods then
-				-- flip through weaponlist, get the largest speedfactor as default
-				local nSpeedFactor = 0
-
-				for _, nodeWeapon in pairs(DB.getChildren(nodeEntry, "weaponlist")) do
-					local nSpeed = DB.getValue(nodeWeapon, "speedfactor", 0)
-					if nSpeed > nSpeedFactor then
-						nSpeedFactor = nSpeed
-					end
-				end
-
-				if nSpeedFactor ~= 0 then
-					nInit = nSpeedFactor + nInitMOD
-				elseif (nTotal ~= 0) then
-					nInit = nTotal + nInitMOD
+		Debug.console("type", "PC")
+		-- init mods enabled
+		if bOptInitMods and (sOptInitGrouping == "neither") then
+			-- flip through weaponlist, get the largest speedfactor as default
+			local nSpeedFactor = 0
+			for _, nodeWeapon in pairs(DB.getChildren(nodeEntry, "weaponlist")) do
+				local nSpeed = DB.getValue(nodeWeapon, "speedfactor", 0)
+				if nSpeed > nSpeedFactor then
+					nSpeedFactor = nSpeed
 				end
 			end
 
-			--[[ IF we ignore size/mods, clear nInit ]]
-			if OptionsManager.getOption("OPTIONAL_INIT_SIZEMODS") ~= "on" then
-				nInit = 0
-			end
+			-- apply prior mods plus any effects mods
+			nInitMod = nInitMod + nInitEffectMod
 
-			-- For NPCs, if NPC init option is not group, then roll unique initiative
-			local sOptINIT = OptionsManager.getOption("INIT")
+			-- roll init and apply mods
+			nInitResult = rollRandomInitOrig(nInitMod, bADV)
+			Debug.console(
+				"nSpeedFactor",
+				nSpeedFactor,
+				"nInitMod",
+				nInitMod,
+				"nInitSizeMod",
+				nInitSizeMod,
+				"nInitResult",
+				nInitResult,
+				"nCustomInit",
+				nCustomInit
+			)
+		else
+			-- roll init and apply mods, mods should be 0 here
+			nInitMod = 0
+			nInitResult = rollRandomInitOrig(nInitMod, bADV)
+			Debug.console("130:nInitResult", nInitResult)
+		end
 
-			if sOptINIT ~= "group" then
-				-- if they have custom init then we use it.
-				local nInitResult = rollRandomInitOrig(nInit, bADV)
-
-				DB.setValue(nodeEntry, "initresult", "number", nInitResult)
-				DB.setValue(nodeEntry, "initresult_d6", "number", nInitResult)
+		if (sOptInitGrouping == "pc") or (sOptInitGrouping == "both") then
+			-- init swap
+			if bOptInitGroupingSwap or (User.getRulesetName() == "OSRIC") then
+				applyInitResultToAllNPCs(nInitResult)
 			else
-				-- For NPCs with group option enabled
-				-- Get the entry's database node name and creature name
-				local sStripName = CombatManager.stripCreatureNumber(DB.getValue(nodeEntry, "name", ""))
-
-				if sStripName == "" then
-					local nInitResult = rollRandomInitOrig(nInit, bADV)
-
-					DB.setValue(nodeEntry, "initresult", "number", nInitResult)
-					DB.setValue(nodeEntry, "initresult_d6", "number", nInitResult)
-
-					return
-				end
-
-				-- Iterate through list looking for other creature's with same name and faction
-				local nLastInit = nil
-				local sEntryFaction = DB.getValue(nodeEntry, "friendfoe", "")
-
-				for _, v in pairs(CombatManager.getCombatantNodes()) do
-					if v.getName() ~= nodeEntry.getName() then
-						if DB.getValue(v, "friendfoe", "") == sEntryFaction then
-							local sTemp = CombatManager.stripCreatureNumber(DB.getValue(v, "name", ""))
-
-							if sTemp == sStripName then
-								local nChildInit = DB.getValue(v, "initresult", 0)
-
-								if nChildInit ~= -10000 then
-									nLastInit = nChildInit
-								end
-							end
-						end
-					end
-				end
-
-				-- If we found similar creatures, then match the initiative of the last one found
-				if nLastInit then
-					DB.setValue(nodeEntry, "initresult", "number", nLastInit)
-					DB.setValue(nodeEntry, "initresult_d6", "number", nLastInit)
-				else
-					local nInitResult = rollRandomInitOrig(nInit, bADV)
-
-					DB.setValue(nodeEntry, "initresult", "number", nInitResult)
-					DB.setValue(nodeEntry, "initresult_d6", "number", nInitResult)
-				end
+				applyInitResultToAllPCs(nInitResult)
 			end
+		else
+			applyIndividualInit(nInitResult, nodeEntry)
 		end
-	end
-
-	-- deal with ties when all initiative is grouped and ties are turned off
-	if bOptPCVNPCINIT or (sOptInitGrouping == "both") then
-		-- init ties off
-		if not bOptInitTies then
-			-- this is to make sure we dont have same initiative
-			-- give the benefit to players.
-			if PC_LASTINIT == NPC_LASTINIT then
-				-- don't want 0 inits
-				if NPC_LASTINIT ~= 1 then
-					nInitResult = NPC_LASTINIT - 1
-					applyInitResultToAllPCs(nInitResult)
-					PC_LASTINIT = nInitResult
-				else
-					nInitResult = PC_LASTINIT + 1
-					applyInitResultToAllNPCs(nInitResult)
-					NPC_LASTINIT = nInitResult
+	else
+		Debug.console("type", "NPC")
+		-- init mods enabled
+		if bOptInitMods and (sOptInitGrouping == "neither") then
+			-- flip through weaponlist, get the largest speedfactor as default
+			local nSpeedFactor = 0
+			for _, nodeWeapon in pairs(DB.getChildren(nodeEntry, "weaponlist")) do
+				local nSpeed = DB.getValue(nodeWeapon, "speedfactor", 0)
+				if nSpeed > nSpeedFactor then
+					nSpeedFactor = nSpeed
 				end
 			end
+
+			-- size mods enabled
+			-- default nInitSizeMod to 0, for disallowing NPC size mods
+			local nInitSizeMod = 0
+			if bOptInitSizeMods then
+				-- Get the base init (size mod)
+				nInitSizeMod = DB.getValue(nodeEntry, "init", 0)
+			end
+
+			-- apply whichever init mod (size vs speed factor) is greater
+			if nSpeedFactor > nInitSizeMod then
+				nInitMod = nSpeedFactor
+			else
+				nInitMod = nInitSizeMod
+			end
+
+			-- apply prior mods plus any effects mods
+			nInitMod = nInitMod + nInitEffectMod
+
+			-- roll init and apply mods
+			nInitResult = rollRandomInitOrig(nInitMod, bADV)
+
+			Debug.console(
+				"nSpeedFactor",
+				nSpeedFactor,
+				"nInitMod",
+				nInitMod,
+				"nInitSizeMod",
+				nInitSizeMod,
+				"nInitResult",
+				nInitResult,
+				"nCustomInit",
+				nCustomInit
+			)
+
+			-- check custom init values and choose custom init if greater than init result
+			if nCustomInit > nInitResult then
+				nInitResult = nCustomInit
+			end
+
+			--Debug.console("bOptInitGroupingSwap", bOptInitGroupingSwap, "nCustomInit", nCustomInit, "nInitResult", nInitResult)
+		else
+			-- roll init and apply mods, mods should be 0 here
+			nInitMod = 0
+			nInitResult = rollRandomInitOrig(nInitMod, bADV)
 		end
 
-		-- init grouping swap
-		if bOptInitGroupingSwap then
-			if bOptPCVNPCINIT or (sOptInitGrouping ~= "neither") then
-				applyInitResultToAllPCs(NPC_LASTINIT)
-				applyInitResultToAllNPCs(PC_LASTINIT)
+		if (sOptInitGrouping == "npc") or (sOptInitGrouping == "both") then
+			-- init swap
+			if bOptInitGroupingSwap or (User.getRulesetName() == "OSRIC") then
+				applyInitResultToAllPCs(nInitResult)
+			else
+				applyInitResultToAllNPCs(nInitResult)
 			end
+		else
+			applyIndividualInit(nInitResult, nodeEntry)
 		end
 	end
 end
 
 function applyInitResultToAllPCs(nInitResult)
 	-- group init - apply init result to all PCs
-	for _, v in pairs(CombatManager.getCombatantNodes()) do
-		if DB.getValue(v, "friendfoe") == "friend" then
+	for _, nodeEntry in pairs(CombatManager.getCombatantNodes()) do
+		if DB.getValue(nodeEntry, "friendfoe") == "friend" then
 			-- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
-			DB.setValue(v, "initresult", "number", nInitResult)
-			DB.setValue(v, "initresult_d6", "number", nInitResult)
+			DB.setValue(nodeEntry, "initresult", "number", nInitResult)
+			DB.setValue(nodeEntry, "initresult_d6", "number", nInitResult)
 			-- set init rolled
-			DB.setValue(v, "initrolled", "number", 1)
+			DB.setValue(nodeEntry, "initrolled", "number", 1)
 		end
 	end
 end
 
 function applyInitResultToAllNPCs(nInitResult)
 	-- group init - apply init result to remaining NPCs
-	for _, v in pairs(CombatManager.getCombatantNodes()) do
-		if DB.getValue(v, "friendfoe") ~= "friend" then
+	for _, nodeEntry in pairs(CombatManager.getCombatantNodes()) do
+		if DB.getValue(nodeEntry, "friendfoe") ~= "friend" then
+			-- reset nInitResult
+			nInitResult = nInitResult
+			-- get custom init value
+			-- default to 0 each iteration
+			local nCustomInit = 0
+			-- get actual value
+			nCustomInit = DB.getValue(nodeEntry, "init", 0)
+			-- new var for storing any ne result
+			local nInitResultNew = 0
+
+			-- set custom init as new init result if custom init is higher (zombies, etc)
+			if nCustomInit > nInitResult then
+				nInitResultNew = nCustomInit
+			else
+				nInitResultNew = nInitResult
+			end
+
 			-- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
-			DB.setValue(v, "initresult", "number", nInitResult)
-			DB.setValue(v, "initresult_d6", "number", nInitResult)
+			DB.setValue(nodeEntry, "initresult", "number", nInitResultNew)
+			DB.setValue(nodeEntry, "initresult_d6", "number", nInitResultNew)
 			-- set init rolled
-			DB.setValue(v, "initrolled", "number", 1)
+			DB.setValue(nodeEntry, "initrolled", "number", 1)
 		end
 	end
 end
 
-function applyIndividualInit(nTotal, rSource)
-	local nodeEntry = ActorManager.getCTNode(rSource)
+function applyIndividualInit(nInitResult, nodeEntry)
+	-- reset nInitResult
+	nInitResult = nInitResult
+	-- get custom init value
+	-- default to 0 each iteration
+	local nCustomInit = 0
+	-- get actual value
+	nCustomInit = DB.getValue(nodeEntry, "init", 0)
+	-- new var for storing any ne result
+	local nInitResultNew = 0
+
+	-- set custom init as new init result if custom init is higher (zombies, etc)
+	if nCustomInit > nInitResult then
+		nInitResultNew = nCustomInit
+	else
+		nInitResultNew = nInitResult
+	end
 
 	-- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
-	DB.setValue(nodeEntry, "initresult", "number", nTotal)
-	DB.setValue(nodeEntry, "initresult_d6", "number", nTotal)
+	DB.setValue(nodeEntry, "initresult", "number", nInitResultNew)
+	DB.setValue(nodeEntry, "initresult_d6", "number", nInitResultNew)
 	-- set init rolled
 	DB.setValue(nodeEntry, "initrolled", "number", 1)
 end
@@ -289,7 +305,7 @@ function sortfuncAdndOpHr(node2, node1)
 			local nValue1 = DB.getValue(node1, "initresult", 0)
 			local nValue2 = DB.getValue(node2, "initresult", 0)
 			if nValue1 ~= nValue2 then
-				if sOptInitOrdering == "ascending" then
+				if (sOptInitOrdering == "ascending") or (User.getRulesetName() == "OSRIC") then
 					return nValue1 > nValue2
 				else
 					return nValue1 < nValue2
@@ -299,7 +315,7 @@ function sortfuncAdndOpHr(node2, node1)
 			nValue1 = DB.getValue(node1, "init", 0)
 			nValue2 = DB.getValue(node2, "init", 0)
 			if nValue1 ~= nValue2 then
-				if sOptInitOrdering == "ascending" then
+				if (sOptInitOrdering == "ascending") or (User.getRulesetName() == "OSRIC") then
 					return nValue1 > nValue2
 				else
 					return nValue1 < nValue2
@@ -319,7 +335,8 @@ function sortfuncAdndOpHr(node2, node1)
 	local sValue1 = DB.getValue(node1, "name", "")
 	local sValue2 = DB.getValue(node2, "name", "")
 
-	if sOptInitOrdering == "ascending" then
+	if (sOptInitOrdering == "ascending") or (User.getRulesetName() == "OSRIC") then
+		--Debug.console("sOptInitOrdering", sOptInitOrdering, "User.getRulesetName()", User.getRulesetName())
 		if sValue1 ~= sValue2 then
 			return sValue1 < sValue2
 		end
@@ -354,15 +371,34 @@ function resetInitAdndOpHr()
 end
 
 function onRoundStartAdndOpHr(nCurrent)
+	local bOptAutoRollInitEachRound = (OptionsManager.getOption("HouseRule_InitEachRound") == "on")
 	local bOptRoundStartResetInit = (OptionsManager.getOption("roundStartResetInit") == "on")
+	local bOptAutoNpcInitiative = (OptionsManager.getOption("autoNpcInitiative") == "on")
 
+	Debug.console("bOptRoundStartResetInit", bOptRoundStartResetInit)
 	PC_LASTINIT = 0
 	NPC_LASTINIT = 0
 
+	-- toggle portrait initiative icon
+	CharlistManagerADND.turnOffAllInitRolled()
+	-- toggle all "initrun" values to not run
+	CharlistManagerADND.turnOffAllInitRun()
+
+	-- resets init
 	if bOptRoundStartResetInit then
 		for _, nodeCT in pairs(CombatManager.getCombatantNodes()) do
 			resetCombatantInit(nodeCT)
 		end
+	end
+
+	-- auto rolls all inits
+	if bOptAutoRollInitEachRound then
+		rollRandomInitAdndOpHr(0, false, "both")
+	end
+
+	-- auto rolls npc inits
+	if bOptAutoNpcInitiative then
+		rollRandomInitAdndOpHr(0, false, "npc")
 	end
 end
 
@@ -572,8 +608,6 @@ function getLastInitiative()
 	else
 		local nLastInit = -100
 		for _, nodeCT in pairs(CombatManager.getCombatantNodes()) do
-
-
 			local nInit = DB.getValue(nodeCT, "initresult", 0)
 
 			if nInit > nLastInit then
@@ -581,6 +615,6 @@ function getLastInitiative()
 			end
 		end
 	end
-	
+
 	return nLastInit
 end
