@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <root>
+	<template name="button_cta_menu">
+		<buttoncontrol>
+			<anchored height="21" width="21">
+				<top offset="-1" />
+				<right offset="-80" />
+			</anchored>
+			<icon normal="menu_icon_white_filled" pressed="menu_icon_black" />
+			<tooltip textres="ct_tooltip_menu" />
+			<script file="cta/scripts/cta_menu.lua" />
+			<nodrag />
+			<readonly />
+		</buttoncontrol>
+	</template>
 	<template name="button_ctaentry_initresult">
 		<number_ct_crosslink name="initresult">
 			<script>
