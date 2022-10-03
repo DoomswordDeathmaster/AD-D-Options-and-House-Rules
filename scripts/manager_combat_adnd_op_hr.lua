@@ -3,8 +3,9 @@
 --
 --
 
-PC_LASTINIT = 0
-NPC_LASTINIT = 0
+-- for handling determination of ties
+pcLastInit = 0
+npcLastInit = 0
 OOB_MSGTYPE_CHANGEINIT = "changeinitiative"
 
 function onInit()
@@ -29,16 +30,17 @@ function onInit()
 	CombatManager.setCustomSort(sortfuncAdndOpHr)
 end
 
--- called when dm rolls init
+-- called when dm rolls init manually or onroundstart
 function rollEntryInitAdndOpHr(nodeEntry)
 	Debug.console("rollEntryInitAdndOpHr", nodeEntry)
 
 	local bOptInitMods = (OptionsManager.getOption("initiativeModifiersAllow") == "on")
 	local bOptInitSizeMods = (OptionsManager.getOption("OPTIONAL_INIT_SIZEMODS") == "on")
-	local bOptInitTies = (OptionsManager.getOption("initiativeTiesAllow") == "on")
+	--local bOptInitTies = (OptionsManager.getOption("initiativeTiesAllow") == "on")
 	local sOptInitGrouping = OptionsManager.getOption("initiativeGrouping")
 	local bOptInitGroupingSwap = (OptionsManager.getOption("initiativeGroupingSwap") == "on")
 
+	-- for handling determination of ties
 	--local pcLastInit = 0
 	--local npcLastInit = 0
 
@@ -90,6 +92,11 @@ function rollEntryInitAdndOpHr(nodeEntry)
 
 				-- roll init and apply mod
 				nInitResult = rollRandomInitAdndOpHr(nInitMod)
+			-- some init grouping enabled
+			else
+				-- roll init without mods
+				nInitMod = 0
+				nInitResult = rollRandomInitAdndOpHr(nInitMod)
 			end
 		-- init mods disabled
 		else
@@ -98,7 +105,7 @@ function rollEntryInitAdndOpHr(nodeEntry)
 			nInitResult = rollRandomInitAdndOpHr(nInitMod)
 		end
 
-		--pcLastInit = nInitResult
+		pcLastInit = nInitResult
 
 		if sOptInitGrouping == "both" then
 			-- init swap
@@ -113,6 +120,7 @@ function rollEntryInitAdndOpHr(nodeEntry)
 			end
 		elseif sOptInitGrouping == "pc" then
 			applyInitResultToAllPCs(nInitResult)
+			--pcLastInit = nInitResult
 		else
 			Debug.console("117:PC", "applyIndividualInit", "ninitresult", nInitResult)
 			applyIndividualInit(nInitResult, nodeEntry)
@@ -120,31 +128,39 @@ function rollEntryInitAdndOpHr(nodeEntry)
 	else
 		Debug.console("type", "NPC")
 
-		-- init mods enabled and no init grouping
-		if bOptInitMods and (sOptInitGrouping == "neither") then
-			local nSpeedFactor = getHighestWeaponSpeedFactor(nodeEntry)
+		-- init mods enabled
+		if bOptInitMods then
+			-- init grouping disabled
+			if sOptInitGrouping == "neither" then
+				local nSpeedFactor = getHighestWeaponSpeedFactor(nodeEntry)
 
-			-- size mods enabled
-			-- default nInitSizeMod to 0, for disallowing NPC size mods
-			local nInitSizeMod = 0
-			if bOptInitSizeMods then
-				-- Get the base init (size mod)
-				nInitSizeMod = DB.getValue(nodeEntry, "init", 0)
-			end
+				-- size mods enabled
+				-- default nInitSizeMod to 0, for disallowing NPC size mods
+				local nInitSizeMod = 0
+				if bOptInitSizeMods then
+					-- Get the base init (size mod)
+					nInitSizeMod = DB.getValue(nodeEntry, "init", 0)
+				end
 
-			-- apply whichever init mod (size vs speed factor) is greater
-			if nSpeedFactor > nInitSizeMod then
-				nInitMod = nSpeedFactor
+				-- apply whichever init mod (size vs speed factor) is greater
+				if nSpeedFactor > nInitSizeMod then
+					nInitMod = nSpeedFactor
+				else
+					nInitMod = nInitSizeMod
+				end
+
+				-- apply prior mods plus any effects mods
+				nInitMod = nInitMod + nInitEffectMod
+
+				-- roll init and apply mods
+				nInitResult = rollRandomInitAdndOpHr(nInitMod)
+			-- some init grouping enabled
 			else
-				nInitMod = nInitSizeMod
+				-- roll init without mods
+				nInitMod = 0
+				nInitResult = rollRandomInitAdndOpHr(nInitMod)
 			end
-
-			-- apply prior mods plus any effects mods
-			nInitMod = nInitMod + nInitEffectMod
-
-			-- roll init and apply mods
-			nInitResult = rollRandomInitAdndOpHr(nInitMod)
-		-- no init mods or grouping not = neither
+		-- init mods disabled
 		else
 			-- roll init without mods
 			nInitMod = 0
@@ -155,20 +171,39 @@ function rollEntryInitAdndOpHr(nodeEntry)
 			-- init swap
 			if bOptInitGroupingSwap or (User.getRulesetName() == "OSRIC") then
 				--applyInitResultToAllNPCs(pcLastInit)
-				applyInitResultToAllPCs(nInitResult)
 				--pcLastInit = nInitResult
+				nInitResult = resolveInitTie(pcLastInit, nInitResult)
+				applyInitResultToAllPCs(nInitResult)
 			else
 				--applyInitResultToAllPCs(npcLastInit)
-				applyInitResultToAllNPCs(nInitResult)
 				--npcLastInit = nInitResult
+				nInitResult = resolveInitTie(pcLastInit, nInitResult)
+				applyInitResultToAllNPCs(nInitResult)
 			end
 		elseif sOptInitGrouping == "npc" then
+			--npcLastInit = nInitResult
+			--nInitResult = resolveInitTie(pcLastInit, nInitResult)
 			applyInitResultToAllNPCs(nInitResult)
 		else
 			Debug.console("168:NPC", "applyIndividualInit", "ninitresult", nInitResult)
 			applyIndividualInit(nInitResult, nodeEntry)
 		end
 	end
+end
+
+function resolveInitTie(pcLastInit, npcLastInit)
+	local bOptInitTies = (OptionsManager.getOption("initiativeTiesAllow") == "on")
+	Debug.console("resolveInitTie", "bOptInitTies", bOptInitTies)
+
+	if not bOptInitTies then
+		Debug.console("pcLastInit", pcLastInit, "npcLastInit", npcLastInit)
+		if pcLastInit == nInitResult then
+			nInitResult = nInitResult + 1
+			Debug.console("nInitResult", nInitResult)
+		end
+	end
+
+	return nInitResult
 end
 
 function rollRandomInitAdndOpHr(nInitMod)
@@ -370,8 +405,8 @@ end
 
 function resetInitAdndOpHr()
 	-- set last init results to 0
-	PC_LASTINIT = 0
-	NPC_LASTINIT = 0
+	pcLastInit = 0
+	npcLastInit = 0
 
 	for _, nodeCT in pairs(CombatManager.getCombatantNodes()) do
 		resetCombatantInit(nodeCT)
@@ -384,8 +419,8 @@ function onRoundStartAdndOpHr(nCurrent)
 	local bOptAutoNpcInitiative = (OptionsManager.getOption("autoNpcInitiative") == "on")
 
 	Debug.console("bOptRoundStartResetInit", bOptRoundStartResetInit)
-	PC_LASTINIT = 0
-	NPC_LASTINIT = 0
+	pcLastInit = 0
+	npcLastInit = 0
 
 	-- toggle portrait initiative icon
 	CharlistManagerADND.turnOffAllInitRolled()

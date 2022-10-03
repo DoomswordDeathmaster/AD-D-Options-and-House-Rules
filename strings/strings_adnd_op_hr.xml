@@ -16,7 +16,7 @@
 	<string name="option_label_adnd_op_hr_initiative_grouping_osric">Init: Grouping</string>
 	<string name="option_label_adnd_op_hr_initiative_grouping_swap">Init: Grouping: Swap Results\r\t[requires init grouping BOTH]</string>
 	<string name="option_label_adnd_op_hr_initiative_modifiers_allow">Init: Modifiers: Mods</string>
-	<string name="option_label_adnd_op_hr_initiative_ties_allow">Init: Grouping: Allow Ties\r\t[requires init grouping not NEITHER]</string>
+	<string name="option_label_adnd_op_hr_initiative_ties_allow">Init: Grouping: Allow Ties\r\t[requires init grouping BOTH]</string>
 	<string name="option_label_adnd_op_hr_surprise_die">Surprise: Die</string>
 	<string name="option_label_adnd_op_hr_use_2e_kits">PC: Allow Kits\r\t[reload/restart after changing]</string>
 	<string name="option_label_ADND_DEATHSDOOR_Threshold">PC Death: At Death's Door Threshold\r\t[requires at death's door ON]</string>

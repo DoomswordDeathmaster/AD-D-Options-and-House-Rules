@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <root>
 	<!-- may not need this -->
-	<!-- <template name="button_charinitdelay">
+	<template name="button_charinitdelay">
 		<buttoncontrol>
 			<icon normal="button_initdelay" pressed="button_initdelay_down" />
 			<script>
@@ -40,5 +40,5 @@
 			</stateframe>
 			<tooltip textres="char_initdelay_tooltip" />
 		</buttoncontrol>
-	</template> -->
+	</template>
 </root>

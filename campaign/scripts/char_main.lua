@@ -61,6 +61,8 @@ function updateSurpriseScores()
 		surpriseBase = 4
 	end
 
+	Debug.console("sOptSurpriseDie", sOptSurpriseDie, "surpriseBase", surpriseBase)
+
 	local nMod = DB.getValue(nodeChar, "surprise.mod", 0)
 	local nTmpMod = DB.getValue(nodeChar, "surprise.tempmod", 0)
 	local nTotal = surpriseBase + nMod + nTmpMod
