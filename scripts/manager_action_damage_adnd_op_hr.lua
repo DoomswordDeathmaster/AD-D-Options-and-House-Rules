@@ -389,7 +389,7 @@ function modDamageAdndOpHr(rSource, rTarget, rRoll)
     ActionsManager2.encodeDesktopMods(rRoll)
 end
 
--- brought this is to handle Death's Door changes, TODO: apply new Death's Door Threshold options
+-- brought this in to handle Death's Door changes
 function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
     Debug.console("manager_action_damage_osric.lua", "applyDamageNew", "aDice", aDice)
     -- Get health fields
@@ -413,6 +413,8 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
         nTotalHP = DB.getValue(nodeTarget, "hptotal", 0)
         nTempHP = DB.getValue(nodeTarget, "hptemp", 0)
         nWounds = DB.getValue(nodeTarget, "wounds", 0)
+        nPrevWounds = nWounds
+        nCurrentHp = (nTotalHP + nTempHP) - nWounds
         nDeathSaveSuccess = DB.getValue(nodeTarget, "deathsavesuccess", 0)
         nDeathSaveFail = DB.getValue(nodeTarget, "deathsavefail", 0)
     end
@@ -428,40 +430,58 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
     -- Decode damage/heal description
     local rDamageOutput = ActionDamage.decodeDamageText(nTotal, sDamage)
 
-    -- CONTINUE FROM HERE - 09/15/22
-    -- death's door option
-    local bDeathsDoor = OptionsManager.isOption("HouseRule_DeathsDoor", "on")
 
-    -- just a default
-    local nDeathsDoorThreshold = 0
 
-    -- maybe different defaults for different rulesets, maybe revisit this
-    -- if User.getRuleSetName() == "OSRIC" then
-    --     nDeathDoorThreshold = 0
-    -- elseif User.getRuleSetName() == "2E" then
-    --     nDeathsDoorThreshold = 0
-    -- end
+    -- ***************************************************************************************************************
+    -- refactor the death's door stuff so that npcs and pcs are both correctly handled without checking for type later
+    -- default Death's Door Threshold
+    local nDeathDoorThreshold = 0
+    -- default nDEAD_AT
+    local nDEAD_AT = 0
+    -- default
+    local deadAtPositive = 0
+    --default
+    local deathDoorThresholdPositive = 0
 
-    local sOptPcDeadAtValue = OptionsManager.getOption("pcDeadAtValue")
+    -- pc-only options for death's door
+    if sTargetType == "pc" then
+        -- get death's door on/off
+        local bOptDeathsDoor = OptionsManager.isOption("HouseRule_DeathsDoor", "on")
 
-    local nDEAD_AT = -10
+        -- death's door ON
+        if bOptDeathsDoor then
+            -- get pc dead at config value
+            local sOptPcDeadAtValue = OptionsManager.getOption("pcDeadAtValue")
 
-    if sOptPcDeadAtValue == "minusCon" then
-        nDEAD_AT = nConScore
-        Debug.console("actiondamagadnd: ndeadat", nDEAD_AT)
+            -- minus CON
+            if sOptPcDeadAtValue == "minusCon" then
+                nDEAD_AT = 0 - nConScore
+                deadAtPositive = nConScore
+                Debug.console("actorhealth: ndeadat", nDEAD_AT)
+            -- minus 10
+            else
+                nDEAD_AT = -10
+                deadAtPositive = 10
+            end
+
+            -- get the threshold config setting
+            local sOptHouseRuleDeathsDoorThreshold = OptionsManager.getOption("HouseRule_DeathsDoor_Threshold")
+
+            if sOptHouseRuleDeathsDoorThreshold == "exactlyZero" then
+                nDeathDoorThreshold = 0
+            elseif sOptHouseRuleDeathsDoorThreshold == "zeroToMinusThree" then
+                nDeathDoorThreshold = -3
+                deathDoorThresholdPositive = 3
+            else
+                -- minus 9 because -10 = dead
+                nDeathDoorThreshold = -9
+                deathDoorThresholdPositive = 9
+            end
+        end
     end
+    -- **************************************************************************************************************
+    Debug.console("manager_actor_health_osric.lua", "sNodeType", sNodeType, "nDEAD_AT", nDEAD_AT, "nCurrentHp", nCurrentHp, "sOptHouseRuleDeathsDoor", sOptHouseRuleDeathsDoor, "nDeathDoorThreshold", nDeathDoorThreshold)
 
-    local sOptHouseRuleDeathsDoorThreshold = OptionsManager.getOption("HouseRule_DeathsDoorThreshold")
-
-    if sOptHouseRuleDeathsDoorThreshold == "exactlyZero" then
-        nDeathDoorThreshold = 0
-    elseif sOptHouseRuleDeathsDoorThreshold == "zeroToMinusThree" then
-        nDeathDoorThreshold = 3
-    else
-        -- nDEAD_AT -1
-        nDeathDoorThreshold = nDEAD_AT - 1
-        Debug.console("actiondamagadnd: ndeathsdoorthreshold", ndeathsdoorthreshold)
-    end
 
     -- Healing
     if rDamageOutput.sType == "recovery" then
@@ -717,18 +737,29 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
 
             -- deal with death's door threshold
             -- currently has hp
+            Debug.console("nCurrentHp", nCurrentHp, "nwounds", nWounds, "nAdjustedDamage", nAdjustedDamage, "nDeathDoorThreshold", nDeathDoorThreshold, "nDEAD_AT", nDEAD_AT, "deathDoorThresholdPositive", deathDoorThresholdPositive, "deadAtPositive", deadAtPositive)
+
             if nCurrentHp > 0 then
                 -- todo: System Shock
                 -- Add check here for nAdjustedDamage > 50 and if so perform system shock check?-- celestian, AD&D
                 -- hit after having zero or less hp - dead
                 -- new hit causing damage beyond threshold or deadAt = dead
-                if (nAdjustedDamage > nCurrentHp + nDeathDoorThreshold) or (nAdjustedDamage >= nCurrentHp + nDEAD_AT) then
+
+                -- target is a PC
+                --if sTargetType == "pc" then
+
+                -- adjusted damage exceeds all death's door and dead at values
+                if (nAdjustedDamage > nCurrentHp + deathDoorThresholdPositive) or (nAdjustedDamage >= nCurrentHp + deadAtPositive) then
+                    Debug.console("adjusted damage exceeds all death's door and dead at values")
                     table.insert(aNotifications, "[INSTANT DEATH]")
                     nDeathSaveFail = 3
+                -- adjusted damage = hp
                 elseif (nAdjustedDamage == nCurrentHp) then
-                    -- new hit causing hit points to fall within threshold
+                    Debug.console("adjusted damage = hp")
                     table.insert(aNotifications, "[DAMAGE EQUALS HIT POINTS - AT DEATH'S DOOR]")
-                elseif (nAdjustedDamage > nCurrentHp) and ((nAdjustedDamage <= nCurrentHp + nDeathDoorThreshold) and (nAdjustedDamage < nCurrentHp + nDEAD_AT)) then
+                -- adjusted damage brings character within death's door buffer values
+                elseif (nAdjustedDamage > nCurrentHp) and ((nAdjustedDamage < nCurrentHp + deathDoorThresholdPositive) and (nAdjustedDamage < nCurrentHp + deadAtPositive)) then
+                    Debug.console("adjusted damage brings character within death's door buffer values")
                     table.insert(
                         aNotifications,
                         "[DAMAGE EXCEEDS HIT POINTS BY " .. nDmgBeyondTotalHp .. "  - AT DEATH'S DOOR]"
@@ -742,40 +773,25 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
                         nDeathSaveFail = nDeathSaveFail + 1
                     end
                 end
+
+                -- target is an NPC, no Death's Door
+                -- else
+                --     if (nAdjustedDamage > nCurrentHp) then
+                --         table.insert(aNotifications, "[INSTANT DEATH]")
+                --         nDeathSaveFail = 3
+                --     end
+                -- end
             else
-                -- ongoing damage
+                -- ongoing bleeding damage
                 if rSource == nil then
                     table.insert(aNotifications, "[BLEEDING]")
+                -- damage from a new source
                 else
                     -- hit after at 0 hp or less - death
                     table.insert(aNotifications, "[INSTANT DEATH]")
                     nDeathSaveFail = 3
                 end
             end
-
-            --end
-
-            -- Deal with remainder damage
-            -- if nDmgBeyondTotalHp >= (nTotalHP + 10) then
-            --     table.insert(aNotifications, "[INSTANT DEATH]")
-            --     nDeathSaveFail = 3
-            -- elseif nDmgBeyondTotalHp > 0 or nWounds == nTotalHP then
-            --     if nDmgBeyondTotalHp > 0 then
-            --         table.insert(aNotifications, "[DAMAGE EXCEEDS HIT POINTS BY " .. nDmgBeyondTotalHp .. "]")
-            --     else
-            --         table.insert(aNotifications, "[DAMAGE EXCEEDS HIT POINTS]")
-            --     end
-
-            --     if nPrevWounds >= nTotalHP then
-            --         if rDamageOutput.bCritical then
-            --             nDeathSaveFail = nDeathSaveFail + 2
-            --         else
-            --             nDeathSaveFail = nDeathSaveFail + 1
-            --         end
-            --     end
-            -- -- todo: System Shock
-            -- -- Add check here for nAdjustedDamage > 50 and if so perform system shock check?-- celestian, AD&D
-            -- end
 
             -- Handle stable situation
             EffectManager.removeEffect(nodeTargetCT, "Stable")
@@ -851,7 +867,9 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
             nPrevWounds,
             nTotalHP,
             nDeathDoorThreshold,
+            deathDoorThresholdPositive,
             nDEAD_AT,
+            deadAtPositive,
             rTarget,
             nCurrentHp,
             nAdjustedDamage
@@ -859,19 +877,6 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
     end
 
     updateHealthStatus(sTargetType, nodeTarget, nDeathSaveSuccess, nDeathSaveFail, nTempHP, nWounds, nDmgBeyondTotalHp)
-
-    --
-    -- if sTargetType == "pc" then
-    -- DB.setValue(nodeTarget, "hp.deathsavesuccess", "number", math.min(nDeathSaveSuccess, 3));
-    -- DB.setValue(nodeTarget, "hp.deathsavefail", "number", math.min(nDeathSaveFail, 3));
-    -- DB.setValue(nodeTarget, "hp.temporary", "number", nTempHP);
-    -- DB.setValue(nodeTarget, "hp.wounds", "number", (nWounds+nDmgBeyondTotalHp));
-    -- else
-    -- DB.setValue(nodeTarget, "deathsavesuccess", "number", math.min(nDeathSaveSuccess, 3));
-    -- DB.setValue(nodeTarget, "deathsavefail", "number", math.min(nDeathSaveFail, 3));
-    -- DB.setValue(nodeTarget, "hptemp", "number", nTempHP);
-    -- DB.setValue(nodeTarget, "wounds", "number", nWounds);
-    -- end
 
     -- Check for status change
     local bShowStatus = false
@@ -937,27 +942,28 @@ function updatePcCondition(
     nPrevWounds,
     nTotalHP,
     nDeathDoorThreshold,
+    deathDoorThresholdPositive,
     nDEAD_AT,
+    deadAtPositive,
     rTarget,
     nCurrentHp,
     nAdjustedDamage)
     -- effects management
     --if sTargetType == "pc" then
-    Debug.console("manager_action_attack_osric.lua 897", "pc")
     -- ^^ was PC
     --local nDeathValue = (nTotalHP - nWounds) - nDmgBeyondTotalHp;
 
     -- todo: done? fix this for deaths door and add coma effect
     Debug.console(
-        "manager_action_attack_osric.lua 902",
+        "updatePcCondition",
         sDamageType,
-        rSource,
         nWounds,
         nPrevWounds,
         nTotalHP,
         nDeathDoorThreshold,
+        deathDoorThresholdPositive,
         nDEAD_AT,
-        rTarget,
+        deadAtPositive,
         nCurrentHp,
         nAdjustedDamage
     )
@@ -1047,6 +1053,7 @@ function updatePcCondition(
                 )
             end
         end
+        -- damage
     elseif rSource ~= nil then
         -- ongoing damage
         -- deal with death's door threshold
@@ -1064,7 +1071,7 @@ function updatePcCondition(
             -- Add check here for nAdjustedDamage > 50 and if so perform system shock check?-- celestian, AD&D
             -- hit after having zero or less hp - dead
             -- new hit causing damage beyond threshold = dead
-            if (nAdjustedDamage > nCurrentHp + nDeathDoorThreshold) or (nAdjustedDamage >= nCurrentHp + nDEAD_AT) then
+            if (nAdjustedDamage > nCurrentHp + deathDoorThresholdPositive) or (nAdjustedDamage >= nCurrentHp + deadAtPositive) then
                 if not EffectManager5E.hasEffect(rTarget, "Dead") then
                     EffectManager.removeEffect(ActorManager.getCTNode(rTarget), "Unconscious");
                     EffectManager.addEffect(
@@ -1085,7 +1092,7 @@ function updatePcCondition(
                     true
                 )
             -- new hit causing damage to fall within threshold
-            elseif (nAdjustedDamage > nCurrentHp) and ((nAdjustedDamage <= nCurrentHp + nDeathDoorThreshold) and (nAdjustedDamage < nCurrentHp + nDEAD_AT)) then
+            elseif (nAdjustedDamage > nCurrentHp) and ((nAdjustedDamage <= nCurrentHp + deathDoorThresholdPositive) and (nAdjustedDamage < nCurrentHp + deadAtPositive)) then
                 EffectManager.addEffect(
                     "",
                     "",
@@ -1120,12 +1127,14 @@ function updatePcCondition(
             end
         end
     end
+
     Debug.console("1099")
-    -- doing this here, outside of the loop that causes an error, line 1083
-    if EffectManager5E.hasEffect(rTarget, "Unconscious") and EffectManager5E.hasEffect(rTarget, "Dead") then
-        -- remove unconscious
-        EffectManager.removeEffect(ActorManager.getCTNode(rTarget), "Unconscious")
-    end
+
+    -- ****** not sure how to remove "unconcious" effect. need to look into this some more
+    -- if EffectManager5E.hasEffect(rTarget, "Unconscious") and EffectManager5E.hasEffect(rTarget, "Dead") then
+    --     -- remove unconscious
+    --     EffectManager.removeEffect(ActorManager.getCTNode(rTarget), "Unconscious")
+    -- end
 end
 
 function updateHealthStatus(
@@ -1137,7 +1146,7 @@ function updateHealthStatus(
     nWounds,
     nDmgBeyondTotalHp)
     Debug.console(
-        "manager_action_attack_osric.lua 1116",
+        "updateHealthStatus",
         sTargetType,
         nodeTarget,
         nDeathSaveSuccess,

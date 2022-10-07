@@ -1,6 +1,33 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- <?xml version="1.0" encoding="iso-8859-1"?>
 <root>
 	<!-- may not need this -->
+	<template name="button_charinit">
+		<buttoncontrol>
+			<icon normal="button_initiative" pressed="button_initiative_down" />
+			<script>
+				function action(draginfo)
+					local nodeChar = window.getDatabaseNode();
+					local rActor = ActorManager.resolveActor( window.getDatabaseNode());
+					Debug.console("nodeChar", nodeChar, "rActor", rActor, "draginfo", draginfo);
+					ActionInit.performRoll(draginfo, rActor);
+
+					return true;
+				end
+				
+				function onDragStart(button, x, y, draginfo)
+					return action(draginfo);
+				end
+				
+				function onButtonPress()
+					return action();
+				end
+			</script>
+			<frame name="fielddark" offset="7,5,7,5" />
+			<stateframe>
+				<hover name="rowshade" offset="7,5,7,5" />
+			</stateframe>
+		</buttoncontrol>
+	</template>
 	<template name="button_charinitdelay">
 		<buttoncontrol>
 			<icon normal="button_initdelay" pressed="button_initdelay_down" />
@@ -41,4 +68,4 @@
 			<tooltip textres="char_initdelay_tooltip" />
 		</buttoncontrol>
 	</template>
-</root>
+</root> -->

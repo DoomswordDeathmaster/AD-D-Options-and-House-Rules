@@ -28,59 +28,73 @@ function getWoundPercentAdndOpHr(rActor)
         nCurrentHp = nHP - nWounds
     end
 
-    --local bDeathsDoor = OptionsManager.isOption("HouseRule_DeathsDoor", "on"); -- using deaths door aD&D rule
-
     local sStatus = ActorHealthManager.STATUS_HEALTHY
-    --local nLeftOverHP = (nHP - nWounds)
 
-    -- AD&D goes to -10 then dead with deaths door
-    --local nDEAD_AT = -10;
-
-    -- changing death's door options, since it always exists in 1e
+    -- default Death's Door Threshold
     local nDeathDoorThreshold = 0
+    --default nDEAD_AT
+    local nDEAD_AT = 0
+    -- default
+    local deadAtPositive = 0
+    --default
+    local deathDoorThresholdPositive = 0
 
-    local sOptPcDeadAtValue = OptionsManager.getOption("pcDeadAtValue")
+    -- pc-only options for death's door
+    if sNodeType == "pc" then
+        -- get death's door on/off
+        local bOptDeathsDoor = OptionsManager.isOption("HouseRule_DeathsDoor", "on")
 
-    local nDEAD_AT = -10
+        -- death's door ON
+        if bOptDeathsDoor then
+            -- get pc dead at config value
+            local sOptPcDeadAtValue = OptionsManager.getOption("pcDeadAtValue")
 
-    if sOptPcDeadAtValue == "minusCon" then
-        nDEAD_AT = nConScore
-        Debug.console("actorhealth: ndeadat", nDEAD_AT)
+            -- minus CON
+            if sOptPcDeadAtValue == "minusCon" then
+                nDEAD_AT = 0 - nConScore
+                --deadAtPositive = nConScore
+                Debug.console("actorhealth: ndeadat", nDEAD_AT)
+            -- minus 10
+            else
+                nDEAD_AT = -10
+                --deadAtPositive = 10
+            end
+
+            -- get the threshold config setting
+            local sOptHouseRuleDeathsDoorThreshold = OptionsManager.getOption("HouseRule_DeathsDoor_Threshold")
+
+            if sOptHouseRuleDeathsDoorThreshold == "exactlyZero" then
+                nDeathDoorThreshold = 0
+            elseif sOptHouseRuleDeathsDoorThreshold == "zeroToMinusThree" then
+                nDeathDoorThreshold = -3
+                --deathDoorThresholdPositive = 3
+            else
+                -- minus 9 because -10 = dead
+                nDeathDoorThreshold = -9
+                --deathDoorThresholdPositive = 9
+            end
+        end
     end
-    
-    local nDEAD_AT = -10
 
-    local sOptHouseRuleDeathsDoor = OptionsManager.getOption("HouseRule_DeathsDoor")
-
-    if sOptHouseRuleDeathsDoor == "exactlyZero" then
-        nDeathDoorThreshold = 0
-    elseif sOptHouseRuleDeathsDoor == "zeroToMinusThree" then
-        nDeathDoorThreshold = -3
-    else
-        -- minus 9 because -10 = dead
-        nDeathDoorThreshold = -9
-    end
-
-    -- force death's door
-    -- if not bDeathsDoor then
-    --     nDEAD_AT = 0;
-    -- end
-
-    --if sTargetType == "pc" then
-    -- ^^ was PC
-
-    --end
-
+    Debug.console("manager_actor_health_osric.lua", "sNodeType", sNodeType, "nDEAD_AT", nDEAD_AT, "nCurrentHp", nCurrentHp, "nDeathDoorThreshold", nDeathDoorThreshold)
     --Debug.console("manager_actor_health_osric.lua 62", nWounds, nPercentWounded, nHP, nCurrentHp)
 
     if nPercentWounded >= 1 then
-        if nCurrentHp <= nDEAD_AT then
+        --local bhpltDeadAt = (nCurrentHp <= nDEAD_AT)
+        --local bhpltDdt = (nCurrentHp < nDeathDoorThreshold)
+
+        --Debug.console("bhpGtDeadAt", bhpGtDeadAt, "bhpltDdt", bhpltDdt)
+
+        if (nCurrentHp <= nDEAD_AT) or (nCurrentHp < nDeathDoorThreshold) then
+            Debug.console("ADD DEAD STATUS")
             sStatus = ActorHealthManager.STATUS_DEAD
         else
+            Debug.console("ADD DYING STATUS")
             sStatus = ActorHealthManager.STATUS_DYING
         end
 
         if nCurrentHp < 1 then
+            Debug.console("CURRENT HP LESS THAN ONE")
             sStatus = sStatus .. " (" .. nCurrentHp .. ")"
         end
     elseif OptionsManager.isOption("WNDC", "detailed") then

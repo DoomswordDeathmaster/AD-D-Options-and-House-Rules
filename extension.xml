@@ -32,7 +32,7 @@
 		<includefile source="graphics/graphics_frames_adnd.xml" />
 		<includefile source="graphics/graphics_icons.xml" />
 
-		<script name="ActionInitAdndOpHr" file="scripts/manager_action_init_adnd_op_hr.lua" />
+		<script name="ActionInitManagerAdndOpHr" file="scripts/manager_action_init_adnd_op_hr.lua" />
 		<script name="ActionSurpriseAdndOpHr" file="scripts/manager_action_surprise_adnd_op_hr.lua" />
 		<script name="AdndOpHrManager" file="scripts/data_options_adnd_op_hr.lua" />
 		<script name="ActionDamageManagerAdndOpHr" file="scripts/manager_action_damage_adnd_op_hr.lua" />

@@ -31,6 +31,22 @@ function onInit()
 end
 
 -- called when dm rolls init manually or onroundstart
+function rollRandomInitAdndOpHr(nInitMod)
+	-- Override, TODO should figure out why OSRIC isn't initializing DataCommonADND.nDefaultInitiativeDice and not sure about why 2E is initializing as string
+	local initiativeDie = 0
+
+	if User.getRulesetName() == "OSRIC" then
+		initiativeDie = 6
+	else
+		initiativeDie = tonumber(DataCommonADND.nDefaultInitiativeDice)
+	end
+
+	--Debug.console("rollRandomInitAdndOpHr", "initiativeDie", initiativeDie)
+	local nInitResult = math.random(initiativeDie)
+    Debug.console("rollRandomInitAdndOpHr", nInitResult)
+    return nInitResult
+end
+
 function rollEntryInitAdndOpHr(nodeEntry)
 	Debug.console("rollEntryInitAdndOpHr", nodeEntry)
 
@@ -168,16 +184,13 @@ function rollEntryInitAdndOpHr(nodeEntry)
 		end
 
 		if sOptInitGrouping == "both" then
+			-- evaluate ties and adjust
+			nInitResult = resolveInitTie(pcLastInit, nInitResult)
+
 			-- init swap
 			if bOptInitGroupingSwap or (User.getRulesetName() == "OSRIC") then
-				--applyInitResultToAllNPCs(pcLastInit)
-				--pcLastInit = nInitResult
-				nInitResult = resolveInitTie(pcLastInit, nInitResult)
 				applyInitResultToAllPCs(nInitResult)
 			else
-				--applyInitResultToAllPCs(npcLastInit)
-				--npcLastInit = nInitResult
-				nInitResult = resolveInitTie(pcLastInit, nInitResult)
 				applyInitResultToAllNPCs(nInitResult)
 			end
 		elseif sOptInitGrouping == "npc" then
@@ -206,22 +219,6 @@ function resolveInitTie(pcLastInit, npcLastInit)
 	return nInitResult
 end
 
-function rollRandomInitAdndOpHr(nInitMod)
-	-- Override, TODO should figure out why OSRIC isn't initializing DataCommonADND.nDefaultInitiativeDice and not sure about why 2E is initializing as string
-	local initiativeDie = 0
-
-	if User.getRulesetName() == "OSRIC" then
-		initiativeDie = 6
-	else
-		initiativeDie = tonumber(DataCommonADND.nDefaultInitiativeDice)
-	end
-
-	--Debug.console("rollRandomInitAdndOpHr", "initiativeDie", initiativeDie)
-	local nInitResult = math.random(initiativeDie)
-    Debug.console("rollRandomInitAdndOpHr", nInitResult)
-    return nInitResult
-end
-
 function getHighestWeaponSpeedFactor(nodeEntry)
 	-- flip through weaponlist, get the largest speedfactor as default
 	local nSpeedFactor = 0
@@ -235,22 +232,6 @@ function getHighestWeaponSpeedFactor(nodeEntry)
 
 	return nSpeedFactor
 end
-
--- function swapInitiativeResults()
--- 	-- pc or both grouping enabled
--- 	if sOptInitGrouping ~= "neither" then
--- 		-- init swap
--- 		if bOptInitGroupingSwap or (User.getRulesetName() == "OSRIC") then
--- 			applyInitResultToAllNPCs(nInitResult)
--- 		else
--- 			applyInitResultToAllPCs(nInitResult)
--- 		end
--- 	-- individual init
--- 	else
--- 		Debug.console("148:PC", "applyIndividualInit", "ninitresult", nInitResult)
--- 		applyIndividualInit(nInitResult, nodeEntry)
--- 	end
--- end
 
 function applyInitResultToAllPCs(nInitResult)
 	Debug.console("applyInitResultToAllPCs", nInitResult)
@@ -281,14 +262,33 @@ function applyInitResultToAllNPCs(nInitResult)
 			-- new var for storing any new result
 			local nInitResultNew = 0
 
-			-- set custom init as new init result if custom init is higher (zombies, etc)
-			if nCustomInit > nInitResult then
+			-- Override, TODO should figure out why OSRIC isn't initializing DataCommonADND.nDefaultInitiativeDice and not sure about why 2E is initializing as string
+			local initiativeDie = 0
+
+			if User.getRulesetName() == "OSRIC" then
+				initiativeDie = 6
+			else
+				initiativeDie = tonumber(DataCommonADND.nDefaultInitiativeDice)
+			end
+
+			local bOptInitMods = (OptionsManager.getOption("initiativeModifiersAllow") == "on")
+			local bOptInitSizeMods = (OptionsManager.getOption("OPTIONAL_INIT_SIZEMODS") == "on")
+			local sOptInitGrouping = OptionsManager.getOption("initiativeGrouping")
+
+			-- modify init results for size or other custom init
+			-- higher than the max init die (zombies, etc)
+			if nCustomInit > initiativeDie then
 				nInitResultNew = nCustomInit
+			-- init mods on, size mods on, and grouped init not involving npcs - add size mod to init roll
+			elseif (bOptInitMods and bOptInitSizeMods) and (sOptInitGrouping ~= "both" and sOptInitGrouping ~= "npc") then
+				nInitResultNew = nInitResult + nCustomInit
+			-- just the init roll, including any weapon mods
 			else
 				nInitResultNew = nInitResult
 			end
-
-			Debug.console("applyInitResultToAllNPCs", "nInitResult", nInitResult, "nCustomInit", nCustomInit, "nInitResultNew", nInitResultNew)
+			
+			--Debug.console("applyInitResultToAllNPCs", "nInitResult", nInitResult, "nCustomInit", nCustomInit, "nInitResultNew", nInitResultNew)
+			Debug.console("applyInitResultToAllNPCs", "nInitResult", nInitResult, "nCustomInit", nCustomInit)
 			-- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
 			DB.setValue(nodeEntry, "initresult", "number", nInitResultNew)
 			DB.setValue(nodeEntry, "initresult_d6", "number", nInitResultNew)
@@ -309,12 +309,36 @@ function applyIndividualInit(nInitResult, nodeEntry)
 	-- new var for storing any ne result
 	local nInitResultNew = 0
 
-	-- set custom init as new init result if custom init is higher (zombies, etc)
-	if nCustomInit > nInitResult then
+	local bOptInitSizeMods = (OptionsManager.getOption("OPTIONAL_INIT_SIZEMODS") == "on")
+
+	-- Override, TODO should figure out why OSRIC isn't initializing DataCommonADND.nDefaultInitiativeDice and not sure about why 2E is initializing as string
+	local initiativeDie = 0
+
+	if User.getRulesetName() == "OSRIC" then
+		initiativeDie = 6
+	else
+		initiativeDie = tonumber(DataCommonADND.nDefaultInitiativeDice)
+	end
+
+	-- modify init results for size or other custom init
+	-- higher than the max init die (zombies, etc)
+	if nCustomInit > initiativeDie then
 		nInitResultNew = nCustomInit
+	-- size mods on, add size mod to init roll
+	elseif bOptInitSizeMods then
+		nInitResultNew = nInitResult + nCustomInit
+	-- just the init roll, including any weapon mods
 	else
 		nInitResultNew = nInitResult
 	end
+
+
+	-- set custom init as new init result if custom init is higher (zombies, etc)
+	-- if nCustomInit > nInitResult then
+	-- 	nInitResultNew = nCustomInit
+	-- else
+	-- 	nInitResultNew = nInitResult
+	-- end
 
 	-- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
 	DB.setValue(nodeEntry, "initresult", "number", nInitResultNew)
@@ -447,11 +471,13 @@ end
 
 function dmGenerateInit(combatantSide)
 	Debug.console("dmGenerateInit", "combatantSide", combatantSide)
-
 	-- roll only for non-friend CT nodes
 	if combatantSide == "npc" then
 		for _, nodeEntry in pairs(CombatManager.getCombatantNodes()) do
 			if DB.getValue(nodeEntry, "friendfoe") ~= "friend" then
+				--local rActor = ActorManager.resolveActor(nodeEntry);
+				--Debug.console("RACTOR", rActor)
+				--ActionInitManagerAdndOpHr.getRollAdndOpHr(rActor, bSecretRoll, rItem)
 				rollEntryInitAdndOpHr(nodeEntry)
 			end
 		end

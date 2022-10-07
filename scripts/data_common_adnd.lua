@@ -256,7 +256,7 @@ function onInit()
 	-- default initiative dice size
 	-- take whatever the initiative die option is set to
 
-	if User.getRulesetName ~= "OSRIC" then
+	if sRulesetName ~= "OSRIC" then
 		nDefaultInitiativeDice = OptionsManager.getOption("initiativeDie"):gsub("d", "") --10;
 	else
 		nDefaultInitiativeDice = 6
