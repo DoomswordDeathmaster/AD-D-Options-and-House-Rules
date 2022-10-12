@@ -3,7 +3,7 @@ function onInit()
 end
 
 function getWoundPercentAdndOpHr(rActor)
-    --Debug.console("manager_actor_helth_osric.lua 7", "getWoundPercentNew")
+    Debug.console("getWoundPercentAdndOpHr")
     -- local rActor = ActorManager.resolveActor(node);
     -- local node = ActorManager.getCreatureNode(rActor);
     local sNodeType, node = ActorManager.getTypeAndNode(rActor)
@@ -76,7 +76,7 @@ function getWoundPercentAdndOpHr(rActor)
         end
     end
 
-    Debug.console("manager_actor_health_osric.lua", "sNodeType", sNodeType, "nDEAD_AT", nDEAD_AT, "nCurrentHp", nCurrentHp, "nDeathDoorThreshold", nDeathDoorThreshold)
+    Debug.console("manager_actor_health_adnd_op_hr.lua", "nPercentWounded", nPercentWounded, "sNodeType", sNodeType, "nDEAD_AT", nDEAD_AT, "nCurrentHp", nCurrentHp, "nDeathDoorThreshold", nDeathDoorThreshold)
     --Debug.console("manager_actor_health_osric.lua 62", nWounds, nPercentWounded, nHP, nCurrentHp)
 
     if nPercentWounded >= 1 then
@@ -85,12 +85,15 @@ function getWoundPercentAdndOpHr(rActor)
 
         --Debug.console("bhpGtDeadAt", bhpGtDeadAt, "bhpltDdt", bhpltDdt)
 
-        if (nCurrentHp <= nDEAD_AT) or (nCurrentHp < nDeathDoorThreshold) then
+        if (nCurrentHp <= nDEAD_AT) then --or (nCurrentHp < nDeathDoorThreshold) then
             Debug.console("ADD DEAD STATUS")
             sStatus = ActorHealthManager.STATUS_DEAD
         else
-            Debug.console("ADD DYING STATUS")
-            sStatus = ActorHealthManager.STATUS_DYING
+            -- add this status if the guy isn't already dead, necessary because the health manager gets called after the damage manager and there's not an elegant way to stop it
+            if not EffectManager5E.hasEffect(rActor, "Dead") then
+                Debug.console("ADD DYING STATUS")
+                sStatus = ActorHealthManager.STATUS_DYING
+            end
         end
 
         if nCurrentHp < 1 then

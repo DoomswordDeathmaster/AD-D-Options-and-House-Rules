@@ -2,7 +2,7 @@
 <root version="3.0">
 	<properties>
 		<name>AD&amp;D Options and House Rules</name>
-		<version>1.3</version>
+		<version>1.5</version>
 		<author>Doomsword</author>
 		<description>
 			<text>AD&amp;D Options and House Rules</text>
@@ -17,7 +17,7 @@
 		</ruleset>
 	</properties>
 
-	<announcement text="AD&amp;D Options and House Rules\rby Doomsword and including Celestian's 1E properties with enhancements.\rFor issues or feature requests, find me on the Discord." font="emotefont" icon="doomsword_icon" />
+	<announcement text="AD&amp;D Options and House Rules\rby Doomsword and including Celestian's 1E properties with enhancements.\rFor issues or feature requests, find me on the Discord.\r--PLEASE CHECK ALL OPTIONS" font="emotefont" icon="doomsword_icon" />
 
 	<base>
 		<includefile source="campaign/record_char_combat.xml" />

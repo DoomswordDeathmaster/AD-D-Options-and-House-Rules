@@ -473,9 +473,17 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
                 nDeathDoorThreshold = -3
                 deathDoorThresholdPositive = 3
             else
-                -- minus 9 because -10 = dead
-                nDeathDoorThreshold = -9
-                deathDoorThresholdPositive = 9
+                -- minus CON
+                if sOptPcDeadAtValue == "minusCon" then
+                    nDeathDoorThreshold = (0 - nConScore) + 1
+                    deathDoorThresholdPositive = nConScore - 1
+                else
+                    -- minus 9 because -10 = dead
+                    nDeathDoorThreshold = -9
+                    deathDoorThresholdPositive = 9
+                end
+
+                Debug.console("nDeathDoorThreshold", nDeathDoorThreshold, "deathDoorThresholdPositive", deathDoorThresholdPositive)
             end
         end
     end
@@ -1053,7 +1061,7 @@ function updatePcCondition(
                 )
             end
         end
-        -- damage
+    -- new damage
     elseif rSource ~= nil then
         -- ongoing damage
         -- deal with death's door threshold
@@ -1106,9 +1114,13 @@ function updatePcCondition(
             EffectManager.addEffect("", "", ActorManager.getCTNode(rTarget), {sName = "Dead", nDuration = 0}, true)
             nDeathSaveFail = 3
         end
+    -- ongoing damage
     else
-        Debug.console("ongoing 1076")
-        if nCurrentHp <= -9 then
+        local lastHpBeforeDeath = nDEAD_AT + 1
+        Debug.console("apply ongoing damage", "lastHpBeforeDeath", lastHpBeforeDeath)
+
+        if nCurrentHp <= lastHpBeforeDeath then
+        --if nCurrentHp <= -9 then
             -- removing an effect here causes an error because we're going through a loop of effects where DMGO is called and if this one
             -- is removed it causes the for loop to crash
             -- if EffectManager5E.hasEffect(rTarget, "Unconscious") then
@@ -1128,7 +1140,7 @@ function updatePcCondition(
         end
     end
 
-    Debug.console("1099")
+    --Debug.console("1099")
 
     -- ****** not sure how to remove "unconcious" effect. need to look into this some more
     -- if EffectManager5E.hasEffect(rTarget, "Unconscious") and EffectManager5E.hasEffect(rTarget, "Dead") then
