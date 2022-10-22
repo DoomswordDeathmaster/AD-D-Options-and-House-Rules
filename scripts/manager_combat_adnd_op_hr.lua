@@ -43,7 +43,17 @@ function rollRandomInitAdndOpHr(nInitMod)
 
 	--Debug.console("rollRandomInitAdndOpHr", "initiativeDie", initiativeDie)
 	local nInitResult = math.random(initiativeDie)
-    Debug.console("rollRandomInitAdndOpHr", nInitResult)
+    Debug.console("46: rollRandomInitAdndOpHr", "nInitResult", nInitResult, "nInitMod", nInitMod)
+
+	nInitResult = nInitResult + nInitMod
+
+	-- handle results higher or lower than the max we want to deal with
+	if nInitResult <= 0 then
+		nInitResult = 1
+	elseif nInitResult > 10 then
+		nInitResult = 10
+	end
+
     return nInitResult
 end
 
@@ -98,8 +108,8 @@ function rollEntryInitAdndOpHr(nodeEntry)
 
 		-- init mods enabled
 		if bOptInitMods then
-			-- init grouping disabled
-			if sOptInitGrouping == "neither" then
+			-- init grouping disabled for the pc group
+			if (sOptInitGrouping == "neither") or (sOptInitGrouping == "npc") then
 				-- get each pc's highest weapon speed factor
 				local nSpeedFactor = getHighestWeaponSpeedFactor(nodeEntry)
 
@@ -146,8 +156,8 @@ function rollEntryInitAdndOpHr(nodeEntry)
 
 		-- init mods enabled
 		if bOptInitMods then
-			-- init grouping disabled
-			if sOptInitGrouping == "neither" then
+			-- init grouping disabled for the npc group
+			if (sOptInitGrouping == "neither") or (sOptInitGrouping == "pc") then
 				local nSpeedFactor = getHighestWeaponSpeedFactor(nodeEntry)
 
 				-- size mods enabled
@@ -198,7 +208,7 @@ function rollEntryInitAdndOpHr(nodeEntry)
 			--nInitResult = resolveInitTie(pcLastInit, nInitResult)
 			applyInitResultToAllNPCs(nInitResult)
 		else
-			Debug.console("168:NPC", "applyIndividualInit", "ninitresult", nInitResult)
+			Debug.console("211: NPC", "applyIndividualInit", "nInitResult", nInitResult, "nInitMod", nInitMod)
 			applyIndividualInit(nInitResult, nodeEntry)
 		end
 	end
@@ -271,17 +281,17 @@ function applyInitResultToAllNPCs(nInitResult)
 				initiativeDie = tonumber(DataCommonADND.nDefaultInitiativeDice)
 			end
 
-			local bOptInitMods = (OptionsManager.getOption("initiativeModifiersAllow") == "on")
-			local bOptInitSizeMods = (OptionsManager.getOption("OPTIONAL_INIT_SIZEMODS") == "on")
-			local sOptInitGrouping = OptionsManager.getOption("initiativeGrouping")
+			--local bOptInitMods = (OptionsManager.getOption("initiativeModifiersAllow") == "on")
+			--local bOptInitSizeMods = (OptionsManager.getOption("OPTIONAL_INIT_SIZEMODS") == "on")
+			--local sOptInitGrouping = OptionsManager.getOption("initiativeGrouping")
 
 			-- modify init results for size or other custom init
 			-- higher than the max init die (zombies, etc)
 			if nCustomInit > initiativeDie then
 				nInitResultNew = nCustomInit
 			-- init mods on, size mods on, and grouped init not involving npcs - add size mod to init roll
-			elseif (bOptInitMods and bOptInitSizeMods) and (sOptInitGrouping ~= "both" and sOptInitGrouping ~= "npc") then
-				nInitResultNew = nInitResult + nCustomInit
+			--elseif (bOptInitMods and bOptInitSizeMods) and (sOptInitGrouping ~= "both" and sOptInitGrouping ~= "npc") then
+			--	nInitResultNew = nInitResult + nCustomInit
 			-- just the init roll, including any weapon mods
 			else
 				nInitResultNew = nInitResult
@@ -309,7 +319,7 @@ function applyIndividualInit(nInitResult, nodeEntry)
 	-- new var for storing any ne result
 	local nInitResultNew = 0
 
-	local bOptInitSizeMods = (OptionsManager.getOption("OPTIONAL_INIT_SIZEMODS") == "on")
+	--local bOptInitSizeMods = (OptionsManager.getOption("OPTIONAL_INIT_SIZEMODS") == "on")
 
 	-- Override, TODO should figure out why OSRIC isn't initializing DataCommonADND.nDefaultInitiativeDice and not sure about why 2E is initializing as string
 	local initiativeDie = 0
@@ -325,8 +335,8 @@ function applyIndividualInit(nInitResult, nodeEntry)
 	if nCustomInit > initiativeDie then
 		nInitResultNew = nCustomInit
 	-- size mods on, add size mod to init roll
-	elseif bOptInitSizeMods then
-		nInitResultNew = nInitResult + nCustomInit
+	--elseif bOptInitSizeMods then
+	--	nInitResultNew = nInitResult + nCustomInit
 	-- just the init roll, including any weapon mods
 	else
 		nInitResultNew = nInitResult

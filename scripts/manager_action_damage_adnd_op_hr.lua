@@ -7,7 +7,7 @@ end
 -- brought this in to later remove critical options
 function modDamageAdndOpHr(rSource, rTarget, rRoll)
     ActionDamage.decodeDamageTypes(rRoll)
-    CombatManager2.addRightClickDiceToClauses(rRoll)
+    CombatManagerADND.addRightClickDiceToClauses(rRoll)
 
     -- Set up
     local aAddDesc = {}

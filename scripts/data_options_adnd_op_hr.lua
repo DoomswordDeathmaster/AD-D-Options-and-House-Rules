@@ -352,6 +352,8 @@ function registerOptions()
 			{labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off"}
 		)
 	end
+
+	
 end
 
 -- -- Dynamic Options

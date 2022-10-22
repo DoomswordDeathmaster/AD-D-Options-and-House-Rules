@@ -2,7 +2,7 @@
 <root version="3.0">
 	<properties>
 		<name>AD&amp;D Options and House Rules</name>
-		<version>1.5</version>
+		<version>1.53</version>
 		<author>Doomsword</author>
 		<description>
 			<text>AD&amp;D Options and House Rules</text>
@@ -17,7 +17,7 @@
 		</ruleset>
 	</properties>
 
-	<announcement text="AD&amp;D Options and House Rules\rby Doomsword and including Celestian's 1E properties with enhancements.\rFor issues or feature requests, find me on the Discord.\r--PLEASE CHECK ALL OPTIONS" font="emotefont" icon="doomsword_icon" />
+	<announcement text="AD&amp;D Options and House Rules\rby Doomsword and including Celestian's 1E properties with enhancements.\rFor issues or feature requests, find me on the Discord.\r--PLEASE CHECK ALL OPTIONS AS MANY HAVE RECENTLY CHANGED" font="emotefont" icon="doomsword_icon" />
 
 	<base>
 		<includefile source="campaign/record_char_combat.xml" />
@@ -25,10 +25,10 @@
 		<includefile source="campaign/record_class.xml" />
 		<includefile source="campaign/record_npc.xml" />
 		<includefile source="campaign/template_char_adnd.xml" />
-		<includefile source="campaign/template_cta.xml" />
 		<includefile source="campaign/template_npc.xml" />
 		<includefile source="campaign/template_campaign.xml" />
 		<includefile source="cta/cta_host.xml" />
+		<includefile source="cta/template_cta.xml" />
 		<includefile source="graphics/graphics_frames_adnd.xml" />
 		<includefile source="graphics/graphics_icons.xml" />
 
@@ -42,7 +42,6 @@
 		<script name="DataCommonADND1e" file="scripts/data_common_adnd1e.lua" />
 		<script name="NpcClickChooser" file="campaign/scripts/npc_click_chooser.lua" />
 		<script name="ActorHealthManagerAdndOpHr" file="scripts/manager_actor_health_adnd_op_hr.lua" />
-		<script name="Options5E" file="scripts/data_options_5E.lua" />
   		<script name="OptionsADND" file="scripts/data_options_adnd.lua" />
 		<script name="CharEncumbranceManager" file="scripts/manager_char_encumbrance.lua" />
 

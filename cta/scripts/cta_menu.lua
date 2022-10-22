@@ -59,17 +59,17 @@ function onMenuSelection(selection, subselection, subsubselection)
 		if selection == 8 then
 			if subselection == 8 then
 				ChatManager.Message(Interface.getString("ct_message_rest"), true)
-				CombatManager2.rest(false)
+				CombatManagerADND.rest(false)
 			elseif subselection == 6 then
 				ChatManager.Message(Interface.getString("ct_message_restlong"), true)
-				CombatManager2.rest(true)
+				CombatManagerADND.rest(true)
 			end
 		end
 		if selection == 5 then
 			if subselection == 7 then
 				CombatManager.resetCombatantEffects()
 			elseif subselection == 5 then
-				CombatManager2.clearExpiringEffects()
+				CombatManagerADND.clearExpiringEffects()
 			end
 		end
 		if selection == 3 then
