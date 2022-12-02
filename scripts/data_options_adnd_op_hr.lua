@@ -1,5 +1,5 @@
 function onInit()
-	Debug.console("getRulesetName: ", User.getRulesetName())
+	--Debug.console("getRulesetName: ", User.getRulesetName())
 	-- doesn't work correctly
 	--OptionsManager.registerCallback("add1eProperties", dynamicOsricOption);
 	sRulesetName = User.getRulesetName()
@@ -106,7 +106,7 @@ function registerOptions()
 			}
 		)
 	else
-		Debug.console("OSRIC Option")
+		--Debug.console("OSRIC Option")
 		OptionsManager.registerOption2(
 			"initiativeGrouping",
 			false,

@@ -1,5 +1,5 @@
 function onInit()
-    Debug.console("manager_action_damage_AdndOpHr.lua", "init")
+    --Debug.console("manager_action_damage_AdndOpHr.lua", "init")
     ActionDamage.applyDamage = applyDamageAdndOpHr
     ActionDamage.modDamage = modDamageAdndOpHr
 end
@@ -391,7 +391,7 @@ end
 
 -- brought this in to handle Death's Door changes
 function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
-    Debug.console("manager_action_damage_osric.lua", "applyDamageNew", "aDice", aDice)
+    --Debug.console("manager_action_damage_osric.lua", "applyDamageNew", "aDice", aDice)
     -- Get health fields
     local sTargetType, nodeTarget = ActorManager.getTypeAndNode(rTarget)
 

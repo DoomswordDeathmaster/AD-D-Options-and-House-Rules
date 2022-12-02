@@ -56,7 +56,7 @@ local _tStandardSupportedRulesets = {
 local _bInitComplete = false
 local _bDesktopInitComplete = false
 function onInit()
-	Debug.console("managercharencumbrance", "onInit")
+	--Debug.console("managercharencumbrance", "onInit")
 	if StringManager.contains(_tStandardSupportedRulesets, Interface.getRuleset()) then
 		CharEncumbranceManager.addStandardCalc()
 	end
@@ -77,7 +77,7 @@ end
 
 local _bInitialized = false
 function performInit()
-	Debug.console("managercharencumbrance", "performInit")
+	--Debug.console("managercharencumbrance", "performInit")
 	if not _bInitComplete then
 		return
 	end

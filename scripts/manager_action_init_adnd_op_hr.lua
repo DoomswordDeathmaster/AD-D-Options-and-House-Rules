@@ -17,7 +17,7 @@ end
 
 -- initiative roll, from item entry in ct or init button on character
 function getRollAdndOpHr(rActor, bSecretRoll, rItem)
-	Debug.console("getRollAdndOpHr", rActor, bSecretRoll, rItem);
+	--Debug.console("getRollAdndOpHr", rActor, bSecretRoll, rItem);
 
 	local bOptInitMods = (OptionsManager.getOption("initiativeModifiersAllow") == "on")
 	--local bOptInitSizeMods = (OptionsManager.getOption("OPTIONAL_INIT_SIZEMODS") == "on")
@@ -66,7 +66,7 @@ function getRoll(rActor, bSecretRoll, rItem)
 	local sAbility = nil
 	-- local nodeActor = ActorManager.getCreatureNode(rActor);
 	local sActorType, nodeActor = ActorManager.getTypeAndNode(rActor)
-	Debug.console("manager_action_init.lua","getRoll","sActorType",sActorType);
+	--Debug.console("manager_action_init.lua","getRoll","sActorType",sActorType);
 	if nodeActor then
 		if rItem then
 			if sActorType == "pc" then
@@ -80,7 +80,7 @@ function getRoll(rActor, bSecretRoll, rItem)
 
 				-- size mods enabled
 				if bOptInitSizeMods then
-					sizeMod = DB.getValue(nodeActor, "initiative.total", 0)
+					sizeMod = DB.getValue(nodeActor, "initiative.misc", 0)
 				end
 				
 				if itemMod >= sizeMod then
@@ -135,12 +135,12 @@ end
 
 -- standard roll when modifiers are turned off
 function getRollNoMods(rActor, bSecretRoll, rItem)
-	Debug.console("getRollNoMods", rActor, bSecretRoll, rItem);
+	--Debug.console("getRollNoMods", rActor, bSecretRoll, rItem);
 	local rRoll = {}
 
 	rRoll.sType = "init"
 	rRoll.aDice = {"d" .. DataCommonADND.nDefaultInitiativeDice}
-	Debug.console("getRollNoMods", rRoll.aDice);
+	--Debug.console("getRollNoMods", rRoll.aDice);
 	rRoll.nMod = 0
 	rRoll.sDesc = "[INIT][Mods OFF]"
 	rRoll.bSecret = bSecretRoll
@@ -160,7 +160,7 @@ function handleApplyInitAdndOpHr(msgOOB)
 	local sOptInitGrouping = OptionsManager.getOption("initiativeGrouping")
 	local sOptInitOrdering = OptionsManager.getOption("initiativeOrdering")
 
-	Debug.console("handleApplyInitAdndOpHr", "msgOOB", msgOOB, "sOptInitGrouping", sOptInitGrouping)
+	--Debug.console("handleApplyInitAdndOpHr", "msgOOB", msgOOB, "sOptInitGrouping", sOptInitGrouping)
 
 	-- set inits to 0, in case a grouping option has been changed and inits not fully reset after some inits have been rolled
 	pcInit = 0
@@ -202,12 +202,12 @@ function handleApplyInitAdndOpHr(msgOOB)
 			end
 		end
 
-		Debug.console("SOPTINITGROUPING", sOptInitGrouping, "BOPTINITGROUPINGSWAP", bOptInitGroupingSwap, "BOPTINITTIES", bOptInitTies, "PCINIT", pcInit, "NPCINIT", npcInit, "PCLASTINIT", pcLastInit, "NPCLASTINIT", npcLastInit)
+		--Debug.console("SOPTINITGROUPING", sOptInitGrouping, "BOPTINITGROUPINGSWAP", bOptInitGroupingSwap, "BOPTINITTIES", bOptInitTies, "PCINIT", pcInit, "NPCINIT", npcInit, "PCLASTINIT", pcLastInit, "NPCLASTINIT", npcLastInit)
 
 		-- handle disallowing ties
 		if not bOptInitTies then
 			if pcLastInit == npcLastInit then
-				Debug.console("TIE FOUND, FIX")
+				--Debug.console("TIE FOUND, FIX")
 
 				if sOptInitOrdering == "ascending" then
 					if pcInit == 1 then
@@ -255,7 +255,7 @@ function handleApplyInitAdndOpHr(msgOOB)
 		end
 	end
 	
-	Debug.console("SOPTINITGROUPING", sOptInitGrouping, "BOPTINITGROUPINGSWAP", bOptInitGroupingSwap, "BOPTINITTIES", bOptInitTies, "PCINIT", pcInit, "NPCINIT", npcInit)
+	--Debug.console("SOPTINITGROUPING", sOptInitGrouping, "BOPTINITGROUPINGSWAP", bOptInitGroupingSwap, "BOPTINITTIES", bOptInitTies, "PCINIT", pcInit, "NPCINIT", npcInit)
 
 	if pcInit ~= 0 then
 		applyInitResultToAllPCs(pcInit)
@@ -350,7 +350,7 @@ end
 -- end
 
 function applyInitResultToAllPCs(nInitResult)
-	Debug.console("applyInitResultToAllPCs", nInitResult)
+	--Debug.console("applyInitResultToAllPCs", nInitResult)
 	-- group init - apply init result to all PCs
 	for _, nodeEntry in pairs(CombatManager.getCombatantNodes()) do
 		if DB.getValue(nodeEntry, "friendfoe") == "friend" then
@@ -364,7 +364,7 @@ function applyInitResultToAllPCs(nInitResult)
 end
 
 function applyInitResultToAllNPCs(nInitResult)
-	Debug.console("applyInitResultToAllNPCs", nInitResult)
+	--Debug.console("applyInitResultToAllNPCs", nInitResult)
 	-- group init - apply init result to remaining NPCs
 	for _, nodeEntry in pairs(CombatManager.getCombatantNodes()) do
 		if DB.getValue(nodeEntry, "friendfoe") ~= "friend" then
@@ -398,7 +398,7 @@ function applyInitResultToAllNPCs(nInitResult)
 			end
 
 			--Debug.console("applyInitResultToAllNPCs", "nInitResult", nInitResult, "nCustomInit", nCustomInit, "nInitResultNew", nInitResultNew)
-			Debug.console("applyInitResultToAllNPCs", "nInitResult", nInitResult, "nCustomInit", nCustomInit, "nInitResultNew", nInitResultNew)
+			--Debug.console("applyInitResultToAllNPCs", "nInitResult", nInitResult, "nCustomInit", nCustomInit, "nInitResultNew", nInitResultNew)
 			-- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
 			DB.setValue(nodeEntry, "initresult", "number", nInitResultNew)
 			DB.setValue(nodeEntry, "initresult_d6", "number", nInitResultNew)

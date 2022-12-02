@@ -27,7 +27,7 @@ function onInit()
 	end
 	--sPath    = path[1];
 	--sClass   = class[1];
-	Debug.console("npc_click_chooser")
+	--Debug.console("npc_click_chooser")
 
 	if sRecord then
 		sRecord = DB.getPath(window.getDatabaseNode(), sRecord)
@@ -58,9 +58,9 @@ function updateForNode()
 end
 
 function onClickDown()
-	Debug.console(sControl)
-	Debug.console(sClass)
-	Debug.console(sRecord)
+	--Debug.console(sControl)
+	--Debug.console(sClass)
+	--Debug.console(sRecord)
 	Interface.openWindow(sPath, sClass)
 	return true
 end

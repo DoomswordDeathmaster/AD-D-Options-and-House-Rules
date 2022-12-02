@@ -30,6 +30,7 @@ function onInit()
 		end
 	end
 
+	--Debug.console("createTHACOMatrix")
 	createTHACOMatrix()
 end
 
@@ -77,7 +78,7 @@ function createTHACOMatrix()
 
 	local node = getDatabaseNode()
 	local bisPC = (ActorManager.isPC(node))
-	local bUseMatrix = (DataCommonADND.coreVersion == "1e")
+	local bUseMatrix = (DataCommonADND.coreVersion ~= "2e")
 	local sHitDice = DB.getValue(node, "hitDice")
 	local nTHACO = DB.getValue(node, "combat.thaco.score", 20)
 	local fightsAsClass = ""
@@ -95,13 +96,13 @@ function createTHACOMatrix()
 	-- 1e matrix
 	local aMatrixRolls = {}
 
-	-- assign the proper hit dice and class or monster matrix
+	-- NPCs, assign the proper hit dice and class or monster matrix
 	if bUseMatrix and not bisPC then
 		fightsAsClass = DB.getValue(node, "fights_as")
 		fightsAsClass = fightsAsClass:gsub("%s+", "")
 		fightsAsHdLevel = DB.getValue(node, "fights_as_hd_level")
 
-		Debug.console("111", "npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel)
+		--Debug.console("111", "npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel)
 
 		-- fights_as_hd_level not set
 		if (fightsAsHdLevel == nil or fightsAsHdLevel == 0) then
@@ -128,8 +129,8 @@ function createTHACOMatrix()
 			end
 		end
 
-		Debug.console("121", "fightsAsClass", fightsAsClass)
-		Debug.console("122", "fightsAsHdLevel", fightsAsHdLevel, "sHitDice", sHitDice)
+		--Debug.console("121", "fightsAsClass", fightsAsClass)
+		--Debug.console("122", "fightsAsHdLevel", fightsAsHdLevel, "sHitDice", sHitDice)
 
 		if (fightsAsClass ~= "") then
 			if (fightsAsClass == "Assassin") then
@@ -193,7 +194,7 @@ function createTHACOMatrix()
 			end
 
 			local bmosterAttackMatrices = (OptionsManager.getOption("mosterAttackMatrices") == "on")
-			Debug.console("213", "fightsAsHdLevel", fightsAsHdLevel, "bmosterAttackMatrices", bmosterAttackMatrices)
+			--Debug.console("213", "fightsAsHdLevel", fightsAsHdLevel, "bmosterAttackMatrices", bmosterAttackMatrices)
 
 			if bmosterAttackMatrices then
 				aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel]
@@ -217,26 +218,29 @@ function createTHACOMatrix()
 		if bUseMatrix then
 			if bisPC then
 				nTHAC = DB.getValue(node, "combat.matrix.thac" .. i, 20)
-			else --if not bisPC and #aMatrixRolls > 0 then
-				-- math.abs(i-11), this table is reverse of how we display the matrix
-				-- so we start at the end instead of at the front by taking I - 11 then get the absolute value of it.
-				nTHAC = aMatrixRolls[math.abs(i - 11)]
+				--Debug.console("bisPC", bisPC, "node", node, "nTHAC", nTHAC)
+			else 
+				if #aMatrixRolls > 0 then
+					-- math.abs(i-11), this table is reverse of how we display the matrix
+					-- so we start at the end instead of at the front by taking I - 11 then get the absolute value of it.
+					nTHAC = aMatrixRolls[math.abs(i - 11)]
 
-				-- get value from db, in case it's been explicitly set
-				local nTHACDb = DB.getValue(node, "thac" .. i)
+					-- get value from db, in case it's been explicitly set
+					local nTHACDb = DB.getValue(node, "thac" .. i)
 
-				-- get value from aMatrixRolls
-				local nTHACM = aMatrixRolls[math.abs(i - nTotalACs)]
+					-- get value from aMatrixRolls
+					local nTHACM = aMatrixRolls[math.abs(i - nTotalACs)]
 
-				if (fightsAsClass ~= "" or (fightsAsHdLevel ~= 0 and fightsAsHdLevel ~= tonumber(sHitDice))) then
-					nTHAC = nTHACM
-				elseif (nTHACDb ~= nil and nTHACDb ~= nTHACM) then
-					nTHAC = nTHACDb
-				else
-					nTHAC = nTHACM
+					if (fightsAsClass ~= "" or (fightsAsHdLevel ~= 0 and fightsAsHdLevel ~= tonumber(sHitDice))) then
+						nTHAC = nTHACM
+					elseif (nTHACDb ~= nil and nTHACDb ~= nTHACM) then
+						nTHAC = nTHACDb
+					else
+						nTHAC = nTHACM
+					end
+
+					DB.setValue(node, "thac" .. i, "number", nTHAC)
 				end
-
-				DB.setValue(node, "thac" .. i, "number", nTHAC)
 			end
 		end
 
@@ -253,9 +257,10 @@ function createTHACOMatrix()
 
 		cntNum.setFrame(nil)
 		cntNum.setValue(nTHAC)
+		cntNum.setReadOnly(false)
 
 		local cntAC = createControl("label_fieldtop_thaco_matrix", sMatrixACName)
-		cntAC.setReadOnly(false)
+		cntAC.setReadOnly(true)
 		cntAC.setValue(sMatrixACValue)
 
 		if (i == 0) then
@@ -274,10 +279,10 @@ end
 
 -- update combat_mini_thaco_matrix from db values
 function update()
-	Debug.console("char_matrix_thaco.lua:130", "updating combat_mini_thaco_matrix")
+	--Debug.console("char_matrix_thaco.lua:130", "updating combat_mini_thaco_matrix")
 	local node = getDatabaseNode()
 	local bisPC = (ActorManager.isPC(node))
-	local bUseMatrix = (DataCommonADND.coreVersion ~= "2e")
+	local bUseMatrix = (DataCommonADND.coreVersion == "1e")
 
 	local nTHACO = DB.getValue(node, "combat.thaco.score", 20)
 

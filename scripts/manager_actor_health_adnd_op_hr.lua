@@ -3,7 +3,7 @@ function onInit()
 end
 
 function getWoundPercentAdndOpHr(rActor)
-    Debug.console("getWoundPercentAdndOpHr")
+    --Debug.console("getWoundPercentAdndOpHr")
     -- local rActor = ActorManager.resolveActor(node);
     -- local node = ActorManager.getCreatureNode(rActor);
     local sNodeType, node = ActorManager.getTypeAndNode(rActor)
@@ -76,7 +76,7 @@ function getWoundPercentAdndOpHr(rActor)
         end
     end
 
-    Debug.console("manager_actor_health_adnd_op_hr.lua", "nPercentWounded", nPercentWounded, "sNodeType", sNodeType, "nDEAD_AT", nDEAD_AT, "nCurrentHp", nCurrentHp, "nDeathDoorThreshold", nDeathDoorThreshold)
+    --Debug.console("manager_actor_health_adnd_op_hr.lua", "nPercentWounded", nPercentWounded, "sNodeType", sNodeType, "nDEAD_AT", nDEAD_AT, "nCurrentHp", nCurrentHp, "nDeathDoorThreshold", nDeathDoorThreshold)
     --Debug.console("manager_actor_health_osric.lua 62", nWounds, nPercentWounded, nHP, nCurrentHp)
 
     if nPercentWounded >= 1 then

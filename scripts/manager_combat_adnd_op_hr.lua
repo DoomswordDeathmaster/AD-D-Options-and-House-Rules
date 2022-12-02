@@ -58,7 +58,7 @@ function rollRandomInitAdndOpHr(nInitMod)
 end
 
 function rollEntryInitAdndOpHr(nodeEntry)
-	Debug.console("rollEntryInitAdndOpHr", nodeEntry)
+	--Debug.console("rollEntryInitAdndOpHr", nodeEntry)
 
 	local bOptInitMods = (OptionsManager.getOption("initiativeModifiersAllow") == "on")
 	local bOptInitSizeMods = (OptionsManager.getOption("OPTIONAL_INIT_SIZEMODS") == "on")
@@ -85,7 +85,7 @@ function rollEntryInitAdndOpHr(nodeEntry)
 		local aEffectDice, nEffectBonus = EffectManager5E.getEffectsBonus(rActor, "INIT")
 
 		nInitEffectMod = StringManager.evalDice(aEffectDice, nEffectBonus)
-		Debug.console("nInitEffectMod", nInitEffectMod)
+		--Debug.console("nInitEffectMod", nInitEffectMod)
 	end
 
 	-- Check for the ADVINIT effect
@@ -96,7 +96,7 @@ function rollEntryInitAdndOpHr(nodeEntry)
 
 	-- get actual value
 	nCustomInit = DB.getValue(nodeEntry, "init", 0)
-	Debug.console("nCustomInit", nCustomInit)
+	--Debug.console("nCustomInit", nCustomInit)
 
 	-- PC/NPC init
 	local sClass, sRecord = DB.getValue(nodeEntry, "link", "", "")
@@ -104,7 +104,7 @@ function rollEntryInitAdndOpHr(nodeEntry)
 
 	-- it's a pc
 	if sClass == "charsheet" then
-		Debug.console("type", "PC")
+		--Debug.console("type", "PC")
 
 		-- init mods enabled
 		if bOptInitMods then
@@ -148,11 +148,11 @@ function rollEntryInitAdndOpHr(nodeEntry)
 			applyInitResultToAllPCs(nInitResult)
 			--pcLastInit = nInitResult
 		else
-			Debug.console("117:PC", "applyIndividualInit", "ninitresult", nInitResult)
+			--Debug.console("117:PC", "applyIndividualInit", "ninitresult", nInitResult)
 			applyIndividualInit(nInitResult, nodeEntry)
 		end
 	else
-		Debug.console("type", "NPC")
+		--Debug.console("type", "NPC")
 
 		-- init mods enabled
 		if bOptInitMods then
@@ -208,7 +208,7 @@ function rollEntryInitAdndOpHr(nodeEntry)
 			--nInitResult = resolveInitTie(pcLastInit, nInitResult)
 			applyInitResultToAllNPCs(nInitResult)
 		else
-			Debug.console("211: NPC", "applyIndividualInit", "nInitResult", nInitResult, "nInitMod", nInitMod)
+			--Debug.console("211: NPC", "applyIndividualInit", "nInitResult", nInitResult, "nInitMod", nInitMod)
 			applyIndividualInit(nInitResult, nodeEntry)
 		end
 	end
@@ -216,13 +216,13 @@ end
 
 function resolveInitTie(pcLastInit, npcLastInit)
 	local bOptInitTies = (OptionsManager.getOption("initiativeTiesAllow") == "on")
-	Debug.console("resolveInitTie", "bOptInitTies", bOptInitTies)
+	--Debug.console("resolveInitTie", "bOptInitTies", bOptInitTies)
 
 	if not bOptInitTies then
-		Debug.console("pcLastInit", pcLastInit, "npcLastInit", npcLastInit)
+		--Debug.console("pcLastInit", pcLastInit, "npcLastInit", npcLastInit)
 		if pcLastInit == nInitResult then
 			nInitResult = nInitResult + 1
-			Debug.console("nInitResult", nInitResult)
+			--Debug.console("nInitResult", nInitResult)
 		end
 	end
 
@@ -244,7 +244,7 @@ function getHighestWeaponSpeedFactor(nodeEntry)
 end
 
 function applyInitResultToAllPCs(nInitResult)
-	Debug.console("applyInitResultToAllPCs", nInitResult)
+	--Debug.console("applyInitResultToAllPCs", nInitResult)
 	-- group init - apply init result to all PCs
 	for _, nodeEntry in pairs(CombatManager.getCombatantNodes()) do
 		if DB.getValue(nodeEntry, "friendfoe") == "friend" then
@@ -258,7 +258,7 @@ function applyInitResultToAllPCs(nInitResult)
 end
 
 function applyInitResultToAllNPCs(nInitResult)
-	Debug.console("applyInitResultToAllNPCs", nInitResult)
+	--Debug.console("applyInitResultToAllNPCs", nInitResult)
 	-- group init - apply init result to remaining NPCs
 	for _, nodeEntry in pairs(CombatManager.getCombatantNodes()) do
 		if DB.getValue(nodeEntry, "friendfoe") ~= "friend" then
@@ -298,7 +298,7 @@ function applyInitResultToAllNPCs(nInitResult)
 			end
 			
 			--Debug.console("applyInitResultToAllNPCs", "nInitResult", nInitResult, "nCustomInit", nCustomInit, "nInitResultNew", nInitResultNew)
-			Debug.console("applyInitResultToAllNPCs", "nInitResult", nInitResult, "nCustomInit", nCustomInit)
+			--Debug.console("applyInitResultToAllNPCs", "nInitResult", nInitResult, "nCustomInit", nCustomInit)
 			-- just set both of these values regardless of initiative die used, so we don't have to mod other places where initresult is displayed
 			DB.setValue(nodeEntry, "initresult", "number", nInitResultNew)
 			DB.setValue(nodeEntry, "initresult_d6", "number", nInitResultNew)
@@ -452,7 +452,7 @@ function onRoundStartAdndOpHr(nCurrent)
 	local bOptRoundStartResetInit = (OptionsManager.getOption("roundStartResetInit") == "on")
 	local bOptAutoNpcInitiative = (OptionsManager.getOption("autoNpcInitiative") == "on")
 
-	Debug.console("bOptRoundStartResetInit", bOptRoundStartResetInit)
+	--Debug.console("bOptRoundStartResetInit", bOptRoundStartResetInit)
 	pcLastInit = 0
 	npcLastInit = 0
 
@@ -480,7 +480,7 @@ function onRoundStartAdndOpHr(nCurrent)
 end
 
 function dmGenerateInit(combatantSide)
-	Debug.console("dmGenerateInit", "combatantSide", combatantSide)
+	--Debug.console("dmGenerateInit", "combatantSide", combatantSide)
 	-- roll only for non-friend CT nodes
 	if combatantSide == "npc" then
 		for _, nodeEntry in pairs(CombatManager.getCombatantNodes()) do
@@ -554,7 +554,7 @@ function getACHitFromMatrixForNPCAdndOpHr(nodeCT, nRoll)
 
 	fightsAsHdLevel = DB.getValue(nodeNPC, "fights_as_hd_level")
 
-	Debug.console("111", "npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel)
+	--Debug.console("111", "npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel)
 
 	-- fights_as_hd_level not set
 	if (fightsAsHdLevel == nil or fightsAsHdLevel == 0) then
@@ -581,8 +581,8 @@ function getACHitFromMatrixForNPCAdndOpHr(nodeCT, nRoll)
 		end
 	end
 
-	Debug.console("121", "fightsAsClass", fightsAsClass)
-	Debug.console("122", "fightsAsHdLevel", fightsAsHdLevel, "sHitDice", sHitDice)
+	--Debug.console("121", "fightsAsClass", fightsAsClass)
+	--Debug.console("122", "fightsAsHdLevel", fightsAsHdLevel, "sHitDice", sHitDice)
 
 	if (fightsAsClass ~= "") then
 		if (fightsAsClass == "Assassin") then
@@ -646,7 +646,7 @@ function getACHitFromMatrixForNPCAdndOpHr(nodeCT, nRoll)
 		end
 
 		local bmosterAttackMatrices = (OptionsManager.getOption("mosterAttackMatrices") == "on")
-		Debug.console("514", "fightsAsHdLevel", fightsAsHdLevel, "bmosterAttackMatrices", bmosterAttackMatrices)
+		--Debug.console("514", "fightsAsHdLevel", fightsAsHdLevel, "bmosterAttackMatrices", bmosterAttackMatrices)
 
 		if bmosterAttackMatrices then
 			aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel]
@@ -661,7 +661,7 @@ function getACHitFromMatrixForNPCAdndOpHr(nodeCT, nRoll)
 		end
 	end
 
-	Debug.console("manager_combat_adnd_op_hr", "getACHitFromMatrixForNPCNew", "aMatrixRolls", aMatrixRolls)
+	--Debug.console("manager_combat_adnd_op_hr", "getACHitFromMatrixForNPCNew", "aMatrixRolls", aMatrixRolls)
 	local nACBase = 11
 
 	if (DataCommonADND.coreVersion == "becmi") then
@@ -675,22 +675,22 @@ function getACHitFromMatrixForNPCAdndOpHr(nodeCT, nRoll)
 
 		-- get value from db, in case it's been explicitly set
 		local nTHACDb = DB.getValue(nodeNPC, "thac" .. i)
-		Debug.console("char_matrix_thaco:151", "nTHACDb", nTHACDb)
+		--Debug.console("char_matrix_thaco:151", "nTHACDb", nTHACDb)
 
 		-- get value from aMatrixRolls
 		local nTHACM = aMatrixRolls[math.abs(i - nTotalACs)]
-		Debug.console("char_matrix_thaco:155", "nTHACM", nTHACM)
+		--Debug.console("char_matrix_thaco:155", "nTHACM", nTHACM)
 
 		if (fightsAsClass ~= "" or (fightsAsHdLevel ~= 0 and fightsAsHdLevel ~= tonumber(sHitDice))) then
-			Debug.console("119", fightsAsClass, fightsAsHdLevel, tonumber(sHitDice))
+			--Debug.console("119", fightsAsClass, fightsAsHdLevel, tonumber(sHitDice))
 			sCurrentTHAC = nTHACM
-			Debug.console("char_matrix_thaco:173", "nTHAC", nTHAC)
+			--Debug.console("char_matrix_thaco:173", "nTHAC", nTHAC)
 		elseif (nTHACDb ~= nil and nTHACDb ~= nTHACM) then
 			sCurrentTHAC = nTHACDb
-			Debug.console("char_matrix_thaco:176", "nTHAC", nTHAC)
+			--Debug.console("char_matrix_thaco:176", "nTHAC", nTHAC)
 		else
 			sCurrentTHAC = nTHACM
-			Debug.console("char_matrix_thaco:179", "nTHAC", nTHAC)
+			--Debug.console("char_matrix_thaco:179", "nTHAC", nTHAC)
 		end
 
 		if nRoll >= nCurrentTHAC then
@@ -707,7 +707,7 @@ end
 function getLastInitiative()
 	iibOptAdd1eProperties = (OptionsManager.getOption("add1eProperties") == "on")
 
-	if DataCommonADND.coreVersion == "1e" then
+	if DataCommonADND.coreVersion ~= "2e" then
 		nLastInit = 7
 	else
 		local nLastInit = -100

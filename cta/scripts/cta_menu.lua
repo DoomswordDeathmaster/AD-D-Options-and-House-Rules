@@ -46,13 +46,13 @@ function onMenuSelection(selection, subselection, subsubselection)
 			if subselection == 4 then
 				CombatManager.resetInit()
 			elseif subselection == 8 then
-				Debug.console("cta_menu.lua", "roll all init")
+				--Debug.console("cta_menu.lua", "roll all init")
 				CombatManagerAdndOpHr.dmGenerateInit("both")
 			elseif subselection == 7 then
-				Debug.console("cta_menu.lua", "roll npc init")
+				--Debug.console("cta_menu.lua", "roll npc init")
 				CombatManagerAdndOpHr.dmGenerateInit("npc")
 			elseif subselection == 6 then
-				Debug.console("cta_menu.lua", "roll pc init")
+				--Debug.console("cta_menu.lua", "roll pc init")
 				CombatManagerAdndOpHr.dmGenerateInit("pc")
 			end
 		end
