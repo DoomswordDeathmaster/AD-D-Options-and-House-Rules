@@ -234,7 +234,7 @@ function calcDefaultInventoryEncumbrance(nodeChar)
 
 	local tInventoryPaths = ItemManager.getInventoryPaths("charsheet")
 	for _, sList in ipairs(tInventoryPaths) do
-		for _, nodeItem in pairs(DB.getChildren(nodeChar, sList)) do
+		for _, nodeItem in pairs(DB.getChildList(nodeChar, sList)) do
 			if DB.getValue(nodeItem, "carried", 0) ~= 0 then
 				nCount = DB.getValue(nodeItem, "count", 0)
 				nWeight = DB.getValue(nodeItem, "weight", 0)
@@ -255,7 +255,7 @@ function calcDefaultCurrencyEncumbrance(nodeChar)
 		local nCurrencyWeight
 		local tCurrencyPaths = CurrencyManager.getCurrencyPaths("charsheet")
 		for _, sList in ipairs(tCurrencyPaths) do
-			for _, vNode in pairs(DB.getChildren(nodeChar, sList)) do
+			for _, vNode in pairs(DB.getChildList(nodeChar, sList)) do
 				sCurrency = DB.getValue(vNode, "name", "")
 
 				if (CurrencyManager.getCurrencyMatch(sCurrency) or "") ~= "" then

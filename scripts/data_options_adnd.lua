@@ -4,10 +4,76 @@
 --
 
 function onInit()
+    registerDiceRolls()
     registerOptions()
+
+    OptionsManager.registerCallback("OPTIONS_MENU", updateMenuStyle)
     OptionsManager.registerCallback("OPTIONAL_ENCUMBRANCE", updateForEncumbranceOption)
 
+    DesktopManager.getSidebarDockWidth = getSidebarDockWidth_adnd
     createBackupDBOnStartCheck()
+end
+
+function getSidebarDockWidth_adnd()
+    -- override piece
+    local bMenuStyle =
+        (OptionsManager.getOption("OPTIONS_MENU") == "menus" or OptionsManager.getOption("OPTIONS_MENU") == "")
+    --  need these
+    local _nSidebarVisibility = DesktopManager.getSidebarVisibilityState()
+    local _szDockCategory = DesktopManager.getSidebarDockCategorySize()
+    local _rcDockCategoryOffset = DesktopManager.getSidebarDockCategoryOffset()
+    local _rcDockButtonOffset = DesktopManager.getSidebarDockButtonOffset()
+    local _szDockButton = DesktopManager.getSidebarDockButtonSize()
+    if (bMenuStyle) then
+        _nSidebarVisibility = 4
+    end
+
+    hideMenuBar()
+
+    -- end override piece
+    if _nSidebarVisibility <= 0 then
+        local nDockCategoryWidth = _szDockCategory.w + (_rcDockCategoryOffset.left + _rcDockCategoryOffset.right)
+        local nDockButtonWidth = _szDockButton.w + (_rcDockButtonOffset.left + _rcDockButtonOffset.right)
+        return math.max(nDockCategoryWidth, nDockButtonWidth)
+    end
+    local nDockIconWidth = DesktopManager.getSidebarDockIconWidth()
+    if _nSidebarVisibility == 1 then
+        return nDockIconWidth * 2
+    end
+    -- override piece
+    if (_nSidebarVisibility == 4) then
+        nDockIconWidth = -9
+    end
+    -- end override piece
+    return nDockIconWidth
+end
+
+function registerDiceRolls()
+    DiceRollManager.registerDamageKey()
+    DiceRollManager.registerDamageTypeKey("acid", "life")
+    DiceRollManager.registerDamageTypeKey("cold", "frost")
+    DiceRollManager.registerDamageTypeKey("fire", "fire")
+    DiceRollManager.registerDamageTypeKey("force", "arcane")
+    DiceRollManager.registerDamageTypeKey("lightning", "lightning")
+    DiceRollManager.registerDamageTypeKey("necrotic", "shadow")
+    DiceRollManager.registerDamageTypeKey("poison", "life")
+    DiceRollManager.registerDamageTypeKey("psychic", "shadow")
+    DiceRollManager.registerDamageTypeKey("radiant", "light")
+    DiceRollManager.registerDamageTypeKey("thunder", "storm")
+
+    DiceRollManager.registerDamageTypeKey("bludgeoning")
+    DiceRollManager.registerDamageTypeKey("piercing")
+    DiceRollManager.registerDamageTypeKey("slashing")
+
+    DiceRollManager.registerDamageTypeKey("adamantine")
+    DiceRollManager.registerDamageTypeKey("cold-forged iron")
+    DiceRollManager.registerDamageTypeKey("silver")
+
+    DiceRollManager.registerDamageTypeKey("magic")
+
+    DiceRollManager.registerHealKey()
+    DiceRollManager.registerHealTypeKey("health", "light")
+    DiceRollManager.registerHealTypeKey("temp", "water")
 end
 
 function registerOptions()
@@ -406,35 +472,84 @@ local nUpdateVersion = 35
 
 function updateMenuStyle()
     if wMenuWindow and wSidebarWindow then
-        Debug.console(
-            "data_options_adnd.lua",
-            "updateMenuStyle",
-            "OPTIONS_MENU",
-            OptionsManager.getOption("OPTIONS_MENU")
-        )
+        Debug.console("data_options_adnd.lua updateMenuStyle OPTIONS_MENU", OptionsManager.getOption("OPTIONS_MENU"))
         local bMenuStyle =
             (OptionsManager.getOption("OPTIONS_MENU") == "menus" or OptionsManager.getOption("OPTIONS_MENU") == "")
-
         if bMenuStyle then
             enableMenuStyleButtons()
         else
             enableMenuStyleSidebar()
         end
+        DesktopManager.saveSidebarVisibilityState()
     end
 end
 
 function enableMenuStyleButtons()
-    --  Debug.console("data_options_adnd.lua","enableMenuStyleButtons");
-    wSidebarWindow.setEnabled(false)
-    wSidebarWindow.close()
+    --	Debug.console("data_options_adnd.lua","enableMenuStyleButtons");
+    -- wSidebarWindow.setEnabled(false);
+    -- wSidebarWindow.close();
+    -- wMenuWindow.setEnabled(true);
+    DesktopManager.setSidebarVisibilityState(4)
+    DesktopManager.updateSidebarAnchorWindowPosition()
+    wMenuWindow.setPosition(3, 5, 0, false)
+end
+
+function hideMenuBar()
+    local bMenuStyle =
+        (OptionsManager.getOption("OPTIONS_MENU") == "menus" or OptionsManager.getOption("OPTIONS_MENU") == "")
+    if (wMenuWindow and not bMenuStyle) then
+        wMenuWindow.setPosition(-90000, -90000, 0, false)
+    end
 end
 
 function enableMenuStyleSidebar()
-    --  Debug.console("data_options_adnd.lua","enableMenuStyleSidebar");
-    wMenuWindow.setEnabled(false)
-    -- and this is required because of the call back mess
-    wMenuWindow.close()
+    --	Debug.console("data_options_adnd.lua","enableMenuStyleSidebar");
+    -- wMenuWindow.setEnabled(false);
+    -- wMenuWindow.close();
+    -- wMenuWindow.setEnabled(true);
+    -- wMenuWindow.setAnchor("left","shortcuts","right","absolute");
+    -- wMenuWindow.setPosition(-90000,-90000, 0, false);
+    hideMenuBar()
+    -- wMenuWindow.onSizeChanged = hideMenuBar;
+    -- local _nSidebarVisibility = DesktopManager.getSidebarVisibilityState();
+    -- if _nSidebarVisibility == 4 then
+    -- 	DesktopManager.setSidebarVisibilityState(0);
+    -- end
+    DesktopManager.setSidebarVisibilityState(0)
+    DesktopManager.updateSidebarAnchorWindowPosition()
 end
+
+-- function updateMenuStyle()
+--     if wMenuWindow and wSidebarWindow then
+--         Debug.console(
+--             "data_options_adnd.lua",
+--             "updateMenuStyle",
+--             "OPTIONS_MENU",
+--             OptionsManager.getOption("OPTIONS_MENU")
+--         )
+--         local bMenuStyle =
+--             (OptionsManager.getOption("OPTIONS_MENU") == "menus" or OptionsManager.getOption("OPTIONS_MENU") == "")
+
+--         if bMenuStyle then
+--             enableMenuStyleButtons()
+--         else
+--             enableMenuStyleSidebar()
+--         end
+--     end
+-- end
+
+-- function enableMenuStyleButtons()
+--     --  Debug.console("data_options_adnd.lua","enableMenuStyleButtons");
+--     wSidebarWindow.setEnabled(false)
+--     wSidebarWindow.close()
+-- end
+
+-- function enableMenuStyleSidebar()
+--     --  Debug.console("data_options_adnd.lua","enableMenuStyleSidebar");
+--     wMenuWindow.setEnabled(false)
+--     -- and this is required because of the call back mess
+--     wMenuWindow.close()
+-- end
 
 function createBackupDBOnStartCheck()
     if Session.IsHost and OptionsManager.getOption("OPTIONS_DBBACKUP") == "on" then
