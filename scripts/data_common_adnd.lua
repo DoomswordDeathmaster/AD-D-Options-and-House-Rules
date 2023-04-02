@@ -45,28 +45,6 @@ aWarriorSaves = {}
 -- required for npcs, hit matrix when used
 aMatrix = {}
 
--- class hit matrices
-aAssassinToHitMatrix = {}
-aClericToHitMatrix = {}
-aDruidToHitMatrix = {}
-aPaladinToHitMatrix = {}
-aIllusionistToHitMatrix = {}
-aMagicUserToHitMatrix = {}
-aPaladinToHitMatrix = {}
-aRangerToHitMatrix = {}
-aThiefToHitMatrix = {}
-
--- class saves
-aAssassinSaves = {}
-aClericSaves = {}
-aDruidSaves = {}
-aPaladinSaves = {}
-aIllusionistSaves = {}
-aMagicUserSaves = {}
-aPaladinSaves = {}
-aRangerSaves = {}
-aThiefSaves = {}
-
 -- distance per unit grid, this is for reach? --celestian
 nDefaultDistancePerUnitGrid = 5
 

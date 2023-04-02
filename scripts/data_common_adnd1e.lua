@@ -42,10 +42,11 @@ function onInit()
 	bOptAdd1eProperties = (OptionsManager.getOption("add1eProperties") == "on")
 
 	if bOptAdd1eProperties then
+		Debug.console("bOptAdd1eProperties", bOptAdd1eProperties)
 		DataCommonADND.coreVersion = "1e"
 
 		-- default coin weight, 10 coins = 1 pound, 1e, ouch
-		DataCommonADND.nDefaultCoinWeight = 0.1
+		DataCommonADND1e.nDefaultCoinWeight = 0.1
 
 		-- aStrength[abilityScore]={hit adj, dam adj, weight allow, max press, open doors, bend bars}
 		aStrength[1] = {-3, -1, -350, 0, "1(0)", 0, 2, 3, 4, 5, 7}
@@ -80,7 +81,7 @@ function onInit()
 		aStrength[99] = {2, 5, 2000, 0, "1-4(1)", 35, 236, 275, 314, 353, 380}
 		aStrength[100] = {3, 6, 3000, 0, "1-5(2)", 40, 336, 375, 414, 453, 480}
 		-- make sure the ruleset uses the same
-		DataCommonADND.aStrength = aStrength
+		DataCommonADND1e.aStrength = aStrength
 
 		-- aDexterity[abilityScore]={reaction, missile, defensive}
 		aDexterity[1] = {-3, -3, 4}
@@ -109,7 +110,7 @@ function onInit()
 		aDexterity[24] = {5, 5, -6}
 		aDexterity[25] = {5, 5, -6}
 		-- make sure the ruleset uses the same
-		DataCommonADND.aDexterity = aDexterity
+		DataCommonADND1e.aDexterity = aDexterity
 
 		-- aWisdom[abilityScore]={magic adj, spell bonuses, spell failure, spell imm. }
 		aWisdom[1] = {-3, "None", 20, "None"}
@@ -183,7 +184,7 @@ function onInit()
 			"Spells: cause fear,charm person, command, friends, hypnotism, forget, hold person, enfeeble, scare, fear, charm monster, confusion, emotion, fumble, suggestion, chaos, feeblemind, hold monster,magic jar,quest, geas, mass suggestion, rod of ruleship, antipathy/sympath, death spell,mass charm"
 		}
 		-- make sure the ruleset uses the same
-		DataCommonADND.aWisdom = aWisdom
+		DataCommonADND1e.aWisdom = aWisdom
 
 		-- aConstitution[abilityScore]={hp, system shock, resurrection survivial, poison save, regeneration}
 		aConstitution[1] = {"-2", 35, 40, 0, "None"}
@@ -212,7 +213,7 @@ function onInit()
 		aConstitution[24] = {"7", 99, 100, 3, "1/2"}
 		aConstitution[25] = {"7", 100, 100, 4, "1 turn"}
 		-- make sure the ruleset uses the same
-		DataCommonADND.aConstitution = aConstitution
+		DataCommonADND1e.aConstitution = aConstitution
 
 		-- aCharisma[abilityScore]={Max # hench, loyalty, reaction afj}
 		aCharisma[1] = {1, -30, -25}
@@ -241,7 +242,7 @@ function onInit()
 		aCharisma[24] = {45, 100, 65}
 		aCharisma[25] = {50, 100, 70}
 		-- make sure the ruleset uses the same
-		DataCommonADND.aCharisma = aCharisma
+		DataCommonADND1e.aCharisma = aCharisma
 
 		-- aIntelligence[abilityScore]={# languages, spelllevel, learn spell, max spells, illusion immunity}
 		aIntelligence[1] = {0, 0, 0, 0, "None"}
@@ -278,7 +279,7 @@ function onInit()
 		aIntelligence[124] = {7, 16, 100, "All", "Level: 1st, 2nd, 3rd, 4th, 5th, 6th"}
 		aIntelligence[125] = {7, 17, 100, "All", "Level: 1st, 2nd, 3rd, 4th, 5th, 6th, 7th"}
 		-- make sure the ruleset uses the same
-		DataCommonADND.aIntelligence = aIntelligence
+		DataCommonADND1e.aIntelligence = aIntelligence
 
 		-- this needs to stick around for NPC save values
 		-- since they use the warrior table
@@ -306,7 +307,7 @@ function onInit()
 		aWarriorSaves[20] = {3, 5, 4, 4, 6}
 		aWarriorSaves[21] = {3, 5, 4, 4, 6}
 		-- make sure the ruleset uses the same
-		DataCommonADND.aWarriorSaves = aWarriorSaves
+		DataCommonADND1e.aWarriorSaves = aWarriorSaves
 
 		-- this needs to stick around for NPC save values
 		-- since they use the warrior table
@@ -335,7 +336,7 @@ function onInit()
 		aWarriorSavesOsric[20] = {2, 4, 3, 3, 5}
 		aWarriorSavesOsric[21] = {2, 4, 3, 3, 5}
 		-- make sure the ruleset uses the same
-		DataCommonADND.aWarriorSavesOsric = aWarriorSavesOsric
+		DataCommonADND1e.aWarriorSavesOsric = aWarriorSavesOsric
 
 		aAssassinSaves[1] = {13, 14, 12, 16, 15}
 		aAssassinSaves[2] = {13, 14, 12, 16, 15}
@@ -352,7 +353,7 @@ function onInit()
 		aAssassinSaves[13] = {10, 8, 9, 13, 9}
 		aAssassinSaves[14] = {10, 8, 9, 13, 9}
 		aAssassinSaves[15] = {10, 8, 9, 13, 9}
-		DataCommonADND.aAssassinSaves = aAssassinSaves
+		DataCommonADND1e.aAssassinSaves = aAssassinSaves
 
 		aClericSaves[1] = {10, 14, 13, 16, 15}
 		aClericSaves[2] = {10, 14, 13, 16, 15}
@@ -373,7 +374,7 @@ function onInit()
 		aClericSaves[17] = {4, 8, 7, 10, 9}
 		aClericSaves[18] = {4, 8, 7, 10, 9}
 		aClericSaves[19] = {2, 6, 5, 8, 7}
-		DataCommonADND.aClericSaves = aClericSaves
+		DataCommonADND1e.aClericSaves = aClericSaves
 
 		aDruidSaves[1] = {10, 14, 13, 16, 15}
 		aDruidSaves[2] = {10, 14, 13, 16, 15}
@@ -389,7 +390,7 @@ function onInit()
 		aDruidSaves[12] = {6, 10, 9, 12, 11}
 		aDruidSaves[13] = {5, 9, 8, 11, 10}
 		aDruidSaves[14] = {5, 9, 8, 11, 10}
-		DataCommonADND.aDruidSaves = aDruidSaves
+		DataCommonADND1e.aDruidSaves = aDruidSaves
 
 		aFighterSaves[0] = {16, 18, 17, 20, 19}
 		aFighterSaves[1] = {14, 16, 15, 17, 17}
@@ -411,7 +412,7 @@ function onInit()
 		aFighterSaves[17] = {3, 5, 4, 4, 6}
 		aFighterSaves[18] = {3, 5, 4, 4, 6}
 		aFighterSaves[19] = {2, 4, 3, 3, 5}
-		DataCommonADND.aFighterSaves = aFighterSaves
+		DataCommonADND1e.aFighterSaves = aFighterSaves
 
 		aIllusionistSaves[1] = {14, 11, 13, 15, 12}
 		aIllusionistSaves[2] = {14, 11, 13, 15, 12}
@@ -434,7 +435,7 @@ function onInit()
 		aIllusionistSaves[19] = {10, 5, 7, 9, 6}
 		aIllusionistSaves[20] = {10, 5, 7, 9, 6}
 		aIllusionistSaves[21] = {8, 3, 5, 7, 4}
-		DataCommonADND.aIllusionistSaves = aIllusionistSaves
+		DataCommonADND1e.aIllusionistSaves = aIllusionistSaves
 
 		aMagicUserSaves[1] = {14, 11, 13, 15, 12}
 		aMagicUserSaves[2] = {14, 11, 13, 15, 12}
@@ -457,7 +458,7 @@ function onInit()
 		aMagicUserSaves[19] = {10, 5, 7, 9, 6}
 		aMagicUserSaves[20] = {10, 5, 7, 9, 6}
 		aMagicUserSaves[21] = {8, 3, 5, 7, 4}
-		DataCommonADND.aMagicUserSaves = aMagicUserSaves
+		DataCommonADND1e.aMagicUserSaves = aMagicUserSaves
 
 		-- Death, Rod, Poly, Breath, Spell
 		aPaladinSaves[1] = {12, 14, 13, 15, 15}
@@ -479,7 +480,7 @@ function onInit()
 		aPaladinSaves[17] = {2, 3, 2, 2, 4}
 		aPaladinSaves[18] = {2, 3, 2, 2, 4}
 		aPaladinSaves[19] = {2, 2, 2, 2, 3}
-		DataCommonADND.aPaladinSaves = aPaladinSaves
+		DataCommonADND1e.aPaladinSaves = aPaladinSaves
 
 		aRangerSaves[1] = {14, 16, 15, 17, 17}
 		aRangerSaves[2] = {14, 16, 15, 17, 17}
@@ -500,7 +501,7 @@ function onInit()
 		aRangerSaves[17] = {3, 5, 4, 4, 6}
 		aRangerSaves[18] = {3, 5, 4, 4, 6}
 		aRangerSaves[19] = {2, 4, 3, 3, 5}
-		DataCommonADND.aRangerSaves = aRangerSaves
+		DataCommonADND1e.aRangerSaves = aRangerSaves
 
 		aThiefSaves[1] = {13, 14, 12, 16, 15}
 		aThiefSaves[2] = {13, 14, 12, 16, 15}
@@ -523,7 +524,84 @@ function onInit()
 		aThiefSaves[19] = {9, 6, 8, 12, 7}
 		aThiefSaves[20] = {9, 6, 8, 12, 7}
 		aThiefSaves[21] = {8, 4, 7, 11, 5}
-		DataCommonADND.aThiefSaves = aThiefSaves
+		DataCommonADND1e.aThiefSaves = aThiefSaves
+
+		aAssassinToHitMatrix[1] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
+		aAssassinToHitMatrix[2] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
+		aAssassinToHitMatrix[3] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
+		aAssassinToHitMatrix[4] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
+		aAssassinToHitMatrix[5] = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24}
+		aAssassinToHitMatrix[6] = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24}
+		aAssassinToHitMatrix[7] = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24}
+		aAssassinToHitMatrix[8] = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24}
+		aAssassinToHitMatrix[9] = {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21}
+		aAssassinToHitMatrix[10] = {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21}
+		aAssassinToHitMatrix[11] = {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21}
+		aAssassinToHitMatrix[12] = {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21}
+		aAssassinToHitMatrix[13] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20}
+		aAssassinToHitMatrix[14] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20}
+		aAssassinToHitMatrix[15] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20}
+		DataCommonADND1e.aAssassinToHitMatrix = aAssassinToHitMatrix
+
+		aClericToHitMatrix[1] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25}
+		aClericToHitMatrix[2] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25}
+		aClericToHitMatrix[3] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25}
+		aClericToHitMatrix[4] = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23}
+		aClericToHitMatrix[5] = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23}
+		aClericToHitMatrix[6] = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23}
+		aClericToHitMatrix[7] = {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21}
+		aClericToHitMatrix[8] = {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21}
+		aClericToHitMatrix[9] = {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21}
+		aClericToHitMatrix[10] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20}
+		aClericToHitMatrix[11] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20}
+		aClericToHitMatrix[12] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20}
+		aClericToHitMatrix[13] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20}
+		aClericToHitMatrix[14] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20}
+		aClericToHitMatrix[15] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20}
+		aClericToHitMatrix[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+		aClericToHitMatrix[17] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+		aClericToHitMatrix[18] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+		aClericToHitMatrix[19] = {-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19}
+		DataCommonADND1e.aClericToHitMatrix = aClericToHitMatrix
+
+		aDruidToHitMatrix[1] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25}
+		aDruidToHitMatrix[2] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25}
+		aDruidToHitMatrix[3] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25}
+		aDruidToHitMatrix[4] = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23}
+		aDruidToHitMatrix[5] = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23}
+		aDruidToHitMatrix[6] = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23}
+		aDruidToHitMatrix[7] = {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21}
+		aDruidToHitMatrix[8] = {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21}
+		aDruidToHitMatrix[9] = {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21}
+		aDruidToHitMatrix[10] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20}
+		aDruidToHitMatrix[11] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20}
+		aDruidToHitMatrix[12] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20}
+		aDruidToHitMatrix[13] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20}
+		aDruidToHitMatrix[14] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20}
+		DataCommonADND1e.aDruidToHitMatrix = aDruidToHitMatrix
+
+		aFighterToHitMatrix[0] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
+		aFighterToHitMatrix[1] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25}
+		aFighterToHitMatrix[2] = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24}
+		aFighterToHitMatrix[3] = {8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23}
+		aFighterToHitMatrix[4] = {7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22}
+		aFighterToHitMatrix[5] = {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21}
+		aFighterToHitMatrix[6] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20}
+		aFighterToHitMatrix[7] = {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20}
+		aFighterToHitMatrix[8] = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20}
+		aFighterToHitMatrix[9] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20}
+		aFighterToHitMatrix[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20}
+		aFighterToHitMatrix[11] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+		aFighterToHitMatrix[12] = {-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19}
+		aFighterToHitMatrix[13] = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18}
+		aFighterToHitMatrix[14] = {-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}
+		aFighterToHitMatrix[15] = {-4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
+		aFighterToHitMatrix[16] = {-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
+		aFighterToHitMatrix[17] = {-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
+		aFighterToHitMatrix[18] = {-7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}
+		aFighterToHitMatrix[19] = {-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
+		aFighterToHitMatrix[20] = {-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+		DataCommonADND1e.aFighterToHitMatrix = aFighterToHitMatrix
 
 		aIllusionistToHitMatrix[1] = {
 			11,
@@ -678,7 +756,7 @@ function onInit()
 		aIllusionistToHitMatrix[19] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20}
 		aIllusionistToHitMatrix[20] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20}
 		aIllusionistToHitMatrix[21] = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20}
-		DataCommonADND.aIllusionistToHitMatrix = aIllusionistToHitMatrix
+		DataCommonADND1e.aIllusionistToHitMatrix = aIllusionistToHitMatrix
 
 		aMagicUserToHitMatrix[1] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
 		aMagicUserToHitMatrix[2] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
@@ -701,7 +779,7 @@ function onInit()
 		aMagicUserToHitMatrix[19] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20}
 		aMagicUserToHitMatrix[20] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20}
 		aMagicUserToHitMatrix[21] = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20}
-		DataCommonADND.aMagicUserToHitMatrix = aMagicUserToHitMatrix
+		DataCommonADND1e.aMagicUserToHitMatrix = aMagicUserToHitMatrix
 
 		aPaladinToHitMatrix[0] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
 		aPaladinToHitMatrix[1] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25}
@@ -724,7 +802,7 @@ function onInit()
 		aPaladinToHitMatrix[18] = {-7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}
 		aPaladinToHitMatrix[19] = {-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
 		aPaladinToHitMatrix[20] = {-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
-		DataCommonADND.aPaladinToHitMatrix = aPaladinToHitMatrix
+		DataCommonADND1e.aPaladinToHitMatrix = aPaladinToHitMatrix
 
 		aRangerToHitMatrix[0] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
 		aRangerToHitMatrix[1] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25}
@@ -747,7 +825,7 @@ function onInit()
 		aRangerToHitMatrix[18] = {-7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}
 		aRangerToHitMatrix[19] = {-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
 		aRangerToHitMatrix[20] = {-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
-		DataCommonADND.aRangerToHitMatrix = aRangerToHitMatrix
+		DataCommonADND1e.aRangerToHitMatrix = aRangerToHitMatrix
 
 		aThiefToHitMatrix[1] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
 		aThiefToHitMatrix[2] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
@@ -770,7 +848,7 @@ function onInit()
 		aThiefToHitMatrix[19] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20}
 		aThiefToHitMatrix[20] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20}
 		aThiefToHitMatrix[21] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
-		DataCommonADND.aThiefToHitMatrix = aThiefToHitMatrix
+		DataCommonADND1e.aThiefToHitMatrix = aThiefToHitMatrix
 
 		aMatrix["-1"] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26} -- below 1-1
 		aMatrix["1-1"] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25} -- 1-1
@@ -791,7 +869,7 @@ function onInit()
 		aMatrix["14"] = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18}
 		aMatrix["15"] = {-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18}
 		aMatrix["16"] = {-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}
-		DataCommonADND.aMatrix = aMatrix
+		DataCommonADND1e.aMatrix = aMatrix
 
 		aOsricToHitMatrix[0] = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25, 26}
 		aOsricToHitMatrix[1] = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 20, 20, 20, 20, 20, 21, 22, 23, 24, 25}
@@ -814,7 +892,7 @@ function onInit()
 		aOsricToHitMatrix[18] = {-7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}
 		aOsricToHitMatrix[19] = {-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
 		aOsricToHitMatrix[20] = {-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
-		DataCommonADND.aOsricToHitMatrix = aOsricToHitMatrix
+		DataCommonADND1e.aOsricToHitMatrix = aOsricToHitMatrix
 
 		CharEncumbranceManager.addCustomCalc(CharManager.calcWeightCarried)
 	end

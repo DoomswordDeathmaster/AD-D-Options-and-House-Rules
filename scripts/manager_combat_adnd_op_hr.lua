@@ -590,73 +590,73 @@ function getACHitFromMatrixForNPCAdndOpHr(nodeCT, nRoll)
 				fightsAsHdLevel = 13
 			end
 
-			aMatrixRolls = DataCommonADND.aAssassinToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aAssassinToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Cleric") then
 			if (fightsAsHdLevel >= 19) then
 				fightsAsHdLevel = 19
 			end
 
-			aMatrixRolls = DataCommonADND.aClericToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aClericToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Druid") then
 			if (fightsAsHdLevel >= 13) then
 				fightsAsHdLevel = 13
 			end
 
-			aMatrixRolls = DataCommonADND.aDruidToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aDruidToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Fighter") then
 			if (fightsAsHdLevel >= 20) then
 				fightsAsHdLevel = 20
 			end
 
-			aMatrixRolls = DataCommonADND.aFighterToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aFighterToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Illusionist") then
 			if (fightsAsHdLevel >= 21) then
 				fightsAsHdLevel = 21
 			end
 
-			aMatrixRolls = DataCommonADND.aIllusionistToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aIllusionistToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "MagicUser") then
 			if (fightsAsHdLevel >= 21) then
 				fightsAsHdLevel = 21
 			end
 
-			aMatrixRolls = DataCommonADND.aMagicUserToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aMagicUserToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Paladin") then
 			if (fightsAsHdLevel >= 20) then
 				fightsAsHdLevel = 20
 			end
 
-			aMatrixRolls = DataCommonADND.aPaladinToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aPaladinToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Ranger") then
 			if (fightsAsHdLevel >= 20) then
 				fightsAsHdLevel = 20
 			end
 
-			aMatrixRolls = DataCommonADND.aRangerToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aRangerToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Thief") then
 			if (fightsAsHdLevel >= 21) then
 				fightsAsHdLevel = 21
 			end
 
-			aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aThiefToHitMatrix[fightsAsHdLevel]
 		end
 	else
 		if (fightsAsHdLevel >= 20) then
 			fightsAsHdLevel = 20
 		end
 
-		local bmosterAttackMatrices = (OptionsManager.getOption("mosterAttackMatrices") == "on")
-		--Debug.console("514", "fightsAsHdLevel", fightsAsHdLevel, "bmosterAttackMatrices", bmosterAttackMatrices)
+		local bmonsterAttackMatrices = (OptionsManager.getOption("monsterAttackMatrices") == "on")
+		--Debug.console("514", "fightsAsHdLevel", fightsAsHdLevel, "bmonsterAttackMatrices", bmonsterAttackMatrices)
 
-		if bmosterAttackMatrices then
-			aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel]
+		if bmonsterAttackMatrices then
+			aMatrixRolls = DataCommonADND1e.aOsricToHitMatrix[fightsAsHdLevel]
 		else
-			aMatrixRolls = DataCommonADND.aMatrix[sHitDice]
+			aMatrixRolls = DataCommonADND1e.aMatrix[sHitDice]
 
 			-- for hit dice above 16, use 16
 			if (aMatrixRolls == nil) then
 				sHitDice = "16"
-				aMatrixRolls = DataCommonADND.aMatrix[sHitDice]
+				aMatrixRolls = DataCommonADND1e.aMatrix[sHitDice]
 			end
 		end
 	end
@@ -705,7 +705,7 @@ end
 
 -- return the initiative value of the last entry with initiative.
 function getLastInitiative()
-	iibOptAdd1eProperties = (OptionsManager.getOption("add1eProperties") == "on")
+	bOptAdd1eProperties = (OptionsManager.getOption("add1eProperties") == "on")
 
 	if DataCommonADND.coreVersion ~= "2e" then
 		nLastInit = 7

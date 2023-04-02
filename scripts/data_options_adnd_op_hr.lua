@@ -289,7 +289,7 @@ function registerOptions()
 	-- if User.getRulesetName() == "OSRIC" then
 	-- 	-- monster attack matrices, 1e or osric
 	-- 	OptionsManager.registerOption2(
-	-- 		"mosterAttackMatrices",
+	-- 		"monsterAttackMatrices",
 	-- 		false,
 	-- 		"option_header_adnd_op_hr",
 	-- 		"option_label_adnd_op_hr_osric_monster_matrices",
@@ -314,7 +314,7 @@ function registerOptions()
 	-- monster attack matrices, 1e or osric
 	if sRulesetName == "OSRIC" then
 		OptionsManager.registerOption2(
-			"mosterAttackMatrices",
+			"monsterAttackMatrices",
 			false,
 			"option_header_adnd_op_hr",
 			"option_label_adnd_op_hr_osric_monster_matrices_osric",
@@ -323,7 +323,7 @@ function registerOptions()
 		)
 	elseif sRulesetName == "2E" then
 		OptionsManager.registerOption2(
-			"mosterAttackMatrices",
+			"monsterAttackMatrices",
 			false,
 			"option_header_adnd_op_hr",
 			"option_label_adnd_op_hr_osric_monster_matrices",
@@ -367,7 +367,7 @@ end
 -- 		-- monster attack matrices, 1e or osric
 -- 		if sRulesetName == "OSRIC" then
 -- 			OptionsManager.registerOption2(
--- 				"mosterAttackMatrices",
+-- 				"monsterAttackMatrices",
 -- 				false,
 -- 				"option_header_adnd_op_hr",
 -- 				"option_label_adnd_op_hr_osric_monster_matrices_osric",
@@ -376,7 +376,7 @@ end
 -- 			)
 -- 		elseif sRulesetName == "2E" then
 -- 			OptionsManager.registerOption2(
--- 				"mosterAttackMatrices",
+-- 				"monsterAttackMatrices",
 -- 				false,
 -- 				"option_header_adnd_op_hr",
 -- 				"option_label_adnd_op_hr_osric_monster_matrices",
@@ -464,7 +464,7 @@ end
 -- 	if bOptAdd1eProperties then
 -- 		-- monster attack matrices, 1e or osric
 -- 		OptionsManager.registerOption2(
--- 			"mosterAttackMatrices",
+-- 			"monsterAttackMatrices",
 -- 			false,
 -- 			"option_header_adnd_op_hr",
 -- 			"option_label_adnd_op_hr_osric_monster_matrices",

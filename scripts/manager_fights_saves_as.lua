@@ -21,7 +21,7 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
 	fightsAsClass = fightsAsClass:gsub("%s+", "")
 	fightsAsHdLevel = DB.getValue(nodeNPC, "fights_as_hd_level")
 
-	--Debug.console("111", "npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel)
+	Debug.console("24", "npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel)
 
 	-- fights_as_hd_level not set
 	if (fightsAsHdLevel == nil or fightsAsHdLevel == 0) then
@@ -48,8 +48,8 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
 		end
 	end
 
-	--Debug.console("121", "fightsAsClass", fightsAsClass)
-	--Debug.console("122", "fightsAsHdLevel", fightsAsHdLevel, "sHitDice", sHitDice)
+	Debug.console("51", "fightsAsClass", fightsAsClass)
+	Debug.console("52", "fightsAsHdLevel", fightsAsHdLevel, "sHitDice", sHitDice)
 
 	if (fightsAsClass ~= "") then
 		if (fightsAsClass == "Assassin") then
@@ -57,78 +57,78 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
 				fightsAsHdLevel = 13
 			end
 
-			aMatrixRolls = DataCommonADND.aAssassinToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aAssassinToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Cleric") then
 			if (fightsAsHdLevel >= 19) then
 				fightsAsHdLevel = 19
 			end
-
-			aMatrixRolls = DataCommonADND.aClericToHitMatrix[fightsAsHdLevel]
+			Debug.console("65", "fightsAsHdLevel", fightsAsHdLevel, "DataCommonADND1e.aClericToHitMatrix", DataCommonADND1e.aClericToHitMatrix)
+			aMatrixRolls = DataCommonADND1e.aClericToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Druid") then
 			if (fightsAsHdLevel >= 13) then
 				fightsAsHdLevel = 13
 			end
 
-			aMatrixRolls = DataCommonADND.aDruidToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aDruidToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Fighter") then
 			if (fightsAsHdLevel >= 20) then
 				fightsAsHdLevel = 20
 			end
 
-			aMatrixRolls = DataCommonADND.aFighterToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aFighterToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Illusionist") then
 			if (fightsAsHdLevel >= 21) then
 				fightsAsHdLevel = 21
 			end
 
-			aMatrixRolls = DataCommonADND.aIllusionistToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aIllusionistToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "MagicUser") then
 			if (fightsAsHdLevel >= 21) then
 				fightsAsHdLevel = 21
 			end
 
-			aMatrixRolls = DataCommonADND.aMagicUserToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aMagicUserToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Paladin") then
 			if (fightsAsHdLevel >= 20) then
 				fightsAsHdLevel = 20
 			end
 
-			aMatrixRolls = DataCommonADND.aPaladinToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aPaladinToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Ranger") then
 			if (fightsAsHdLevel >= 20) then
 				fightsAsHdLevel = 20
 			end
 
-			aMatrixRolls = DataCommonADND.aRangerToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aRangerToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Thief") then
 			if (fightsAsHdLevel >= 21) then
 				fightsAsHdLevel = 21
 			end
 
-			aMatrixRolls = DataCommonADND.aThiefToHitMatrix[fightsAsHdLevel]
+			aMatrixRolls = DataCommonADND1e.aThiefToHitMatrix[fightsAsHdLevel]
 		end
 	else
 		if (fightsAsHdLevel >= 20) then
 			fightsAsHdLevel = 20
 		end
 
-		local bmosterAttackMatrices = (OptionsManager.getOption("mosterAttackMatrices") == "on")
-		--Debug.console("128", "fightsAsHdLevel", fightsAsHdLevel, "bmosterAttackMatrices", bmosterAttackMatrices)
+		local bmonsterAttackMatrices = (OptionsManager.getOption("monsterAttackMatrices") == "on")
+		Debug.console("116", "fightsAsHdLevel", fightsAsHdLevel, "bmonsterAttackMatrices", bmonsterAttackMatrices)
 
-		if bmosterAttackMatrices then
-			aMatrixRolls = DataCommonADND.aOsricToHitMatrix[fightsAsHdLevel]
+		if bmonsterAttackMatrices then
+			aMatrixRolls = DataCommonADND1e.aOsricToHitMatrix[fightsAsHdLevel]
 		else
-			aMatrixRolls = DataCommonADND.aMatrix[sHitDice]
+			aMatrixRolls = DataCommonADND1e.aMatrix[sHitDice]
 
 			-- for hit dice above 16, use 16
 			if (aMatrixRolls == nil) then
 				sHitDice = "16"
-				aMatrixRolls = DataCommonADND.aMatrix[sHitDice]
+				aMatrixRolls = DataCommonADND1e.aMatrix[sHitDice]
 			end
 		end
 	end
 
-	--Debug.console("56", aMatrixRolls)
+	Debug.console("131", "aMatrixrolls", aMatrixRolls)
 
 	-- assign matrix values
 	for i = nLowAC, nHighAC, 1 do
@@ -182,12 +182,37 @@ function updateSavesNPC(nodeNPC, savesAsClass, savesAsHdLevel)
 		savesAsClass = DB.getValue(nodeNPC, "saves_as")
 	end
 
-	if (savesAsHdLevel == 0) then
-		savesAsHdLevel = DB.getValue(nodeNPC, "saves_as_hd_level")
-	end
+	-- if (savesAsHdLevel == 0) then
+	-- 	savesAsHdLevel = DB.getValue(nodeNPC, "saves_as_hd_level")
+	-- end
 
 	--Debug.console("15:savesAsClass", savesAsClass)
 	--Debug.console("16:savesAsHdLevel", savesAsHdLevel)
+
+	-- fights_as_hd_level not set
+	if (savesAsHdLevel == nil or savesAsHdLevel == 0) then
+		if (sHitDice == "0") then
+			sHitDice = "-1"
+			savesAsHdLevel = 0
+		elseif (sHitDice == "1-1") then
+			-- string contains a +, as in hd 1+1
+			savesAsHdLevel = 1
+		elseif string.find(sHitDice, "%+") then
+			-- OSRIC
+			savesAsHdLevel = string.match(sHitDice, "%d+") + 2
+			-- 1e DMG
+			if (sHitDice ~= "1+1") then
+				sHitDice = string.match(sHitDice, "%d+")
+			else
+				sHitDice = "1+"
+			end
+		elseif (savesAsClass == "") then
+			savesAsHdLevel = tonumber(sHitDice) + 1
+		else
+			-- fights_as is set, so take the creature's hd
+			savesAsHdLevel = tonumber(sHitDice)
+		end
+	end
 
 	if (savesAsHdLevel == 0) then
 		savesAsHdLevel = tonumber(sHitDice)
@@ -200,7 +225,7 @@ end
 -- Set NPC Saves -celestian
 -- move to manager_action_save.lua?
 function updateNPCSaves(nodeEntry, nodeNPC, savesAsClass, savesAsHdLevel)
-	--Debug.console("manager:69", "updateNPCSaves", "nodeNPC", nodeNPC)
+	Debug.console("manager:203", "nodeEntry", nodeEntry, "nodeNPC", nodeNPC, "savesAsClass", savesAsClass, "savesAsHdLevel", savesAsHdLevel)
 	--if  (bForceUpdate) or (DB.getChildCount(nodeNPC, "saves") <= 0) then
 	for i = 1, 10, 1 do
 		local sSave = DataCommon.saves[i]
@@ -217,7 +242,7 @@ function setNPCSave(nodeEntry, sSave, nodeNPC, savesAsClass, savesAsHdLevel)
 
 	savesAsClass = savesAsClass:gsub("%s+", "")
 
-	--Debug.console("84", savesAsClass)
+	Debug.console("220", "savesAsClass", savesAsClass, "savesAsHdLevel", savesAsHdLevel)
 
 	if (savesAsClass ~= "") then
 		if (savesAsClass == "Assassin") then
@@ -225,58 +250,58 @@ function setNPCSave(nodeEntry, sSave, nodeNPC, savesAsClass, savesAsHdLevel)
 				savesAsHdLevel = 13
 			end
 
-			aSaveScores = DataCommonADND.aAssassinSaves[savesAsHdLevel]
+			aSaveScores = DataCommonADND1e.aAssassinSaves[savesAsHdLevel]
 		elseif (savesAsClass == "Cleric") then
 			if (savesAsHdLevel >= 19) then
 				savesAsHdLevel = 19
 			end
 
-			aSaveScores = DataCommonADND.aClericSaves[savesAsHdLevel]
+			aSaveScores = DataCommonADND1e.aClericSaves[savesAsHdLevel]
 		elseif (savesAsClass == "Druid") then
 			if (savesAsHdLevel >= 13) then
 				savesAsHdLevel = 13
 			end
 
-			aSaveScores = DataCommonADND.aDruidSaves[savesAsHdLevel]
+			aSaveScores = DataCommonADND1e.aDruidSaves[savesAsHdLevel]
 		elseif (savesAsClass == "Fighter") then
 			if (savesAsHdLevel >= 20) then
 				savesAsHdLevel = 20
 			end
 
-			aSaveScores = DataCommonADND.aFighterSaves[savesAsHdLevel]
+			aSaveScores = DataCommonADND1e.aFighterSaves[savesAsHdLevel]
 		elseif (savesAsClass == "Illusionist") then
 			if (savesAsHdLevel >= 21) then
 				savesAsHdLevel = 21
 			end
 
-			aSaveScores = DataCommonADND.aIllusionistSaves[savesAsHdLevel]
+			aSaveScores = DataCommonADND1e.aIllusionistSaves[savesAsHdLevel]
 		elseif (savesAsClass == "MagicUser") then
 			if (savesAsHdLevel >= 21) then
 				savesAsHdLevel = 21
 			end
 
-			aSaveScores = DataCommonADND.aMagicUserSaves[savesAsHdLevel]
+			aSaveScores = DataCommonADND1e.aMagicUserSaves[savesAsHdLevel]
 		elseif (savesAsClass == "Paladin") then
 			if (savesAsHdLevel >= 20) then
 				savesAsHdLevel = 20
 			end
 
-			aSaveScores = DataCommonADND.aPaladinSaves[savesAsHdLevel]
+			aSaveScores = DataCommonADND1e.aPaladinSaves[savesAsHdLevel]
 		elseif (savesAsClass == "Ranger") then
 			if (savesAsHdLevel >= 20) then
 				savesAsHdLevel = 20
 			end
 
-			aSaveScores = DataCommonADND.aRangerSaves[savesAsHdLevel]
+			aSaveScores = DataCommonADND1e.aRangerSaves[savesAsHdLevel]
 		elseif (savesAsClass == "Thief") then
 			if (savesAsHdLevel >= 21) then
 				savesAsHdLevel = 21
 			end
 
-			aSaveScores = DataCommonADND.aThiefSaves[savesAsHdLevel]
+			aSaveScores = DataCommonADND1e.aThiefSaves[savesAsHdLevel]
 		end
 	else
-		aSaveScores = DataCommonADND.aWarriorSaves[savesAsHdLevel]
+		aSaveScores = DataCommonADND1e.aWarriorSaves[savesAsHdLevel]
 	end
 
 	--Debug.console("104", aSaveScores, aSaveScores[nSaveIndex])
