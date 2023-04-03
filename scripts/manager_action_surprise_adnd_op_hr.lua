@@ -27,8 +27,10 @@ function getRollAdndOpHr(rActor, nTargetDC, bSecretRoll)
 	rRoll.aDice = aDice
 
 	if (nTargetDC == nil) then
-		local node = CombatManagerADND.getCTFromActor(rActor)
-		nTargetDC = getSurpriseTarget(node)
+		--local node = CombatManagerADND.getCTFromActor(rActor)
+		local nodeCT = ActorManager.getCTNode(rActor)
+		nTargetDC = getSurpriseTarget(nodeCT)
+		Debug.console("ActionSurpriseAdndOpHr", "nTargetDC", nTargetDC, "rActor", rActor, "node", node)
 	end
 
 	rRoll.sDesc = "[CHECK] "
