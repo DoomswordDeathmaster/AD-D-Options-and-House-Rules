@@ -1,3 +1,6 @@
+useUaComeliness = "useUaComeliness";
+useOaComelinessHonor = "useOaComelinessHonor";
+
 function onInit()
 	--Debug.console("getRulesetName: ", User.getRulesetName())
 	-- doesn't work correctly
@@ -22,14 +25,14 @@ function registerOptions()
 	-- 		{labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off"}
 	-- 	)
 	-- else
-		OptionsManager.registerOption2(
-			"initiativeDelay",
-			false,
-			"option_header_adnd_op_hr",
-			"option_label_adnd_op_hr_initiative_delay",
-			"option_entry_cycler",
-			{labels = "option_val_off", values = "off", baselabel = "option_val_on", baseval = "on", default = "on"}
-		)
+	OptionsManager.registerOption2(
+		"initiativeDelay",
+		false,
+		"option_header_adnd_op_hr",
+		"option_label_adnd_op_hr_initiative_delay",
+		"option_entry_cycler",
+		{labels = "option_val_off", values = "off", baselabel = "option_val_on", baseval = "on", default = "on"}
+	)
 	--end
 
 	-- 2E: Allow Tied Group Initiative
@@ -70,15 +73,15 @@ function registerOptions()
 
 	-- Initiative Die
 	if User.getRulesetName() ~= "OSRIC" then
-	-- 	OptionsManager.registerOption2(
-	-- 		"initiativeDie",
-	-- 		false,
-	-- 		"option_header_adnd_op_hr",
-	-- 		"option_label_adnd_op_hr_initiative_die",
-	-- 		"option_entry_cycler",
-	-- 		{labels = "option_val_d10", values = "d10", baselabel = "option_val_d6", baseval = "d6", default = "d6"}
-	-- 	)
-	-- else
+		-- 	OptionsManager.registerOption2(
+		-- 		"initiativeDie",
+		-- 		false,
+		-- 		"option_header_adnd_op_hr",
+		-- 		"option_label_adnd_op_hr_initiative_die",
+		-- 		"option_entry_cycler",
+		-- 		{labels = "option_val_d10", values = "d10", baselabel = "option_val_d6", baseval = "d6", default = "d6"}
+		-- 	)
+		-- else
 		OptionsManager.registerOption2(
 			"initiativeDie",
 			false,
@@ -353,7 +356,33 @@ function registerOptions()
 		)
 	end
 
-	
+	-- Comeliness
+	OptionsManager.registerOption2(
+		useUaComeliness,
+		false,
+		"option_header_adnd_op_hr",
+		"option_label_adnd_op_hr_comeliness",
+		"option_entry_cycler",
+		{labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off"}
+	)
+
+	-- Oriental Adventures Honor
+	OptionsManager.registerOption2(
+		useOaComelinessHonor,
+		false,
+		"option_header_adnd_op_hr",
+		"option_label_adnd_op_hr_oahonor",
+		"option_entry_cycler",
+		{labels = "option_val_on", values = "on", baselabel = "option_val_off", baseval = "off", default = "off"}
+	)
+end
+
+function isOaComelinessHonorEnabled()
+	return OptionsManager.isOption(useOaComelinessHonor, "on");
+end
+
+function isUaComelinessEnabled()
+	return OptionsManager.isOption(useUaComeliness, "on");
 end
 
 -- -- Dynamic Options

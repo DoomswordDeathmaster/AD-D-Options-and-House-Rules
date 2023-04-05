@@ -24,6 +24,8 @@
 	<string name="option_label_adnd_op_hr_add1e_properties">System: 1E/OSRIC Data\r\t[reload/restart after changing]</string>
 	<string name="option_label_adnd_op_hr_osric_monster_matrices">System: Monster Attack Matrices\r\t[requires use osric/1e data ON]</string>
 	<string name="option_label_adnd_op_hr_osric_monster_matrices_osric">System: Monster Attack Matrices</string>
+	<string name="option_label_adnd_op_hr_comeliness">PC: Use Comeliness (UA)\r\t -- OR --</string>
+    <string name="option_label_adnd_op_hr_oahonor">PC: Use Comeliness AND Honor (OA)</string>
 
 	<!-- Option value strings -->
 	<string name="option_val_d6">d6</string>
@@ -50,6 +52,26 @@
 	<string name="npc_label_fights_as_hd_level">Level or HD</string>
 	<string name="npc_label_saves_as">Saves As</string>
 	<string name="npc_label_saves_as_hd_level">Level or HD</string>
+
+	<!-- PC Sheet -->
+	<string name="COM">COM</string>
+    <string name="com">Com</string>
+    <string name="comeliness">Comeliness</string>
+    <string name="char_tooltip_comeliness">Comeliness of the character.</string>
+    <string name="char_label_comeliness_effects">Effects</string>
+    <string name="char_tooltip_comeliness_effects">How others view the character</string>
+	<string name="char_label_ability_details_percent_com">Com %</string>
+
+    <string name="HON">HON</string>
+    <string name="hon">Hon</string>
+    <string name="honor">Honor</string>
+    <!-- <string name="char_label_honor_dice">Honor Dice</string>
+    <string name="char_tooltip_honor_dice">The die type you roll for your honor die</string>
+
+    <string name="char_label_honor_dice">Honor Dice</string>
+    <string name="char_tooltip_honor_dice">The die type you roll for your honor die</string>
+    <string name="char_label_honor_window">Honor Window</string>
+    <string name="char_tooltip_honor_window">Great Honor gives +1 to every die rolled, 5% bonus XP, a 10% cost reduction on training, and one mulligan per session. Dishonor gives -1 to every die rolled, a 10% XP penalty, and a 10% cost increase on training. Too Much Honor increases the chance of random encounters and makes that PC more likely to be targeted by monsters.</string> -->
 
 	<!-- Overrides -->
 	<!-- change the name on this one because it was maddeningly confusing -->
