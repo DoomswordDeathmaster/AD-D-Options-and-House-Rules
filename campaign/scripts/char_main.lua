@@ -1,93 +1,59 @@
 local bIsUaComelinessEnabled
 local bIsOaComelinessHonorEnabled
+-- local bIsUse2eKitsEnabled
 
 function onInit()
-	-- TODO: test super.oninit here
 	if super and super.onInit then
 		--Debug.console("super and oninit found")
 		super.onInit()
 	end
 
-	-- local nodeChar = getDatabaseNode()
-	-- DB.addHandler("options.HouseRule_ASCENDING_AC", "onUpdate", updateAscendingValues)
-
-	-- DB.addHandler(DB.getPath(nodeChar, "abilities.*.percentbase"), "onUpdate", updateAbilityScores)
-	-- DB.addHandler(DB.getPath(nodeChar, "abilities.*.percentbasemod"), "onUpdate", updateAbilityScores)
-	-- DB.addHandler(DB.getPath(nodeChar, "abilities.*.percentadjustment"), "onUpdate", updateAbilityScores)
-	-- DB.addHandler(DB.getPath(nodeChar, "abilities.*.percenttempmod"), "onUpdate", updateAbilityScores)
-
-	-- DB.addHandler(DB.getPath(nodeChar, "abilities.*.base"), "onUpdate", updateAbilityScores)
-	-- DB.addHandler(DB.getPath(nodeChar, "abilities.*.basemod"), "onUpdate", updateAbilityScores)
-	-- DB.addHandler(DB.getPath(nodeChar, "abilities.*.adjustment"), "onUpdate", updateAbilityScores)
-	-- DB.addHandler(DB.getPath(nodeChar, "abilities.*.tempmod"), "onUpdate", updateAbilityScores)
-
-	-- DB.addHandler(DB.getPath(nodeChar, "hp.base"), "onUpdate", updateHealthScore)
-	-- DB.addHandler(DB.getPath(nodeChar, "hp.basemod"), "onUpdate", updateHealthScore)
-	-- --this is managed, not adjusted by players
-	-- --DB.addHandler(DB.getPath(nodeChar, "hp.hpconmod"),  "onUpdate", updateHealthScore);
-
-	-- DB.addHandler(DB.getPath(nodeChar, "hp.adjustment"), "onUpdate", updateHealthScore)
-	-- DB.addHandler(DB.getPath(nodeChar, "hp.tempmod"), "onUpdate", updateHealthScore)
-
-	-- -- DB.addHandler(DB.getPath(nodeChar, "inventorylist"),  "onChildDeleted", updateEncumbranceForDelete);
-
-	-- DB.addHandler(DB.getPath(nodeChar, "surprise.base"), "onUpdate", updateSurpriseScores)
-	-- DB.addHandler(DB.getPath(nodeChar, "surprise.tempmod"), "onUpdate", updateSurpriseScores)
-	-- DB.addHandler(DB.getPath(nodeChar, "surprise.mod"), "onUpdate", updateSurpriseScores)
-
-	-- DB.addHandler(DB.getPath(nodeChar, "initiative.tempmod"), "onUpdate", updateInitiativeScores)
-	-- DB.addHandler(DB.getPath(nodeChar, "initiative.misc"), "onUpdate", updateInitiativeScores)
-
-	-- DB.addHandler(DB.getPath(nodeChar, "abilities.strength.score"), "onUpdate", onEncumbranceChanged)
-
-	-- --// TODO is this necessary?
-	-- --DB.addHandler("combattracker.list", "onChildDeleted", updatesBulk);
-
 	local node = getDatabaseNode()
 
-	DB.addHandler(DB.getPath(node, "abilities.comeliness.percentbase"), "onUpdate", updateUaComeliness)
-	DB.addHandler(DB.getPath(node, "abilities.comeliness.percentbasemod"), "onUpdate", updateUaComeliness)
-	DB.addHandler(DB.getPath(node, "abilities.comeliness.percentadjustment"), "onUpdate", updateUaComeliness)
-	DB.addHandler(DB.getPath(node, "abilities.comeliness.percenttempmod"), "onUpdate", updateUaComeliness)
-	DB.addHandler(DB.getPath(node, "abilities.comeliness.base"), "onUpdate", updateUaComeliness)
-	DB.addHandler(DB.getPath(node, "abilities.comeliness.basemod"), "onUpdate", updateUaComeliness)
-	DB.addHandler(DB.getPath(node, "abilities.comeliness.adjustment"), "onUpdate", updateUaComeliness)
-	DB.addHandler(DB.getPath(node, "abilities.comeliness.tempmod"), "onUpdate", updateUaComeliness)
-	DB.addHandler(DB.getPath(node, "abilities.honor.score"), "onUpdate", updateOaComelinessHonor)
+	DB.addHandler(DB.getPath(node, "abilities.comeliness.percentbase"), "onUpdate", updateComeliness)
+	DB.addHandler(DB.getPath(node, "abilities.comeliness.percentbasemod"), "onUpdate", updateComeliness)
+	DB.addHandler(DB.getPath(node, "abilities.comeliness.percentadjustment"), "onUpdate", updateComeliness)
+	DB.addHandler(DB.getPath(node, "abilities.comeliness.percenttempmod"), "onUpdate", updateComeliness)
+	DB.addHandler(DB.getPath(node, "abilities.comeliness.base"), "onUpdate", updateComeliness)
+	DB.addHandler(DB.getPath(node, "abilities.comeliness.basemod"), "onUpdate", updateComeliness)
+	DB.addHandler(DB.getPath(node, "abilities.comeliness.adjustment"), "onUpdate", updateComeliness)
+	DB.addHandler(DB.getPath(node, "abilities.comeliness.tempmod"), "onUpdate", updateComeliness)
+	DB.addHandler(DB.getPath(node, "abilities.honor.score"), "onUpdate", updateHonor)
 
 	OptionsManager.registerCallback(AdndOpHrManager.useUaComeliness, onUaComelinessOptionChanged)
 	OptionsManager.registerCallback(AdndOpHrManager.useOaComelinessHonor, onOaComelinessHonorOptionChanged)
-
-	--updateAbilityScores(nodeChar)
-	updateAscendingValues()
+	-- OptionsManager.registerCallback(AdndOpHrManager.use2eKits, onUse2eKitsOptionChanged)
 
 	updateSurpriseScores()
 	updateInitiativeScores()
 
-	updateUaComeliness(node)
-	updateOaComelinessHonor(node)
+	updateComeliness(node)
+	updateHonor(node)
 
 	bIsUaComelinessEnabled = AdndOpHrManager.isUaComelinessEnabled()
 	bIsOaComelinessHonorEnabled = AdndOpHrManager.isOaComelinessHonorEnabled()
+	-- bIs2eKitsEnabled = AdndOpHrManager.is2eKitsEnabled()
 
 	setPlayerOptionControlVisibility("useUaComeliness")
 	setPlayerOptionControlVisibility("useOaComelinessHonor")
+	-- setPlayerOptionControlVisibility("use2eKits")
 end
 
 function onClose()
 	local nodeChar = getDatabaseNode()
-	DB.removeHandler(DB.getPath(nodeChar, "abilities.honor.score"), "onUpdate", updateOaComelinessHonor)
-	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.percentbase"), "onUpdate", updateUaComeliness)
-	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.percentbasemod"), "onUpdate", updateUaComeliness)
-	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.percentadjustment"), "onUpdate", updateUaComeliness)
-	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.percenttempmod"), "onUpdate", updateUaComeliness)
-	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.base"), "onUpdate", updateUaComeliness)
-	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.basemod"), "onUpdate", updateUaComeliness)
-	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.adjustment"), "onUpdate", updateUaComeliness)
-	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.tempmod"), "onUpdate", updateUaComeliness)
+	DB.removeHandler(DB.getPath(nodeChar, "abilities.honor.score"), "onUpdate", updateHonor)
+	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.percentbase"), "onUpdate", updateComeliness)
+	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.percentbasemod"), "onUpdate", updateComeliness)
+	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.percentadjustment"), "onUpdate", updateComeliness)
+	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.percenttempmod"), "onUpdate", updateComeliness)
+	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.base"), "onUpdate", updateComeliness)
+	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.basemod"), "onUpdate", updateComeliness)
+	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.adjustment"), "onUpdate", updateComeliness)
+	DB.removeHandler(DB.getPath(nodeChar, "abilities.comeliness.tempmod"), "onUpdate", updateComeliness)
 
 	OptionsManager.unregisterCallback(AdndOpHrManager.useUaComeliness, onUaComelinessOptionChanged)
 	OptionsManager.unregisterCallback(AdndOpHrManager.useOaComelinessHonor, onOaComelinessHonorOptionChanged)
+	-- OptionsManager.unregisterCallback(AdndOpHrManager.use2eKits, onUse2eKitsOptionChanged)
 
 	super.onClose()
 end
@@ -141,24 +107,28 @@ function updateInitiativeScores()
 	DB.setValue(nodeChar, "initiative.misc", "number", nMod)
 end
 
-function updateOaComelinessHonor(node)
+function updateHonor(node)
 	local nodeChar = node.getChild("....")
+
 	if (nodeChar == nil and node.getPath():match("^charsheet%.id%-%d+$")) then
 		nodeChar = node
 	end
-	--AbilityScorePO.updateHonor(nodeChar);
+
+	--Debug.console("char_main.lua", "updateHonor", "nodeChar", nodechar)
+	AbilityScoreManagerAdndOpHr.updateHonor(nodeChar);
 end
 
-function updateUaComeliness(node)
+function updateComeliness(node)
 	local nodeChar = node.getChild("....")
 	-- onInit doesn't have the same path for node, so we check here so first time
 	-- load works.
 	if (nodeChar == nil and node.getPath():match("^charsheet%.id%-%d+$")) then
 		nodeChar = node
 	end
-	--local dbAbility = AbilityScorePO.updateComeliness(nodeChar)
-	-- set tooltip for this because it's just to big for the abilities pane
-	--comeliness_effects.setTooltipText(dbAbility.effects_TT)
+
+	--Debug.console("char_main.lua", "updateComeliness", "nodeChar", nodechar)
+
+	AbilityScoreManagerAdndOpHr.updateComeliness(nodeChar)
 end
 
 function onUaComelinessOptionChanged()
@@ -169,16 +139,25 @@ function onOaComelinessHonorOptionChanged()
 	setPlayerOptionControlVisibility("useOaComelinessHonor")
 end
 
+-- function onUse2eKitsOptionChanged()
+-- 	setPlayerOptionControlVisibility("use2eKits")
+-- end
+
 function setPlayerOptionControlVisibility(sOption)
-	if (sOption == "useUaComeliness") then
-		bIsUaComelinessEnabled = AdndOpHrManager.isUaComelinessEnabled()
+	bIsUaComelinessEnabled = AdndOpHrManager.isUaComelinessEnabled()
+	bIsOaComelinessHonorEnabled = AdndOpHrManager.isOaComelinessHonorEnabled()
+	-- bIsUse2eKitsEnabled = AdndOpHrManager.is2eKitsEnabled()
+
+
+	if (sOption == "useUaComeliness" and not bIsOaComelinessHonorEnabled) then
 		setUaComelinessVisibility(bIsUaComelinessEnabled)
 	elseif (sOption == "useOaComelinessHonor") then
-		bIsOaComelinessHonorEnabled = AdndOpHrManager.isOaComelinessHonorEnabled()
 		setOaComelinessHonorVisibility(bIsOaComelinessHonorEnabled)
+	-- elseif (sOption == "use2eKits") then
+	-- 	set2eKitsVisibility(bIsUse2eKitsEnabled)
 	end
 
-	Debug.console("char_main.lua", "bIsUaComelinessEnabled", bIsUaComelinessEnabled, "bIsOaComelinessHonorEnabled", bIsOaComelinessHonorEnabled)
+	--Debug.console("char_main.lua", "bIsUaComelinessEnabled", bIsUaComelinessEnabled, "bIsOaComelinessHonorEnabled", bIsOaComelinessHonorEnabled)
 
 	charSheetAdjustment()
 end
@@ -186,76 +165,50 @@ end
 function charSheetAdjustment()
 	local nOffsetAmount = 0
 
-	if bIsUaComelinessEnabled then
-		nOffsetAmount = nOffsetAmount + 36
+	if bIsUaComelinessEnabled and not bIsOaComelinessHonorEnabled then
+		nOffsetAmount = 40
 	end
 
 	if bIsOaComelinessHonorEnabled then
-		nOffsetAmount = nOffsetAmount + 81
+		nOffsetAmount = 80
 	end
 
-	Debug.console("char_main.lua", "nOffsetAmount", nOffsetAmount)
+	--Debug.console("char_main.lua", "nOffsetAmount", nOffsetAmount)
 
 	combattitle.setAnchor("top", "charisma", "bottom", "relative", 15 + nOffsetAmount)
 	combatanchor.setAnchor("top", "combattitle", "bottom", "relative", 15)
 end
 
--- function setPlayerOptionControlVisibility(sOption)
--- 	local bIsUaComelinessEnabled = AdndOpHrManager.isUaComelinessEnabled()
--- 	local bIsOaComelinessHonorEnabled = AdndOpHrManager.isOaComelinessHonorEnabled()
--- 	Debug.console("char_main.lua", "bIsUaComelinessEnabled", bIsUaComelinessEnabled, "bIsOaComelinessHonorEnabled", bIsOaComelinessHonorEnabled)
-
--- 	setUaComelinessVisibility(bIsUaComelinessEnabled)
--- 	setOaComelinessHonorVisibility(bIsOaComelinessHonorEnabled)
-
--- 	local nOffsetAmount = 0
-
--- 	if bIsUaComelinessEnabled then
--- 		nOffsetAmount = nOffsetAmount + 36
--- 		--combattitle.setAnchor("top", "comeliness", "bottom", "relative", 15 + nOffsetAmount)
--- 		--combatanchor.setAnchor("top", "combattitle", "bottom", "relative", 15)
--- 	end
-
--- 	if bIsOaComelinessHonorEnabled then
--- 		nOffsetAmount = nOffsetAmount + 45
--- 		--combattitle.setAnchor("top", "honor", "bottom", "relative", 15 + nOffsetAmount)
--- 		--combatanchor.setAnchor("top", "combattitle", "bottom", "relative", 15)
--- 	end
-
--- 	Debug.console("char_main.lua", "nOffsetAmount", nOffsetAmount)
-
--- 	combattitle.setAnchor("top", "charisma", "bottom", "relative", 15 + nOffsetAmount)
--- 	combatanchor.setAnchor("top", "combattitle", "bottom", "relative", 15)
--- end
-
 function setUaComelinessVisibility(bShow)
 	comeliness.setVisible(bShow)
 	com_label.setVisible(bShow)
 	com_label_actual.setVisible(bShow)
-	comdetailframe.setVisible(bShow)
+	comdetailframe.setVisible(false)
 	comeliness_percent.setVisible(bShow)
 	com_percent_label.setVisible(bShow)
-	comeliness_effects.setVisible(bShow)
-	comeliness_effects_label.setVisible(bShow)
 end
 
 function setOaComelinessHonorVisibility(bShow)
-	comeliness.setVisible(bShow)
-	com_label.setVisible(bShow)
-	com_label_actual.setVisible(bShow)
-	comdetailframe.setVisible(bShow)
-	comeliness_percent.setVisible(bShow)
-	com_percent_label.setVisible(bShow)
-	comeliness_effects.setVisible(bShow)
-	comeliness_effects_label.setVisible(bShow)
-	honor.setVisible(bShow)
-	hon_label.setVisible(bShow)
-	-- honor_label_actual.setVisible(bShow)
-	-- hondetailframe.setVisible(bShow);
-	-- honor_temp.setVisible(bShow);
-	-- hon_temp_label.setVisible(bShow);
-	-- honor_dice.setVisible(bShow);
-	-- honor_dice_label.setVisible(bShow);
-	-- honor_window.setVisible(bShow);
-	-- honor_window_label.setVisible(bShow);
+	--Debug.console("char_main.lua", "bShow", bShow, "bIsUaComelinessEnabled", bIsUaComelinessEnabled)
+	if not bShow and bIsUaComelinessEnabled then
+        honor.setVisible(bShow)
+		hon_label.setVisible(bShow)
+    else
+		comeliness.setVisible(bShow)
+		com_label.setVisible(bShow)
+		com_label_actual.setVisible(bShow)
+		comdetailframe.setVisible(false)
+		comeliness_percent.setVisible(bShow)
+		com_percent_label.setVisible(bShow)
+		honor.setVisible(bShow)
+		hon_label.setVisible(bShow)
+	end
 end
+
+-- function set2eKitsVisibility(bShow)
+-- 	Debug.console("char_main.lua", "bShow", bShow, "bIsUse2eKitsEnabled", bIsUse2eKitsEnabled)
+-- 	background.setVisible(bshow)
+-- 	background_choose.setVisible(bshow)
+-- 	backgroundlink.setVisible(bShow)
+-- 	kit_title.setVisible(bShow)
+-- end

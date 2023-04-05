@@ -44,6 +44,7 @@
 		<script name="ActorHealthManagerAdndOpHr" file="scripts/manager_actor_health_adnd_op_hr.lua" />
   		<script name="OptionsADND" file="scripts/data_options_adnd.lua" />
 		<script name="CharEncumbranceManager" file="scripts/manager_char_encumbrance.lua" />
+		<script name="AbilityScoreManagerAdndOpHr" file="scripts/manager_ability_scores_adnd_op_hr.lua" />
 
 		<includefile source="strings/strings_adnd_op_hr.xml" />
 	</base>

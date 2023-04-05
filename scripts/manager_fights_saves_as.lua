@@ -21,7 +21,7 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
 	fightsAsClass = fightsAsClass:gsub("%s+", "")
 	fightsAsHdLevel = DB.getValue(nodeNPC, "fights_as_hd_level")
 
-	Debug.console("24", "npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel)
+	--Debug.console("24", "npcHitDice", sHitDice, "fightsAsClass", fightsAsClass, "fightsAsHdLevel", fightsAsHdLevel)
 
 	-- fights_as_hd_level not set
 	if (fightsAsHdLevel == nil or fightsAsHdLevel == 0) then
@@ -48,8 +48,8 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
 		end
 	end
 
-	Debug.console("51", "fightsAsClass", fightsAsClass)
-	Debug.console("52", "fightsAsHdLevel", fightsAsHdLevel, "sHitDice", sHitDice)
+	--Debug.console("51", "fightsAsClass", fightsAsClass)
+	--Debug.console("52", "fightsAsHdLevel", fightsAsHdLevel, "sHitDice", sHitDice)
 
 	if (fightsAsClass ~= "") then
 		if (fightsAsClass == "Assassin") then
@@ -62,7 +62,7 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
 			if (fightsAsHdLevel >= 19) then
 				fightsAsHdLevel = 19
 			end
-			Debug.console("65", "fightsAsHdLevel", fightsAsHdLevel, "DataCommonADND1e.aClericToHitMatrix", DataCommonADND1e.aClericToHitMatrix)
+			--Debug.console("65", "fightsAsHdLevel", fightsAsHdLevel, "DataCommonADND1e.aClericToHitMatrix", DataCommonADND1e.aClericToHitMatrix)
 			aMatrixRolls = DataCommonADND1e.aClericToHitMatrix[fightsAsHdLevel]
 		elseif (fightsAsClass == "Druid") then
 			if (fightsAsHdLevel >= 13) then
@@ -113,7 +113,7 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
 		end
 
 		local bmonsterAttackMatrices = (OptionsManager.getOption("monsterAttackMatrices") == "on")
-		Debug.console("116", "fightsAsHdLevel", fightsAsHdLevel, "bmonsterAttackMatrices", bmonsterAttackMatrices)
+		--Debug.console("116", "fightsAsHdLevel", fightsAsHdLevel, "bmonsterAttackMatrices", bmonsterAttackMatrices)
 
 		if bmonsterAttackMatrices then
 			aMatrixRolls = DataCommonADND1e.aOsricToHitMatrix[fightsAsHdLevel]
@@ -128,7 +128,7 @@ function updateCombatValuesNPC(nodeNPC, fightsAsClass, fightsAsHdLevel)
 		end
 	end
 
-	Debug.console("131", "aMatrixrolls", aMatrixRolls)
+	--Debug.console("131", "aMatrixrolls", aMatrixRolls)
 
 	-- assign matrix values
 	for i = nLowAC, nHighAC, 1 do
@@ -225,7 +225,7 @@ end
 -- Set NPC Saves -celestian
 -- move to manager_action_save.lua?
 function updateNPCSaves(nodeEntry, nodeNPC, savesAsClass, savesAsHdLevel)
-	Debug.console("manager:203", "nodeEntry", nodeEntry, "nodeNPC", nodeNPC, "savesAsClass", savesAsClass, "savesAsHdLevel", savesAsHdLevel)
+	--Debug.console("manager:203", "nodeEntry", nodeEntry, "nodeNPC", nodeNPC, "savesAsClass", savesAsClass, "savesAsHdLevel", savesAsHdLevel)
 	--if  (bForceUpdate) or (DB.getChildCount(nodeNPC, "saves") <= 0) then
 	for i = 1, 10, 1 do
 		local sSave = DataCommon.saves[i]
@@ -242,7 +242,7 @@ function setNPCSave(nodeEntry, sSave, nodeNPC, savesAsClass, savesAsHdLevel)
 
 	savesAsClass = savesAsClass:gsub("%s+", "")
 
-	Debug.console("220", "savesAsClass", savesAsClass, "savesAsHdLevel", savesAsHdLevel)
+	--Debug.console("220", "savesAsClass", savesAsClass, "savesAsHdLevel", savesAsHdLevel)
 
 	if (savesAsClass ~= "") then
 		if (savesAsClass == "Assassin") then

@@ -189,23 +189,23 @@ function createAttackMatrix()
 
 				-- get value from db, in case it's been explicitly set
 				local nTHACDb = DB.getValue(node, "thac" .. i)
-				Debug.console("char_matrix:142", "nTHACDb", nTHACDb)
+				--Debug.console("char_matrix:142", "nTHACDb", nTHACDb)
 
 				-- get value from aMatrixRolls
 				local nTHACM = aMatrixRolls[math.abs(i - nTotalACs)]
-				Debug.console("char_matrix:146", "nTHACM", nTHACM)
+				--Debug.console("char_matrix:146", "nTHACM", nTHACM)
 
 				if (fightsAsClass ~= "" or (fightsAsHdLevel ~= 0 and fightsAsHdLevel ~= tonumber(sHitDice))) then
 					--Debug.console("119", fightsAsClass);
 					nTHAC = nTHACM
 					matrixControlReadOnly = "true"
-					Debug.console("char_matrix:151", "nTHAC", nTHAC)
+					--Debug.console("char_matrix:151", "nTHAC", nTHAC)
 				elseif (nTHACDb ~= nil and nTHACDb ~= nTHACM) then
 					nTHAC = nTHACDb
-					Debug.console("char_matrix:154", "nTHAC", nTHAC)
+					--Debug.console("char_matrix:154", "nTHAC", nTHAC)
 				else
 					nTHAC = nTHACM
-					Debug.console("char_matrix:157", "nTHAC", nTHAC)
+					--Debug.console("char_matrix:157", "nTHAC", nTHAC)
 				end
 			end
 		end

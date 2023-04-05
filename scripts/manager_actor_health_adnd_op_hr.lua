@@ -53,7 +53,7 @@ function getWoundPercentAdndOpHr(rActor)
             if sOptPcDeadAtValue == "minusCon" then
                 nDEAD_AT = 0 - nConScore
                 --deadAtPositive = nConScore
-                Debug.console("actorhealth: ndeadat", nDEAD_AT)
+                --Debug.console("actorhealth: ndeadat", nDEAD_AT)
             -- minus 10
             else
                 nDEAD_AT = -10
@@ -86,18 +86,18 @@ function getWoundPercentAdndOpHr(rActor)
         --Debug.console("bhpGtDeadAt", bhpGtDeadAt, "bhpltDdt", bhpltDdt)
 
         if (nCurrentHp <= nDEAD_AT) then --or (nCurrentHp < nDeathDoorThreshold) then
-            Debug.console("ADD DEAD STATUS")
+            --Debug.console("ADD DEAD STATUS")
             sStatus = ActorHealthManager.STATUS_DEAD
         else
             -- add this status if the guy isn't already dead, necessary because the health manager gets called after the damage manager and there's not an elegant way to stop it
             if not EffectManager5E.hasEffect(rActor, "Dead") then
-                Debug.console("ADD DYING STATUS")
+                --Debug.console("ADD DYING STATUS")
                 sStatus = ActorHealthManager.STATUS_DYING
             end
         end
 
         if nCurrentHp < 1 then
-            Debug.console("CURRENT HP LESS THAN ONE")
+            --Debug.console("CURRENT HP LESS THAN ONE")
             sStatus = sStatus .. " (" .. nCurrentHp .. ")"
         end
     elseif OptionsManager.isOption("WNDC", "detailed") then

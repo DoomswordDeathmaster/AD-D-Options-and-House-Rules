@@ -58,8 +58,8 @@
     <string name="com">Com</string>
     <string name="comeliness">Comeliness</string>
     <string name="char_tooltip_comeliness">Comeliness of the character.</string>
-    <string name="char_label_comeliness_effects">Effects</string>
-    <string name="char_tooltip_comeliness_effects">How others view the character</string>
+    <!-- <string name="char_label_comeliness_effects">Effects</string>
+    <string name="char_tooltip_comeliness_effects">How others view the character</string> -->
 	<string name="char_label_ability_details_percent_com">Com %</string>
 
     <string name="HON">HON</string>

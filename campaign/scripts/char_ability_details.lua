@@ -2,7 +2,7 @@ local bIsUaComelinessEnabled
 local bIsOaComelinessHonorEnabled
 
 function onInit()
-    Debug.console("char_ability_details.lua", "onInit")
+    --Debug.console("char_ability_details.lua", "onInit")
     OptionsManager.registerCallback(AdndOpHrManager.useUaComeliness, onUaComelinessOptionChanged)
     OptionsManager.registerCallback(AdndOpHrManager.useOaComelinessHonor, onOaComelinessHonorOptionChanged)
 
@@ -27,21 +27,22 @@ function onOaComelinessHonorOptionChanged()
 end
 
 function setPlayerOptionControlVisibility(sOption)
-    if (sOption == "useUaComeliness") then
-        bIsUaComelinessEnabled = AdndOpHrManager.isUaComelinessEnabled()
+    bIsUaComelinessEnabled = AdndOpHrManager.isUaComelinessEnabled()
+    bIsOaComelinessHonorEnabled = AdndOpHrManager.isOaComelinessHonorEnabled()
+
+    if (sOption == "useUaComeliness" and not bIsOaComelinessHonorEnabled) then
         setUaComelinessVisibility(bIsUaComelinessEnabled)
     elseif (sOption == "useOaComelinessHonor") then
-        bIsOaComelinessHonorEnabled = AdndOpHrManager.isOaComelinessHonorEnabled()
         setOaComelinessHonorVisibility(bIsOaComelinessHonorEnabled)
     end
 
-    Debug.console(
-        "char_main.lua",
-        "bIsUaComelinessEnabled",
-        bIsUaComelinessEnabled,
-        "bIsOaComelinessHonorEnabled",
-        bIsOaComelinessHonorEnabled
-    )
+    -- Debug.console(
+    --     "char_main.lua",
+    --     "bIsUaComelinessEnabled",
+    --     bIsUaComelinessEnabled,
+    --     "bIsOaComelinessHonorEnabled",
+    --     bIsOaComelinessHonorEnabled
+    -- )
 
     charSheetAdjustment()
 end
@@ -62,7 +63,7 @@ end
 -- end
 
 function charSheetAdjustment()
-    if bIsUaComelinessEnabled then
+    if bIsUaComelinessEnabled and not bIsOaComelinessHonorEnabled then
         comeliness_label.setAnchor("top", "charisma_label", "top", "relative", 50)
     else
         comeliness_label.setAnchor("top", "charisma_label", "top", "relative", 50)
@@ -90,23 +91,29 @@ function setUaComelinessVisibility(bShow)
 end
 
 function setOaComelinessHonorVisibility(bShow)
-    comeliness_label.setVisible(bShow)
-    comeliness_base.setVisible(bShow)
-    comeliness_base_mod.setVisible(bShow)
-    com_plus.setVisible(bShow)
-    comeliness_mod.setVisible(bShow)
-    com_plus2.setVisible(bShow)
-    comeliness_temp.setVisible(bShow)
-    comeliness_total.setVisible(bShow)
-    comeliness_percent_label.setVisible(bShow)
-    comeliness_percent_base.setVisible(bShow)
-    comeliness_percent_base_mod.setVisible(bShow)
-    com_per_plus.setVisible(bShow)
-    comeliness_percent_mod.setVisible(bShow)
-    com_per_plus2.setVisible(bShow)
-    comeliness_percent_temp.setVisible(bShow)
-    comeliness_percent_total.setVisible(bShow)
+    --Debug.console("char_ability_detals.lua", "bShow", bShow, "bIsUaComelinessEnabled", bIsUaComelinessEnabled)
+    if not bShow and bIsUaComelinessEnabled then
+        honor_label.setVisible(bShow)
+        honor_total.setVisible(bShow)
+    else
+        comeliness_label.setVisible(bShow)
+        comeliness_base.setVisible(bShow)
+        comeliness_base_mod.setVisible(bShow)
+        com_plus.setVisible(bShow)
+        comeliness_mod.setVisible(bShow)
+        com_plus2.setVisible(bShow)
+        comeliness_temp.setVisible(bShow)
+        comeliness_total.setVisible(bShow)
+        comeliness_percent_label.setVisible(bShow)
+        comeliness_percent_base.setVisible(bShow)
+        comeliness_percent_base_mod.setVisible(bShow)
+        com_per_plus.setVisible(bShow)
+        comeliness_percent_mod.setVisible(bShow)
+        com_per_plus2.setVisible(bShow)
+        comeliness_percent_temp.setVisible(bShow)
+        comeliness_percent_total.setVisible(bShow)
 
-    honor_label.setVisible(bShow)
-    honor_total.setVisible(bShow)
+        honor_label.setVisible(bShow)
+        honor_total.setVisible(bShow)
+    end
 end

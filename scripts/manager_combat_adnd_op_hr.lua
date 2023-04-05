@@ -43,7 +43,7 @@ function rollRandomInitAdndOpHr(nInitMod)
 
 	--Debug.console("rollRandomInitAdndOpHr", "initiativeDie", initiativeDie)
 	local nInitResult = math.random(initiativeDie)
-    Debug.console("46: rollRandomInitAdndOpHr", "nInitResult", nInitResult, "nInitMod", nInitMod)
+    --Debug.console("46: rollRandomInitAdndOpHr", "nInitResult", nInitResult, "nInitMod", nInitMod)
 
 	nInitResult = nInitResult + nInitMod
 

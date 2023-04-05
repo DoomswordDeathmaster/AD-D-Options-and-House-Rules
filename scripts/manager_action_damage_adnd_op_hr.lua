@@ -457,7 +457,7 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
             if sOptPcDeadAtValue == "minusCon" then
                 nDEAD_AT = 0 - nConScore
                 deadAtPositive = nConScore
-                Debug.console("actorhealth: ndeadat", nDEAD_AT)
+                --Debug.console("actorhealth: ndeadat", nDEAD_AT)
             -- minus 10
             else
                 nDEAD_AT = -10
@@ -483,12 +483,12 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
                     deathDoorThresholdPositive = 9
                 end
 
-                Debug.console("nDeathDoorThreshold", nDeathDoorThreshold, "deathDoorThresholdPositive", deathDoorThresholdPositive)
+                --Debug.console("nDeathDoorThreshold", nDeathDoorThreshold, "deathDoorThresholdPositive", deathDoorThresholdPositive)
             end
         end
     end
     -- **************************************************************************************************************
-    Debug.console("manager_actor_health_osric.lua", "sNodeType", sNodeType, "nDEAD_AT", nDEAD_AT, "nCurrentHp", nCurrentHp, "sOptHouseRuleDeathsDoor", sOptHouseRuleDeathsDoor, "nDeathDoorThreshold", nDeathDoorThreshold)
+    --Debug.console("manager_actor_health_osric.lua", "sNodeType", sNodeType, "nDEAD_AT", nDEAD_AT, "nCurrentHp", nCurrentHp, "sOptHouseRuleDeathsDoor", sOptHouseRuleDeathsDoor, "nDeathDoorThreshold", nDeathDoorThreshold)
 
 
     -- Healing
@@ -745,7 +745,7 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
 
             -- deal with death's door threshold
             -- currently has hp
-            Debug.console("nCurrentHp", nCurrentHp, "nwounds", nWounds, "nAdjustedDamage", nAdjustedDamage, "nDeathDoorThreshold", nDeathDoorThreshold, "nDEAD_AT", nDEAD_AT, "deathDoorThresholdPositive", deathDoorThresholdPositive, "deadAtPositive", deadAtPositive)
+            --Debug.console("nCurrentHp", nCurrentHp, "nwounds", nWounds, "nAdjustedDamage", nAdjustedDamage, "nDeathDoorThreshold", nDeathDoorThreshold, "nDEAD_AT", nDEAD_AT, "deathDoorThresholdPositive", deathDoorThresholdPositive, "deadAtPositive", deadAtPositive)
 
             if nCurrentHp > 0 then
                 -- todo: System Shock
@@ -758,16 +758,16 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
 
                 -- adjusted damage exceeds all death's door and dead at values
                 if (nAdjustedDamage > nCurrentHp + deathDoorThresholdPositive) or (nAdjustedDamage >= nCurrentHp + deadAtPositive) then
-                    Debug.console("adjusted damage exceeds all death's door and dead at values")
+                    --Debug.console("adjusted damage exceeds all death's door and dead at values")
                     table.insert(aNotifications, "[INSTANT DEATH]")
                     nDeathSaveFail = 3
                 -- adjusted damage = hp
                 elseif (nAdjustedDamage == nCurrentHp) then
-                    Debug.console("adjusted damage = hp")
+                    --Debug.console("adjusted damage = hp")
                     table.insert(aNotifications, "[DAMAGE EQUALS HIT POINTS - AT DEATH'S DOOR]")
                 -- adjusted damage brings character within death's door buffer values
                 elseif (nAdjustedDamage > nCurrentHp) and ((nAdjustedDamage < nCurrentHp + deathDoorThresholdPositive) and (nAdjustedDamage < nCurrentHp + deadAtPositive)) then
-                    Debug.console("adjusted damage brings character within death's door buffer values")
+                    --Debug.console("adjusted damage brings character within death's door buffer values")
                     table.insert(
                         aNotifications,
                         "[DAMAGE EXCEEDS HIT POINTS BY " .. nDmgBeyondTotalHp .. "  - AT DEATH'S DOOR]"
@@ -962,19 +962,19 @@ function updatePcCondition(
     --local nDeathValue = (nTotalHP - nWounds) - nDmgBeyondTotalHp;
 
     -- todo: done? fix this for deaths door and add coma effect
-    Debug.console(
-        "updatePcCondition",
-        sDamageType,
-        nWounds,
-        nPrevWounds,
-        nTotalHP,
-        nDeathDoorThreshold,
-        deathDoorThresholdPositive,
-        nDEAD_AT,
-        deadAtPositive,
-        nCurrentHp,
-        nAdjustedDamage
-    )
+    -- Debug.console(
+    --     "updatePcCondition",
+    --     sDamageType,
+    --     nWounds,
+    --     nPrevWounds,
+    --     nTotalHP,
+    --     nDeathDoorThreshold,
+    --     deathDoorThresholdPositive,
+    --     nDEAD_AT,
+    --     deadAtPositive,
+    --     nCurrentHp,
+    --     nAdjustedDamage
+    -- )
 
     -- non-damage
     if sDamageType == "recovery" or sDamageType == "heal" or sDamageType == "temphp" then
@@ -1117,7 +1117,7 @@ function updatePcCondition(
     -- ongoing damage
     else
         local lastHpBeforeDeath = nDEAD_AT + 1
-        Debug.console("apply ongoing damage", "lastHpBeforeDeath", lastHpBeforeDeath)
+        --Debug.console("apply ongoing damage", "lastHpBeforeDeath", lastHpBeforeDeath)
 
         if nCurrentHp <= lastHpBeforeDeath then
         --if nCurrentHp <= -9 then
@@ -1157,16 +1157,17 @@ function updateHealthStatus(
     nTempHP,
     nWounds,
     nDmgBeyondTotalHp)
-    Debug.console(
-        "updateHealthStatus",
-        sTargetType,
-        nodeTarget,
-        nDeathSaveSuccess,
-        nDeathSaveFail,
-        nTempHP,
-        nWounds,
-        nDmgBeyondTotalHp
-    )
+    
+    -- Debug.console(
+    --     "updateHealthStatus",
+    --     sTargetType,
+    --     nodeTarget,
+    --     nDeathSaveSuccess,
+    --     nDeathSaveFail,
+    --     nTempHP,
+    --     nWounds,
+    --     nDmgBeyondTotalHp
+    -- )
 
     if sTargetType == "pc" then
         -- todo: what about this? should it be used?
