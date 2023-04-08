@@ -2,6 +2,7 @@ function onInit()
     --Debug.console("manager_action_damage_AdndOpHr.lua", "init")
     ActionDamage.applyDamage = applyDamageAdndOpHr
     ActionDamage.modDamage = modDamageAdndOpHr
+    ActionDamage.damageArmorWorn = damageArmorWorn
 end
 
 -- brought this in to later remove critical options
@@ -430,8 +431,6 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
     -- Decode damage/heal description
     local rDamageOutput = ActionDamage.decodeDamageText(nTotal, sDamage)
 
-
-
     -- ***************************************************************************************************************
     -- refactor the death's door stuff so that npcs and pcs are both correctly handled without checking for type later
     -- default Death's Door Threshold
@@ -455,10 +454,10 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
 
             -- minus CON
             if sOptPcDeadAtValue == "minusCon" then
+                --Debug.console("actorhealth: ndeadat", nDEAD_AT)
+                -- minus 10
                 nDEAD_AT = 0 - nConScore
                 deadAtPositive = nConScore
-                --Debug.console("actorhealth: ndeadat", nDEAD_AT)
-            -- minus 10
             else
                 nDEAD_AT = -10
                 deadAtPositive = 10
@@ -473,6 +472,7 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
                 nDeathDoorThreshold = -3
                 deathDoorThresholdPositive = 3
             else
+                --Debug.console("nDeathDoorThreshold", nDeathDoorThreshold, "deathDoorThresholdPositive", deathDoorThresholdPositive)
                 -- minus CON
                 if sOptPcDeadAtValue == "minusCon" then
                     nDeathDoorThreshold = (0 - nConScore) + 1
@@ -482,14 +482,11 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
                     nDeathDoorThreshold = -9
                     deathDoorThresholdPositive = 9
                 end
-
-                --Debug.console("nDeathDoorThreshold", nDeathDoorThreshold, "deathDoorThresholdPositive", deathDoorThresholdPositive)
             end
         end
     end
     -- **************************************************************************************************************
     --Debug.console("manager_actor_health_osric.lua", "sNodeType", sNodeType, "nDEAD_AT", nDEAD_AT, "nCurrentHp", nCurrentHp, "sOptHouseRuleDeathsDoor", sOptHouseRuleDeathsDoor, "nDeathDoorThreshold", nDeathDoorThreshold)
-
 
     -- Healing
     if rDamageOutput.sType == "recovery" then
@@ -748,6 +745,13 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
             --Debug.console("nCurrentHp", nCurrentHp, "nwounds", nWounds, "nAdjustedDamage", nAdjustedDamage, "nDeathDoorThreshold", nDeathDoorThreshold, "nDEAD_AT", nDEAD_AT, "deathDoorThresholdPositive", deathDoorThresholdPositive, "deadAtPositive", deadAtPositive)
 
             if nCurrentHp > 0 then
+                -- target is an NPC, no Death's Door
+                -- else
+                --     if (nAdjustedDamage > nCurrentHp) then
+                --         table.insert(aNotifications, "[INSTANT DEATH]")
+                --         nDeathSaveFail = 3
+                --     end
+                -- end
                 -- todo: System Shock
                 -- Add check here for nAdjustedDamage > 50 and if so perform system shock check?-- celestian, AD&D
                 -- hit after having zero or less hp - dead
@@ -757,16 +761,23 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
                 --if sTargetType == "pc" then
 
                 -- adjusted damage exceeds all death's door and dead at values
-                if (nAdjustedDamage > nCurrentHp + deathDoorThresholdPositive) or (nAdjustedDamage >= nCurrentHp + deadAtPositive) then
+                if
+                    (nAdjustedDamage > nCurrentHp + deathDoorThresholdPositive) or
+                        (nAdjustedDamage >= nCurrentHp + deadAtPositive)
+                 then
+                    -- adjusted damage = hp
                     --Debug.console("adjusted damage exceeds all death's door and dead at values")
                     table.insert(aNotifications, "[INSTANT DEATH]")
                     nDeathSaveFail = 3
-                -- adjusted damage = hp
                 elseif (nAdjustedDamage == nCurrentHp) then
+                    -- adjusted damage brings character within death's door buffer values
                     --Debug.console("adjusted damage = hp")
                     table.insert(aNotifications, "[DAMAGE EQUALS HIT POINTS - AT DEATH'S DOOR]")
-                -- adjusted damage brings character within death's door buffer values
-                elseif (nAdjustedDamage > nCurrentHp) and ((nAdjustedDamage < nCurrentHp + deathDoorThresholdPositive) and (nAdjustedDamage < nCurrentHp + deadAtPositive)) then
+                elseif
+                    (nAdjustedDamage > nCurrentHp) and
+                        ((nAdjustedDamage < nCurrentHp + deathDoorThresholdPositive) and
+                            (nAdjustedDamage < nCurrentHp + deadAtPositive))
+                 then
                     --Debug.console("adjusted damage brings character within death's door buffer values")
                     table.insert(
                         aNotifications,
@@ -781,19 +792,11 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
                         nDeathSaveFail = nDeathSaveFail + 1
                     end
                 end
-
-                -- target is an NPC, no Death's Door
-                -- else
-                --     if (nAdjustedDamage > nCurrentHp) then
-                --         table.insert(aNotifications, "[INSTANT DEATH]")
-                --         nDeathSaveFail = 3
-                --     end
-                -- end
             else
                 -- ongoing bleeding damage
                 if rSource == nil then
+                    -- damage from a new source
                     table.insert(aNotifications, "[BLEEDING]")
-                -- damage from a new source
                 else
                     -- hit after at 0 hp or less - death
                     table.insert(aNotifications, "[INSTANT DEATH]")
@@ -943,6 +946,82 @@ function applyDamageAdndOpHr(rSource, rTarget, bSecret, sDamage, nTotal, aDice)
     end
 end
 
+--[[
+  This section deals with Armor Damage, DP. From the Fighter's Handbook
+  option rules.
+  
+  Using optional Fighter Handbook rule for armor damage (DP), damage armor worn
+]]
+function damageArmorWorn(nodeChar, nArmorDamage)
+    if nodeChar then
+        local bWearingShield, nodeShield = ItemManager2.isWearingShield(nodeChar)
+        if bWearingShield and ActionDamage.checkShieldHit(nodeShield) then
+            -- shield hit...
+            ActionDamageManagerAdndOpHr.damageArmor(nodeChar, nodeShield, nArmorDamage)
+        else
+            local _, aArmorWorn = ItemManager2.getArmorWorn(nodeChar)
+            for _, nodeItem in ipairs(aArmorWorn) do
+                local nDP = DB.getValue(nodeItem, "armor.dp.base", 0)
+                local nDPDamage = DB.getValue(nodeItem, "armor.dp.damage", 0)
+                -- if the armor doesn't have DP set to anything then we dont mess with it.
+                if nDP ~= 0 and nDPDamage < nDP then
+                    ActionDamageManagerAdndOpHr.damageArmor(nodeChar, nodeItem, nArmorDamage)
+                    -- only damage one piece of armor.
+                    break
+                end
+            end
+        end
+    end
+end
+
+-- give a chance to hit shield instead of armor.
+function checkShieldHit(nodeItem)
+    local bShieldHit = false
+    local nDP = DB.getValue(nodeItem, "armor.dp.base", 0)
+    local nDPDamage = DB.getValue(nodeItem, "armor.dp.damage", 0)
+    -- no DP or shield is trashed.
+    if nDP == 0 or (nDP ~= 0 and nDPDamage >= nDP) then
+        bShieldHit = false
+    else
+        local nPercent = 25
+        local sShieldName = DB.getValue(nodeItem, "name", ""):lower()
+        if sShieldName:find("large") or sShieldName:find("tower") then
+            nPercent = 50
+        elseif sShieldName:find("small") or sShieldName:find("buckler") then
+            nPercent = 10
+        end
+        local nCheck = math.random(100)
+        if nCheck <= nPercent then
+            bShieldHit = true
+        end
+    end
+    return bShieldHit
+end
+
+-- this damages the specific item armor
+function damageArmor(nodeChar, nodeItem, nArmorDamage)
+    local nDP = DB.getValue(nodeItem, "armor.dp.base", 0)
+    local nDPDamage = DB.getValue(nodeItem, "armor.dp.damage", 0)
+    local nDPDamageTotal = nDPDamage + nArmorDamage
+    DB.setValue(nodeItem, "armor.dp.damage", "number", nDPDamageTotal)
+    if nDPDamageTotal >= nDP then
+        if bShield then
+            DB.setValue(nodeItem, "ac", "number", 0)
+        else
+            DB.setValue(nodeItem, "ac", "number", 10)
+        end
+        DB.setValue(nodeItem, "bonus", "number", 0)
+        ChatManager.SystemMessage(
+            string.format(
+                Interface.getString("item_armor_destroyed"),
+                DB.getValue(nodeChar, "name", ""),
+                DB.getValue(nodeItem, "name", "")
+            )
+        )
+    end
+end
+-- end Armor Damage/DP
+
 function updatePcCondition(
     sDamageType,
     rSource,
@@ -978,6 +1057,7 @@ function updatePcCondition(
 
     -- non-damage
     if sDamageType == "recovery" or sDamageType == "heal" or sDamageType == "temphp" then
+        -- new damage
         -- damage from another creature
         -- healed to 0 or less hp from negative
         if nWounds > nTotalHP and nPrevWounds >= nTotalHP then
@@ -1061,8 +1141,8 @@ function updatePcCondition(
                 )
             end
         end
-    -- new damage
     elseif rSource ~= nil then
+        -- ongoing damage
         -- ongoing damage
         -- deal with death's door threshold
         -- currently has hp
@@ -1079,9 +1159,13 @@ function updatePcCondition(
             -- Add check here for nAdjustedDamage > 50 and if so perform system shock check?-- celestian, AD&D
             -- hit after having zero or less hp - dead
             -- new hit causing damage beyond threshold = dead
-            if (nAdjustedDamage > nCurrentHp + deathDoorThresholdPositive) or (nAdjustedDamage >= nCurrentHp + deadAtPositive) then
+            if
+                (nAdjustedDamage > nCurrentHp + deathDoorThresholdPositive) or
+                    (nAdjustedDamage >= nCurrentHp + deadAtPositive)
+             then
+                -- new hit dropping hp to zero
                 if not EffectManager5E.hasEffect(rTarget, "Dead") then
-                    EffectManager.removeEffect(ActorManager.getCTNode(rTarget), "Unconscious");
+                    EffectManager.removeEffect(ActorManager.getCTNode(rTarget), "Unconscious")
                     EffectManager.addEffect(
                         "",
                         "",
@@ -1090,8 +1174,8 @@ function updatePcCondition(
                         true
                     )
                 end
-            -- new hit dropping hp to zero
             elseif (nAdjustedDamage == nCurrentHp) then
+                -- new hit causing damage to fall within threshold
                 EffectManager.addEffect(
                     "",
                     "",
@@ -1099,8 +1183,11 @@ function updatePcCondition(
                     {sName = "Unconscious;DMGO:1", sLabel = "Unconscious;DMGO:1", nDuration = 0},
                     true
                 )
-            -- new hit causing damage to fall within threshold
-            elseif (nAdjustedDamage > nCurrentHp) and ((nAdjustedDamage <= nCurrentHp + deathDoorThresholdPositive) and (nAdjustedDamage < nCurrentHp + deadAtPositive)) then
+            elseif
+                (nAdjustedDamage > nCurrentHp) and
+                    ((nAdjustedDamage <= nCurrentHp + deathDoorThresholdPositive) and
+                        (nAdjustedDamage < nCurrentHp + deadAtPositive))
+             then
                 EffectManager.addEffect(
                     "",
                     "",
@@ -1114,13 +1201,12 @@ function updatePcCondition(
             EffectManager.addEffect("", "", ActorManager.getCTNode(rTarget), {sName = "Dead", nDuration = 0}, true)
             nDeathSaveFail = 3
         end
-    -- ongoing damage
     else
         local lastHpBeforeDeath = nDEAD_AT + 1
         --Debug.console("apply ongoing damage", "lastHpBeforeDeath", lastHpBeforeDeath)
 
         if nCurrentHp <= lastHpBeforeDeath then
-        --if nCurrentHp <= -9 then
+            --if nCurrentHp <= -9 then
             -- removing an effect here causes an error because we're going through a loop of effects where DMGO is called and if this one
             -- is removed it causes the for loop to crash
             -- if EffectManager5E.hasEffect(rTarget, "Unconscious") then
@@ -1157,7 +1243,6 @@ function updateHealthStatus(
     nTempHP,
     nWounds,
     nDmgBeyondTotalHp)
-    
     -- Debug.console(
     --     "updateHealthStatus",
     --     sTargetType,

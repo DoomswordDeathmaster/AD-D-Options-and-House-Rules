@@ -45,6 +45,9 @@ aWarriorSaves = {}
 -- required for npcs, hit matrix when used
 aMatrix = {}
 
+-- armor damage values
+aDefaultArmorDp = {}
+
 -- distance per unit grid, this is for reach? --celestian
 nDefaultDistancePerUnitGrid = 5
 
@@ -579,4 +582,78 @@ function onInit()
 
 	-- CharEncumbranceManager.addStandardCalc();
 	CharEncumbranceManager.addCustomCalc(CharManager.calcWeightCarried)
+
+	-- armor namesarray creation
+	aArmorNames = {
+		"banded mail",
+		"banded armor",
+		"brigandine",
+		"bronze plate mail",
+		"chainmail",
+		"field plate",
+		"field plate armor",
+		"full plate",
+		"full plate armor",
+		"gallic",
+		"hide armor",
+		"leather armor",
+		"mail shirt",
+		"mail hauberk or byrnie (chain)",
+		"mail, elfin (chain)",
+		"padded armor",
+		"padded gambeson",
+		"plate armor",
+		"plate mail",
+		"ring mail",
+		"ring armor",
+		"samnite",
+		"scale mail",
+		"scale or lamellar",
+		"splint mail",
+		"splint armor",
+		"studded leather",
+		"studded armor",
+		"thracian",
+		"shield, buckler",
+		"shield, small",
+		"shield, medium",
+		"shield, body",
+		"shield, large"
+	}
+
+	-- armor damage array creation
+	aDefaultArmorDp["banded mail"] = {30}
+	aDefaultArmorDp["banded armor"] = {30}
+	aDefaultArmorDp["brigandine"] = {20}
+	aDefaultArmorDp["bronze plate mail"] = {30}
+	aDefaultArmorDp["chainmail"] = {25}
+	aDefaultArmorDp["field plate"] = {60}
+	aDefaultArmorDp["field plate armor"] = {60}
+	aDefaultArmorDp["full plate"] = {70}
+	aDefaultArmorDp["full plate armor"] = {70}
+	aDefaultArmorDp["gallic"] = {15}
+	aDefaultArmorDp["hide armor"] = {20}
+	aDefaultArmorDp["leather armor"] = {20}
+	aDefaultArmorDp["mail shirt"] = {25}
+	aDefaultArmorDp["mail hauberk or byrnie (chain)"] = {25}
+	aDefaultArmorDp["mail, elfin (chain)"] = {25}
+	aDefaultArmorDp["padded armor"] = {20}
+	aDefaultArmorDp["padded gambeson"] = {20}
+	aDefaultArmorDp["plate armor"] = {35}
+	aDefaultArmorDp["plate mail"] = {35}
+	aDefaultArmorDp["ring mail"] = {15}
+	aDefaultArmorDp["ring armor"] = {15}
+	aDefaultArmorDp["samnite"] = {25}
+	aDefaultArmorDp["scale mail"] = {20}
+	aDefaultArmorDp["scale or lamellar"] = {20}
+	aDefaultArmorDp["splint mail"] = {30}
+	aDefaultArmorDp["splint armor"] = {30}
+	aDefaultArmorDp["studded leather"] = {15}
+	aDefaultArmorDp["studded armor"] = {15}
+	aDefaultArmorDp["thracian"] = {5}
+	aDefaultArmorDp["shield, buckler"] = {10}
+	aDefaultArmorDp["shield, small"] = {10}
+	aDefaultArmorDp["shield, medium"] = {25}
+	aDefaultArmorDp["shield, body"] = {35}
+	aDefaultArmorDp["shield, large"] = {35}
 end

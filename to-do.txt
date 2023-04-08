@@ -1,0 +1,4 @@
+Armor Damage
+	Create data table of all osric/2e armor and shields, based on fighter's handbook values
+	When item dropped in inventory, add armor damage points from a table of armor damage from Fighter's Hnadbook
+		need to figure out if the dropped item is armor, then add armor dp from table
